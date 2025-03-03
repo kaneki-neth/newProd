@@ -4,7 +4,7 @@
 
 @section('content')
 
-<!-- <link href="/assets/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" /> -->
+<link href="/assets/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
 
     <style>
         #name:hover {

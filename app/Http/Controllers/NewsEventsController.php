@@ -50,6 +50,17 @@ class NewsEventsController extends Controller
 
     public function store(Request $request)
     {
+        $this->handleRequest($request);
+    }
+
+    public function update(Request $request, $ne_id)
+    {
+        $this->handleRequest($request, $ne_id);
+    }
+
+    // Helper methods
+    protected function handleRequest(Request $request, $ne_id = null)
+    {
         //
     }
 }

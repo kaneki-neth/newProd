@@ -72,12 +72,21 @@
                 </a>
             </div>
 
+<<<<<<< Updated upstream
             <div class="menu-item" id="videos">
                 <a href="/videos" class="menu-link">
                     <div class="menu-icon">
                         <i class="fa fa-video"></i>
                     </div>
                     <div class="menu-text">Videos</div>
+=======
+            <div class="menu-item" id="news_events">
+                <a href="/news_events" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fa fa-newspaper"></i>
+                    </div>
+                    <div class="menu-text">News & Events</div>
+>>>>>>> Stashed changes
                 </a>
             </div>
 

@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             OrgCompanySeeder::class,
 
             MaterialSeeder::class,
+            NewsEventsSeeder::class,
         ]);
     }
 }

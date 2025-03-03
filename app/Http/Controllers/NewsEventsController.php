@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DB;
 use Illuminate\Http\Request;
+use Storage;
 use Validator;
 
 class NewsEventsController extends Controller
@@ -39,7 +40,7 @@ class NewsEventsController extends Controller
             $query->where('date', '<=', $dateTo);
         }
 
-        $news_events = $query->get();
+        $news_events = $query->orderBy('date', 'desc')->get();
 
         return view('news_events.index', compact('news_events', 'title', 'category', 'date_from', 'date_to'));
     }
@@ -47,6 +48,11 @@ class NewsEventsController extends Controller
     public function create()
     {
         return view('news_events.create');
+    }
+
+    public function edit($ne_id)
+    {
+        //
     }
 
     public function store(Request $request)
@@ -78,8 +84,9 @@ class NewsEventsController extends Controller
 
             $mainImagePath = $request->file('mainImage')->store('news_events', 'public');
             $storedImagePaths[] = $mainImagePath;
+            $category = $request->category;
             $data = [
-                'category' => $request->category,
+                'category' => $category,
                 'title' => $request->title,
                 'date' => $request->date,
                 'description' => $request->description,
@@ -96,7 +103,6 @@ class NewsEventsController extends Controller
                 $ne_id = DB::table('news_events')->insertGetId($data);
             }
 
-            // sub images
             if ($request->hasFile('sub_images')) {
                 $storedImagePaths = array_merge(
                     $storedImagePaths,
@@ -106,9 +112,15 @@ class NewsEventsController extends Controller
 
             DB::commit();
 
-            return response()->json(['message' => 'Request handled successfully.']);
+            $message = $ne_id
+                ? ($category == 'news' ? 'News updated successfully.' : 'Event updated successfully.')
+                : ($category == 'news' ? 'News created successfully.' : 'Event created successfully.');
+            session()->flash('success', $message);
+
+            return response()->json(['success' => true], 200);
         } catch (\Exception $e) {
             DB::rollBack();
+            $this->deleteImages($storedImagePaths);
 
             return response()->json([
                 'success' => false,
@@ -140,6 +152,7 @@ class NewsEventsController extends Controller
 
     protected function storeSubImages($ne_id, $subImages)
     {
+        DB::table('news_events_images')->where('ne_id', $ne_id)->delete();
         $storedImagePaths = [];
         $imageData = [];
         foreach ($subImages as $subImage) {
@@ -158,5 +171,12 @@ class NewsEventsController extends Controller
         DB::table('news_events_images')->insert($imageData);
 
         return $storedImagePaths;
+    }
+
+    protected function deleteImages($imagePaths)
+    {
+        foreach ($imagePaths as $imagePath) {
+            Storage::disk('public')->delete($imagePath);
+        }
     }
 }

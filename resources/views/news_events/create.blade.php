@@ -182,27 +182,10 @@
             processData: false,
             contentType: false,
             success: function (response) {
-                console.log('success');
-                console.log(response.message);
+                location.reload();
             },
             error: function (xhr, status, error) {
-                console.log('error');
-                console.log(xhr.responseJSON.errors);
                 const errors = xhr.responseJSON.errors;
-                // example error:
-                // date
-                // : 
-                // ['The date field is required.']
-                // description
-                // : 
-                // ['The description field is required.']
-                // mainImage
-                // : 
-                // ['The main image is required.']
-                // title
-                // : 
-                // ['The title field is required.']
-                // use 'id-msg' to display error message
 
                 for (const key in errors) {
                     if (Object.hasOwnProperty.call(errors, key)) {

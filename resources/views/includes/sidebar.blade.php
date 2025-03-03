@@ -72,6 +72,15 @@
                 </a>
             </div>
 
+            <div class="menu-item" id="videos">
+                <a href="/videos" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fa fa-video"></i>
+                    </div>
+                    <div class="menu-text">Videos</div>
+                </a>
+            </div>
+
             @if(Auth::user()->can('role-full') || Auth::user()->can('role-view') || Auth::user()->can('user-full') || Auth::user()->can('user-view'))
                 <div class="menu-item has-sub" id="SysAdmin">
                     <a href="javascript:;" class="menu-link">

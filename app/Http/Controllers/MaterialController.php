@@ -93,7 +93,7 @@ class MaterialController extends Controller
         $images = DB::table('material_images')
             ->where('m_id', $m_id)
             ->pluck('image_file')
-            ->toArray();
+            ->first();
 
         $soft_properties = DB::table('item_properties')
             ->leftJoin('properties', 'item_properties.p_id', '=', 'properties.p_id')
@@ -147,7 +147,7 @@ class MaterialController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error deleting material: '.$e->getMessage(),
+                'message' => 'Error deleting material: ' . $e->getMessage(),
             ], 500);
         }
     }
@@ -185,7 +185,7 @@ class MaterialController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Material '.($materialId ? 'updated' : 'created').' successfully',
+                'message' => 'Material ' . ($materialId ? 'updated' : 'created') . ' successfully',
             ]);
 
         } catch (\Exception $e) {
@@ -194,17 +194,17 @@ class MaterialController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error processing material: '.$e->getMessage(),
+                'message' => 'Error processing material: ' . $e->getMessage(),
             ], 500);
         }
     }
 
     protected function validateMaterialRequest(Request $request, $materialId = null)
     {
-        $uniqueCodeRule = 'unique:materials,material_code'.($materialId ? ",{$materialId},m_id" : '');
+        $uniqueCodeRule = 'unique:materials,material_code' . ($materialId ? ",{$materialId},m_id" : '');
 
         return Validator::make($request->all(), [
-            'code' => 'required|'.$uniqueCodeRule,
+            'code' => 'required|' . $uniqueCodeRule,
             'name' => 'required',
             'categories' => 'sometimes|array',
             'categories.*' => 'exists:categories,c_id',
@@ -313,7 +313,7 @@ class MaterialController extends Controller
             ->where('type', $type)
             ->value('p_id');
 
-        if (! $propertyId) {
+        if (!$propertyId) {
             $propertyId = DB::table('properties')->insertGetId([
                 'name' => $name,
                 'type' => $type,

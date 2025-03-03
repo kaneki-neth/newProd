@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('material_code', 255)->unique();
             $table->longText('description');
             $table->string('image_file');
-            $table->foreignId('y_id')->nullable()->constrained('years', 'y_id')->nullOnDelete();
+            $table->string('year', 4);
 
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();

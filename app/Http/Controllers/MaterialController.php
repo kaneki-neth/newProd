@@ -14,8 +14,7 @@ class MaterialController extends Controller
         $material_code = '';
 
         $query = DB::table('materials')
-            ->leftJoin('years', 'materials.y_id', '=', 'years.y_id')
-            ->select('materials.*', 'years.year');
+            ->select('materials.*');
 
         if ($request->has('name')) {
             $name = $request->input('name');
@@ -44,8 +43,6 @@ class MaterialController extends Controller
     public function edit(string $id)
     {
         $material = DB::table('materials')
-            ->leftJoin('years', 'materials.y_id', '=', 'years.y_id')
-            ->select('materials.*', 'years.year')
             ->where('m_id', $id)
             ->first();
 
@@ -82,8 +79,7 @@ class MaterialController extends Controller
     public function show(string $m_id)
     {
         $material = DB::table('materials')
-            ->leftJoin('years', 'materials.y_id', '=', 'years.y_id')
-            ->select('materials.material_code', 'materials.name', 'materials.description', 'years.year')
+            ->select('materials.material_code', 'materials.name', 'materials.description', 'materials.year')
             ->where('m_id', $m_id)
             ->first();
 
@@ -171,10 +167,9 @@ class MaterialController extends Controller
         try {
             DB::beginTransaction();
 
-            $yearId = $this->getOrCreateYearId($request->input('year'));
             $mainImagePath = $request->file('mainImage')->store('material_images', 'public');
             $storedImagePaths[] = $mainImagePath;
-            $materialId = $this->createOrUpdateMaterial($request, $yearId, $mainImagePath, $materialId);
+            $materialId = $this->createOrUpdateMaterial($request, $mainImagePath, $materialId);
 
             $this->syncCategories($materialId, $request->input('categories'));
             $this->syncProperties($materialId, $request->input('properties'));
@@ -236,39 +231,20 @@ class MaterialController extends Controller
             'imageFiles.*.image' => 'Each image file must be an image.',
             'imageFiles.*.max' => 'Each image file may not be greater than 100MB.',
             'year.required' => 'The year is required.',
+            'year.digits' => 'Invalid year',
             'description.required' => 'The description is required.',
         ]);
     }
 
-    // years table
-    protected function getOrCreateYearId($year)
-    {
-        $yearId = DB::table('years')
-            ->where('year', $year)
-            ->value('y_id');
-
-        if (! $yearId) {
-            $yearId = DB::table('years')->insertGetId([
-                'year' => $year,
-                'created_by' => auth()->id(),
-                'updated_by' => auth()->id(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
-
-        return $yearId;
-    }
-
     // materials table
-    protected function createOrUpdateMaterial(Request $request, $yearId, $imageFilePath, $materialId = null)
+    protected function createOrUpdateMaterial(Request $request, $imageFilePath, $materialId = null)
     {
         $materialData = [
             'material_code' => $request->input('code'),
             'name' => $request->input('name'),
             'description' => $request->input('description'),
             'image_file' => $imageFilePath,
-            'y_id' => $yearId,
+            'year' => $request->input('year'),
             'updated_by' => auth()->id(),
             'updated_at' => now(),
         ];

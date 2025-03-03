@@ -13,19 +13,12 @@ class MaterialSeeder extends Seeder
     public function run(): void
     {
         // Creating Test Material
-        $yearId = DB::table('years')->insertGetId([
-            'year' => '2025',
-            'created_by' => 1,
-            'updated_by' => 1,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
         $materialId = DB::table('materials')->insertGetId([
             'name' => 'Test Material',
             'material_code' => 'TM001',
             'description' => 'test material',
-            'y_id' => $yearId,
+            'image_file' => 'test-material.jpg',
+            'year' => '2025',
             'created_by' => 1,
             'updated_by' => 1,
             'created_at' => now(),

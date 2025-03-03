@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
 
             MaterialSeeder::class,
             NewsEventsSeeder::class,
+            VideoSeeder::class,
         ]);
     }
 }

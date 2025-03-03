@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('videos', function (Blueprint $table) {
             $table->id('v_id');
-            $table->string('video_file');
+            $table->string('video_file')->nullable();
             $table->string('title');
             $table->date('date')->default(now());
             $table->string('description');

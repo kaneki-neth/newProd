@@ -1,0 +1,84 @@
+name: Update & Deploy
+on:
+  pull_request:
+    branches:
+      - production
+      - staging
+      - pre-staging
+    types: [closed]
+env:
+  branch_name: ${{ github.base_ref || github.ref_name }}
+jobs:
+  deploy_job:
+    if: ${{ github.event.pull_request.merged }}
+    runs-on: ubuntu-latest
+    name: deploy
+    steps:
+      - name: Update app
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{secrets.SSH_HOST}}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSPHRASE }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            #OPEN SSH AGENT, ADD SSH KEY TO AGENT
+            eval "$(ssh-agent -s)"
+            ssh-add ~/.ssh/id_rsa
+
+            #CHECK IF PRODUCTION, STAGING, PRE STAGING
+            if [ ${{ env.branch_name }} == "production" ] || [ ${{ env.branch_name }} == "staging" ] || [ ${{ env.branch_name }} == "pre-staging" ]; then
+              REPO_NAME="${{ github.event.repository.name }}"
+              DOMAIN="${REPO_NAME}"
+              WEB_DIR="/var/www"
+              PROJECT_DIR="${WEB_DIR}/${REPO_NAME}"
+
+              #FIX DOMAIN AND PROJECT DIR
+              READABLE_DOMAIN=${DOMAIN//./-}
+              PROJECT_DIR="${WEB_DIR}/${READABLE_DOMAIN}"
+
+              if [ -d "$PROJECT_DIR" ]; then
+                #UPDATE PROJECT DIR
+                PROJECT_DIR+="/${{ env.branch_name }}/app"
+                #GO TO PROJECT DIR, SET AS WORKSPACE
+                cd ${PROJECT_DIR}
+
+                git fetch origin ${{ env.branch_name }} && git reset --hard FETCH_HEAD
+
+                #IF .env EXIST THEN CREATE env BASE ON BRANCH
+                if [ -d ".do" ] && [ -f ".do/.env.${{ env.branch_name }}" ]; then
+                  cp -f .do/.env.${{ env.branch_name }} .env
+                fi
+
+                #IF vendor.zip EXIST, THEN REMOVE EXISTING VENDOR AND UNZIP THE NEW ONE
+                if [ -f "vendor.zip" ]; then
+                  if [ -d "vendor" ]; then
+                    rm -rf vendor
+                  fi
+
+                  unzip vendor.zip
+                else
+                  #IF THERES A composer.json RUN THE INSTALLATION
+                  if [ -f "composer.json" ]; then
+                    composer install --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-reqs
+                  fi
+                fi
+
+                #IF THERES ARTISAN, RUN OPTIMIZE, STORAGE LINK, MIGRATION AND SEEDER
+                if [ -f "artisan" ]; then
+                  php artisan optimize:clear
+                  php artisan storage:link
+
+                  if [ -d "database" ]; then
+                    php artisan migrate --force > /dev/null 2>&1 &
+                  fi
+
+                  if [ -d "database/seeders" ]; then
+                    php artisan db:seed -n > /dev/null 2>&1 &
+                  fi
+                fi
+
+                . ./.do/build.sh ${{ env.branch_name }}
+                . ./.do/start.sh ${{ env.branch_name }}
+              fi
+            fi

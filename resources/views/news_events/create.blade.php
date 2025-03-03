@@ -6,20 +6,28 @@
 
 <link href="/assets/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
 <link href="../assets/plugins/summernote/dist/summernote-lite.css" rel="stylesheet" />
+<link href="../assets/plugins/select2/dist/css/select2.min.css" rel="stylesheet" />
 
 <style>
     .select2-search { display: none; }
+
     .error-msg {
         position: relative;
         top: -5px;
         background-color: white;
     }
+    .error-msg#description-msg {
+        position: relative;
+        background-color: white;
+        top: 0px;
+    }
+
     #img-container {
         max-width: 80%;
         margin: auto;
     }
     #main-img-container {
-        border: 1px solid var(--bs-component-border-color);
+        /* border: 1px solid var(--bs-component-border-color); */
         border-radius: 4px;
         aspect-ratio: 1 / 1;
         margin-left: 0 !important;
@@ -43,46 +51,46 @@
     <div class="panel-body" id="pannel-body">
         <div class="row">
             <div id="fields" class="col-md-7 mb-3">
-                <form action="{{ route('news_events.store') }}" method="POST">
-                    @csrf
-                    <div class="form-group">
-                        <label for="category" class="form-label">Category <span class="text-danger">*</span></label>
-                        <select class="form-control select2" id="category" name="category">
-                            <option value="news">News</option>
-                            <option value="events">Events</option>
-                        </select>
-                        <span id="category-msg" class="error-msg text-danger"></span>
-                    </div>
+                <div class="form-group">
+                    <label for="category" class="form-label">Category <span class="text-danger">*</span></label>
+                    <select class="form-control select2" id="category" name="category">
+                        <option value="news">News</option>
+                        <option value="events">Events</option>
+                    </select>
+                    <span id="category-msg" class="error-msg text-danger"></span>
+                </div>
 
-                    <div class="form-group mt-2">
-                        <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="title" name="title" placeholder="Title">
-                    </div>
+                <div class="form-group mt-2">
+                    <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Title">
+                    <span id="title-msg" class="error-msg text-danger"></span>
+                </div>
 
-                    <div class="form-group mt-2">
-                        <label for="date" class="form-label">Date <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="date" name="date" placeholder="Date">
-                        <span id="date-msg" class="error-msg text-danger"></span>
-                    </div>
+                <div class="form-group mt-2">
+                    <label for="date" class="form-label">Date <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="date" name="date" placeholder="Date">
+                    <span id="date-msg" class="error-msg text-danger"></span>
+                </div>
 
-                    <div class="row mt-2 g-0">
-                        <label for="description" class="form-label" >Description <span class="text-danger">*</span></label>
-                        <span id="description-msg" class="error-msg text-danger"></span>
-                        <div class="border" style="border-radius: 4px">
-                            <textarea class="textarea form-control" name="description" id="summernote"
-                                placeholder="Enter text ..." rows="12"></textarea>
-                        </div>
+                <div class="row mt-2 g-0">
+                    <label for="description" class="form-label" >Description <span class="text-danger">*</span></label>
+                    <span id="description-msg" class="error-msg text-danger"></span>
+                    <div class="border" style="border-radius: 4px">
+                        <textarea class="textarea form-control" name="description" id="summernote"
+                            placeholder="Enter text ..." rows="12"></textarea>
                     </div>
-                </form>
+                </div>
             </div>
 
             <div id="images" class="col-md-5 mb-3">
                 <div id="img-container">
-                    <label class="form-label">Upload Image</label>
+                    <label class="form-label">Upload Image <span class="text-danger">*</span></label>
                     <div id="main-img-container" class="row g-0">
+                        <span id="mainImage-msg" class="error-msg text-danger"></span>
                         <img src='/assets/userProfile/no-image-avail.jpg' id="mainImagePreview" onclick="document.getElementById('mainImage').click();">
                         <input type="file" accept="image/*" id="mainImage" name="mainImage" style="display: none;" onchange="displayMainImage(this)">
                     </div>
+                    <span id="sub_images-msg" class="error-msg text-danger"></span>
                     <div id="imageGallery"
                         style="display: flex; gap: 10px; overflow-x: auto; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-top: 8px">
                         <div id="createButton"
@@ -105,6 +113,7 @@
 <script src="/assets/js/jquery-3.6.4.min.js"></script>
 <script src="/assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
 <script src="../assets/plugins/summernote/dist/summernote-lite.min.js"></script>
+<script src="../assets/plugins/select2/dist/js/select2.min.js"></script>
 <script>
     $('#date').datepicker({
         format: 'yyyy-mm-dd',
@@ -154,11 +163,12 @@
 
     function submitData() {
         var formData = new FormData();
-        formData.append('category', $('#category').val());
+        formData.append('_token', '{{ csrf_token() }}'); 
+        formData.append('category', document.querySelector('select[name="category"]').value);
         formData.append('title', $('#title').val());
         formData.append('date', $('#date').val());
         formData.append('description', $('#summernote').val());
-        formData.append('mainImage', $('#mainImage')[0].files[0]);
+        formData.append('mainImage', $('#mainImage')[0].files[0] ?? "");
 
         var subImages = $('#sub_images')[0].files;
         for (var i = 0; i < subImages.length; i++) {
@@ -166,16 +176,40 @@
         }
 
         $.ajax({
-            url: '/news_events/create',
+            url: '{{ route("news_events.store") }}',
             type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
             success: function (response) {
-                console.log(response);
+                console.log('success');
+                console.log(response.message);
             },
             error: function (xhr, status, error) {
-                console.log(error);
+                console.log('error');
+                console.log(xhr.responseJSON.errors);
+                const errors = xhr.responseJSON.errors;
+                // example error:
+                // date
+                // : 
+                // ['The date field is required.']
+                // description
+                // : 
+                // ['The description field is required.']
+                // mainImage
+                // : 
+                // ['The main image is required.']
+                // title
+                // : 
+                // ['The title field is required.']
+                // use 'id-msg' to display error message
+
+                for (const key in errors) {
+                    if (Object.hasOwnProperty.call(errors, key)) {
+                        const element = errors[key];
+                        $('#' + key + '-msg').text(element[0]);
+                    }
+                }
             }
         });
     }

@@ -76,7 +76,9 @@
                     <div class="menu-icon">
                         <i class="fa fa-video"></i>
                     </div>
-                    <div class="menu-text">Videos</div></a></div>
+                    <div class="menu-text">Videos</div>
+                </a>
+            </div>
             <div class="menu-item" id="news_events">
                 <a href="/news_events" class="menu-link">
                     <div class="menu-icon">

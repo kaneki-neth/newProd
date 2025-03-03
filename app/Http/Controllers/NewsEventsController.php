@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DB;
 use Illuminate\Http\Request;
+use Validator;
 
 class NewsEventsController extends Controller
 {
@@ -50,17 +51,112 @@ class NewsEventsController extends Controller
 
     public function store(Request $request)
     {
-        $this->handleRequest($request);
+        return $this->handleRequest($request);
     }
 
     public function update(Request $request, $ne_id)
     {
-        $this->handleRequest($request, $ne_id);
+        return $this->handleRequest($request, $ne_id);
     }
 
     // Helper methods
     protected function handleRequest(Request $request, $ne_id = null)
     {
-        //
+        $validator = $this->validateRequest($request, $ne_id);
+
+        if ($validator->fails()) {
+
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->getMessageBag()->toArray(),
+            ], 400);
+        }
+
+        $storedImagePaths = [];
+        try {
+            DB::beginTransaction();
+
+            $mainImagePath = $request->file('mainImage')->store('news_events', 'public');
+            $storedImagePaths[] = $mainImagePath;
+            $data = [
+                'category' => $request->category,
+                'title' => $request->title,
+                'date' => $request->date,
+                'description' => $request->description,
+                'image_file' => $mainImagePath,
+                'updated_by' => auth()->id(),
+                'updated_at' => now(),
+            ];
+
+            if ($ne_id) {
+                DB::table('news_events')->where('ne_id', $ne_id)->update($data);
+            } else {
+                $data['created_by'] = auth()->id();
+                $data['created_at'] = now();
+                $ne_id = DB::table('news_events')->insertGetId($data);
+            }
+
+            // sub images
+            if ($request->hasFile('sub_images')) {
+                $storedImagePaths = array_merge(
+                    $storedImagePaths,
+                    $this->storeSubImages($ne_id, $request->file('sub_images'))
+                );
+            }
+
+            DB::commit();
+
+            return response()->json(['message' => 'Request handled successfully.']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while processing the request.',
+            ], 500);
+        }
+    }
+
+    protected function validateRequest(Request $request, $ne_id = null)
+    {
+        return Validator::make($request->all(), [
+            'category' => 'required|in:news,events',
+            'title' => 'required|max:255',
+            'date' => 'required|date',
+            'description' => 'required',
+            'mainImage' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:102400',
+            'sub_images' => 'sometimes|array',
+            'sub_images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:102400',
+        ], messages: [
+            'category.required' => 'The category is required.',
+            'title.required' => 'The title field is required.',
+            'date.required' => 'The date field is required.',
+            'description.required' => 'The description field is required.',
+            'mainImage.required' => 'The main image is required.',
+            'mainImage.max' => 'The main image must not be greater than 100MB.',
+            'sub_images.*.max' => 'The sub images must not be greater than 100MB.',
+        ]);
+    }
+
+    protected function storeSubImages($ne_id, $subImages)
+    {
+        $storedImagePaths = [];
+        $imageData = [];
+        foreach ($subImages as $subImage) {
+            $storedImagePath = $subImage->store('news_events', 'public');
+            $storedImagePaths[] = $storedImagePath;
+
+            $imageData[] = [
+                'ne_id' => $ne_id,
+                'image_file' => $storedImagePath,
+                'created_by' => auth()->id(),
+                'updated_by' => auth()->id(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        DB::table('news_events_images')->insert($imageData);
+
+        return $storedImagePaths;
     }
 }

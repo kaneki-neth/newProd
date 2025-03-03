@@ -84,14 +84,17 @@
                         class="table table-striped table-bordered align-middle table-responsive table-sm">
                         <thead>
                             <tr>
-                                <th class="text-center" width="10%">Category</th>
-                                <th class="text-center">Title</th>
                                 <th class="text-center" width="10%">Date</th>
+                                <th class="text-center">Title</th>
+                                <th class="text-center" width="10%">Category</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($news_events as $ne)
                                 <tr>
+                                    <td class="text-center" width="10%">{{ date('d-m-Y', strtotime($ne->date)) }}</td>
+                                    <td class="text-center" id="name" style="cursor: pointer"
+                                        onclick="location.href='/news_events/edit/{{ $ne->ne_id }}'">{{ $ne->title }}</td>
                                     <td class="text-center" width="10%">
                                         @if($ne->category == 'event')
                                             <span class="badge" style="background-color: orange;">Event</span>
@@ -99,9 +102,6 @@
                                             <span class="badge bg-info">News</span>
                                         @endif
                                     </td>
-                                    <td class="text-center" id="name" style="cursor: pointer"
-                                        onclick="location.href='/news_events/edit/{{ $ne->ne_id }}'">{{ $ne->title }}</td>
-                                    <td class="text-center" width="10%">{{ date('d-m-Y', strtotime($ne->date)) }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

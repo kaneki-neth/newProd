@@ -6,7 +6,7 @@
       <nav id="navmenu" class="navmenu">
         <ul class="nav-items">
           <li><a href="about.html" class="">About MATIX<br></a></li>
-          <li><a href="digital_archive.html" class="">Digital Archive</a></li>
+          <li><a href="/archive" class="">Digital Archive</a></li>
           <li><a href="events.html">News & Event+</a></li>
           <li><a href="contact.html">Contact</a></li>
         </ul>

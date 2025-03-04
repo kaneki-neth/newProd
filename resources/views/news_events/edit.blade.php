@@ -44,6 +44,89 @@
         height: 100%;
         object-fit: cover;
     }
+
+    #imageGallery::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    #imageGallery::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    #imageGallery::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+    }
+
+    #imageGallery::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    #imageGallery {
+        scrollbar-width: thin;
+        scrollbar-color: #888 #f1f1f1;
+    }
+
+    .image-container {
+        position: relative;
+        flex: 0 0 auto;
+        width: 25%;
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--bs-component-border-color);
+        border-radius: 4px;
+    }
+
+    .preview-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border: 1px solid #d1c3c0;
+    }
+
+    .hover-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0);
+        transition: background 0.3s ease;
+    }
+
+    .tool-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50%;
+        height: 50%;
+        background: var(--bs-component-border-color);
+        border-radius: 10%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .tool-overlay i {
+        font-size: 24px;
+        color: white;
+    }
+
+    .image-container:hover .hover-overlay {
+        background: rgba(0, 0, 0, 0.3);
+    }
+
+    .image-container:hover .tool-overlay {
+        opacity: 1;
+    }
 </style>
 
 <ol class="breadcrumb float-xl-end">
@@ -143,15 +226,53 @@
 
         if(subImages) {
             subImages.forEach(sub_image => {
-                imagePath = '/storage/' + sub_image + '?t=' + new Date().getTime();
-                $('#imageGallery').append(
-                    '<div style="border-radius: 4px; flex: 0 0 auto; width: 25%; aspect-ratio: 1/1; background: var(--bs-component-border-color); display: flex; align-items: center; justify-content: center; cursor: pointer;">' +
-                    '<img src="' + imagePath + '" style="width: 100%; height: 100%; object-fit: cover;">' +
-                    '</div>'
-                );
+                imagePath = '/storage/' + sub_image.image_file + '?t=' + new Date().getTime();
+                
+                let newDiv = document.createElement('div');
+                newDiv.classList.add('image-container');
+                
+                let img = document.createElement('img');
+                img.src = imagePath;
+
+                let hoverOverlay = document.createElement('div');
+                hoverOverlay.classList.add('hover-overlay');
+
+                let toolOverlay = document.createElement('div');
+                toolOverlay.classList.add('tool-overlay');
+                toolOverlay.innerHTML = '<i class="fa fa-trash"></i>';
+                
+                toolOverlay.addEventListener('click', function() {
+                    let nei_id = sub_image.nei_id;
+                    console.log(nei_id);
+                    deleteOldSubImage(newDiv, nei_id);
+                });
+
+                newDiv.appendChild(img);
+                newDiv.appendChild(hoverOverlay);
+                newDiv.appendChild(toolOverlay);
+
+                document.getElementById('imageGallery').appendChild(newDiv);
             });
         }
     });
+
+    function deleteOldSubImage(element, id) {
+        url = '/news_events/delete_sub_image/' + id;
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+            },
+            success: function(response) {
+                // console.log(response);
+                element.remove();
+            },
+            error: function(xhr, status, error) {
+                // console.log(error);
+            }
+        });
+    }
 
     $('#date').datepicker({
         format: 'yyyy-mm-dd',
@@ -162,6 +283,8 @@
 </script>
 <script>
     function displayMainImage(input) {
+        $('mainImagePreview').css('border', '1px solid #ccc');
+        $('#mainImage-msg').text('');
         if (input.files && input.files[0]) {
             var reader = new FileReader();
             reader.onload = function (e) {
@@ -171,22 +294,56 @@
         }
     }
 
+    let imageCount = 0;
+    let imageFiles = [];
+    let deletedImageFileIndexes = [];
     function displayImage(input) {
-        if (input.files && input.files[0]) {
-            if (input.files[0].size > 102400000) {
+        if (input.files.length > 0) {
+            let file = input.files[0];
+            if (file.size > 102400000) {
                 swal("File is too large! Please select an image that is 100MB or under.");
                 return;
             }
-            var reader = new FileReader();
+
+            let reader = new FileReader();
             reader.onload = function (e) {
-            $('#imageGallery').append(
-                '<div style="border-radius: 4px; flex: 0 0 auto; width: 25%; aspect-ratio: 1/1; background: var(--bs-component-border-color); display: flex; align-items: center; justify-content: center; cursor: pointer;">' +
-                '<img src="' + e.target.result + '" style="width: 100%; height: 100%; object-fit: cover;">' +
-                '</div>'
-            );
-            }
-            reader.readAsDataURL(input.files[0]);
+                let newDiv = document.createElement('div');
+                newDiv.classList.add('image-container');
+                
+                let img = document.createElement('img');
+                img.src = e.target.result;
+                img.classList.add('preview-image');
+                img.id = `preview-image-${imageCount}`;
+
+                let hoverOverlay = document.createElement('div');
+                hoverOverlay.classList.add('hover-overlay');
+
+                let toolOverlay = document.createElement('div');
+                toolOverlay.classList.add('tool-overlay');
+                toolOverlay.innerHTML = '<i class="fa fa-trash"></i>';
+
+                var currentCount = imageCount;
+                
+                toolOverlay.addEventListener('click', function() {
+                    deleteSubImage(newDiv, currentCount); 
+                });
+
+                newDiv.appendChild(img);
+                newDiv.appendChild(hoverOverlay);
+                newDiv.appendChild(toolOverlay);
+
+                document.getElementById('imageGallery').appendChild(newDiv);
+                imageFiles.push(file);
+                imageCount++;
+
+            };
+            reader.readAsDataURL(file);
         }
+    }
+
+    function deleteSubImage(element, index) {
+        element.remove();
+        deletedImageFileIndexes.push(index);
     }
 
     function submitData() {
@@ -200,13 +357,15 @@
             formData.append('mainImage', $('#mainImage')[0].files[0]);
         }
 
-        var subImages = $('#sub_images')[0].files;
-        for (var i = 0; i < subImages.length; i++) {
-            formData.append('sub_images[]', subImages[i]);
-        }
+        imageFiles.forEach((file, index) => {
+            if(!deletedImageFileIndexes.includes(index)) {
+                formData.append('sub_images[]', file);
+            }
+        });
 
+        let url = '/news_events/' + {{ $news_event->ne_id }} + '/edit';
         $.ajax({
-            url: '{{ route("news_events.update", ['ne_id' => $news_event->ne_id]) }}',
+            url: url,
             type: 'POST',
             data: formData,
             processData: false,

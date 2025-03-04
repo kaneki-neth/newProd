@@ -58,8 +58,9 @@ class NewsEventsController extends Controller
             ->first();
 
         $subImages = DB::table('news_events_images')
+            ->select('nei_id', 'image_file')
             ->where('ne_id', $ne_id)
-            ->pluck('image_file')
+            ->get()
             ->toArray();
 
         return view('news_events.edit', compact('news_event', 'subImages'));
@@ -81,7 +82,6 @@ class NewsEventsController extends Controller
         $validator = $this->validateRequest($request, $ne_id);
 
         if ($validator->fails()) {
-
             return response()->json([
                 'success' => false,
                 'errors' => $validator->getMessageBag()->toArray(),
@@ -89,6 +89,7 @@ class NewsEventsController extends Controller
         }
 
         $storedImagePaths = [];
+        $ddMsg = '';
         try {
             DB::beginTransaction();
 
@@ -118,7 +119,9 @@ class NewsEventsController extends Controller
             }
 
             if ($ne_id) {
+                $ddMsg = 'Updating news_events: '.$ne_id;
                 DB::table('news_events')->where('ne_id', $ne_id)->update($data);
+                $ddMsg = 'Updated news_events';
             } else {
                 $data['created_by'] = auth()->id();
                 $data['created_at'] = now();
@@ -128,7 +131,7 @@ class NewsEventsController extends Controller
             if ($request->hasFile('sub_images')) {
                 $storedImagePaths = array_merge(
                     $storedImagePaths,
-                    $this->storeSubImages($ne_id, $request->file('sub_images'))
+                    $this->storeSubImages($ne_id, $request->file('sub_images'), $ne_id ? true : false)
                 );
             }
 
@@ -144,7 +147,7 @@ class NewsEventsController extends Controller
             DB::rollBack();
             $this->deleteImages($storedImagePaths);
 
-            dd($e->getMessage());
+            dd($e->getMessage(), $request->all(), $ddMsg);
 
             return response()->json([
                 'success' => false,
@@ -174,9 +177,8 @@ class NewsEventsController extends Controller
         ]);
     }
 
-    protected function storeSubImages($ne_id, $subImages)
+    protected function storeSubImages($ne_id, $subImages, $update = false)
     {
-        DB::table('news_events_images')->where('ne_id', $ne_id)->delete();
         $storedImagePaths = [];
         $imageData = [];
         foreach ($subImages as $subImage) {
@@ -202,5 +204,16 @@ class NewsEventsController extends Controller
         foreach ($imagePaths as $imagePath) {
             Storage::disk('public')->delete($imagePath);
         }
+    }
+
+    public function deleteSubImage($sub_image_id)
+    {
+        $imagePath = DB::table('news_events_images')->where('nei_id', $sub_image_id)->value('image_file');
+        if ($imagePath) {
+            Storage::disk('public')->delete($imagePath);
+        }
+        DB::table('news_events_images')->where('nei_id', $sub_image_id)->delete();
+
+        return response()->json(['success' => true], 200);
     }
 }

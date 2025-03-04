@@ -10,4 +10,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [home::class, 'index']);
 Route::get('/archive', [archive::class, 'index']);
 Route::get('/archive_details', [archive::class, 'archive_details']);
+Route::get('/newsevents', [newsevent::class, 'index']);
+Route::get('/aboutus', [aboutus::class, 'index']);
 

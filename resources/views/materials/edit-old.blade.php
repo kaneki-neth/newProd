@@ -1,25 +1,31 @@
 @extends('layouts.app')
 
-@section('title', 'Add Material')
+@section('title', 'Edit Material')
 
 @section('content')
-    <style>
+    <script>
+        let properties = @json($properties);
+        let techProperties = @json($techProperties);
+        let susProperties = @json($susProperties);
+    </script>
+
+<style>
         html, body {
             overflow-x: hidden;
         }
         
         .image-container {
-        position: relative;
-        flex: 0 0 auto;
-        width: 25%;
-        aspect-ratio: 1 / 1;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid var(--bs-component-border-color);
-        border-radius: 4px;
-    }
+            position: relative;
+            flex: 0 0 auto;
+            width: 25%;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--bs-component-border-color);
+            border-radius: 4px;
+        }
 
         /* Image Styles */
         .preview-image {
@@ -142,15 +148,12 @@
             /* Thumb color and track color */
         }
     </style>
-
-
-    <link href="../assets/plugins/summernote/dist/summernote-lite.css" rel="stylesheet" />
-
+    <link href="/assets/plugins/summernote/dist/summernote-lite.css" rel="stylesheet" />
     <ol class="breadcrumb float-xl-end">
         <li class="breadcrumb-item"><a href="{{ route('materials.index') }}">Materials</a></li>
-        <li class="breadcrumb-item"><a href="javascript:;">Add Material</a></li>
+        <li class="breadcrumb-item"><a href="javascript:;">Edit Material</a></li>
     </ol>
-    <h1 class="page-header">Add Material</h1>
+    <h1 class="page-header">Edit Material</h1>
 
     <!-- make new -->
     
@@ -159,56 +162,61 @@
             <div class="row mb-3 g-0" style="margin: 0px;">
                 <!-- diri content sa left -->
                 <div class="col-8">
-                    <!-- initial text inputs: name, code, category, year -->
-                    <div class="row">
-                        <div class="col">
-                            <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control form-control-xs validate" name="name" placeholder="...">
-                            <span class="error-message"></span>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="code" class="form-label">Code <span class="text-danger">*</span></label>
-                            <input type="text"
-                                class="form-control form-control-xs validate @error('code') is-invalid @enderror"
-                                name="code" value="{{ old('code') }}" placeholder="...">
-                            <span class="error-message"></span>
-                        </div>
+                <!-- Initial text inputs: name, code, category, year -->
+                <div class="row">
+                    <div class="col">
+                        <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-xs validate" name="name" 
+                            value="{{ old('name', $material->name) }}" placeholder="...">
+                        <span class="error-message"></span>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <label for="categories" class="form-label">Category <span class="text-danger">*</span></label>
-                                <select class="form-control select2 validate" id="multiple-select-field"
-                                    name="categories" type="text" onkeyup="remove_error(this)" multiple>
-                                    @foreach ($categories as $category)
-                                        <option value="{{ $category->c_id }}">{{ $category->name }}</option>
-                                    @endforeach
-                                </select>
-                            <span class="error-message"></span>
-                        </div>
-                        <div class="col-md-2">
-                            <label for="year" class="form-label">Year <span class="text-danger">*</span></label>
-                            <select class="form-control select2-container select2" id="year" name="year">
-                                @for ($i = 1984; $i <= (date('Y') + 5); $i++)
-                                    @if ($i == date('Y'))
-                                        <option value="{{ $i }}" selected>{{ $i }}</option>
-                                    @else
-                                        <option value="{{ $i }}">{{ $i }}</option>
-                                    @endif
-                                @endfor
-                            </select>
-                        </div>
+                    <div class="col-md-4">
+                        <label for="code" class="form-label">Code <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-xs validate" name="code" 
+                            value="{{ old('material_code', $material->material_code) }}" placeholder="...">
+                        <span class="error-message"></span>
                     </div>
-                    <!-- description module here -->
-                    <div class="row mt-3 g-0">
-                        <div class="alert alert-yellow fade" style="display: none;" id="descriptionError"></div>
-                        <label for="material_description" class="form-label" >Description <span class="text-danger">*</span></label>
-                        <div class="border" style="border-radius: 4px">
-                            <textarea class="textarea form-control" name="material_description" id="summernote"
-                                placeholder="Enter text ..." rows="12"></textarea>
-                        </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="categories" class="form-label">Category <span class="text-danger">*</span></label>
+                        <select class="form-control select2 validate" id="multiple-select-field"
+                            name="categories[]" type="text" multiple>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->c_id }}" 
+                                    {{ in_array($category->c_id, $selectedCategories) ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <span class="error-message"></span>
                     </div>
-                    <!-- other details -->
-                    <div class="row">
+                    <div class="col-md-2">
+                        <label for="year" class="form-label">Year <span class="text-danger">*</span></label>
+                        <select class="form-control select2-container select2" id="year" name="year">
+                            @for ($i = 1984; $i <= (date('Y') + 5); $i++)
+                                <option value="{{ $i }}" {{ $i == old('year', $material->year) ? 'selected' : '' }}>
+                                    {{ $i }}
+                                </option>
+                            @endfor
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Description module -->
+                <div class="row mt-3 g-0">
+                    <div class="alert alert-yellow fade" style="display: none;" id="descriptionError"></div>
+                    <label for="material_description" class="form-label">Description <span class="text-danger">*</span></label>
+                    <div class="border" style="border-radius: 4px">
+                        <textarea class="textarea form-control" name="material_description" id="summernote"
+                            placeholder="Enter text ..." rows="12">
+                            {{ old('material_description', $material->description) }}
+                        </textarea>
+                    </div>
+                </div>
+                <!-- properties module -->
+                <div class="row">
                         <div class="col-12 mt-3">
                             <div style="border-radius: 4px;">
                                 <table class="properties_table table table-responsive" id="properties_table" style="border-radius: 4px;">
@@ -225,25 +233,6 @@
                                     </thead>
                                     <tbody id="properties_tableBody" style="border-radius: 4px;">
                                         <tr>
-                                            <td style="width:50%">
-                                                <div>
-                                                    <label class="form-label" for="property">Name </label>
-                                                    <input class="property-name form-control form-control-xs "
-                                                        name="property_name" id="property-name-field"
-                                                        style=" width:100%">
-                                                    
-                                                </div>
-                                            </td>
-                                            <td style="width:50%">
-                                                <div>
-                                                    <label class="form-label" for="property">Value </label>
-                                                    <input type="text" class="form-control form-control-xs "
-                                                        name="property_value" style=" width:100%">
-                                                    
-                                                </div>
-                                            </td>
-                                            <td>
-                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -261,23 +250,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="technical_properties_tableBody">
-                                        <tr>
-                                            <td style="width:50%">
-                                                <div>
-                                                    <label class="form-label" for="property">Name </label>
-                                                    <input class="form-control form-control-xs "
-                                                        name="technical_property_name" style="width:100%">
-                                                    
-                                                </div>
-                                            </td>
-                                            <td style="width:50%">
-                                                <div>
-                                                    <label class="form-label" for="property">Value </label>
-                                                    <input type="text" class="form-control form-control-xs "
-                                                        name="technical_property_value" style=" width:100%">
-                                                    
-                                                </div>
-                                            </td>
+                                        <tr>                                            
                                         </tr>
                                     </tbody>
                                 </table>
@@ -295,29 +268,14 @@
                                     </thead>
                                     <tbody id="sustainability_tableBody">
                                         <tr>
-                                            <td style="width:50%">
-                                                <div>
-                                                    <label class="form-label" for="property">Name </label>
-                                                    <input class="form-control form-control-xs "
-                                                        name="sustainability_property_name" style="width:100%">
-                                                    
-                                                </div>
-                                            </td>
-                                            <td style="width:50%">
-                                                <div>
-                                                    <label class="form-label" for="property">Value </label>
-                                                    <input type="text" class="form-control form-control-xs "
-                                                        name="sustainability_property_value" style=" width:100%">
-                                                    
-                                                </div>
-                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                </div>
+
+            </div>
                 <!-- end of content on the left -->
 
                 <!-- content on the right aka image and submit button -->
@@ -361,10 +319,7 @@
         </div>
     </div>
     
-
     <script src="/assets/js/jquery-3.6.4.min.js"></script>
-
-    <script src="../assets/plugins/summernote/dist/summernote-lite.min.js"></script>
     <script src="/assets/plugins/select2/dist/js/select2.min.js"></script>
     <script src="../assets/plugins/blueimp-load-image/js/load-image.all.min.js"></script>
     <script src="../assets/plugins/blueimp-file-upload/js/vendor/jquery.ui.widget.js"></script>
@@ -374,13 +329,29 @@
     <script src="../assets/plugins/blueimp-file-upload/js/jquery.fileupload-ui.js"></script>
     <script src="../assets/plugins/blueimp-file-upload/js/jquery.fileupload-validate.js"></script>
     <script src="../assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
-
     <script>
         let imageCount = 0;
         let imageFiles = [];
         let mainImage;
         const MAX_FILE_SIZE = 100 * 1024 * 1024;
         
+        properties.forEach((element, index) => {
+                if (index == 0 ){
+                    addPropertyRow(element, true);
+                } else addPropertyRow(element, false); 
+            });
+
+            techProperties.forEach((element, index) => {
+                if (index == 0 ){
+                    addTechnicalPropertyRow(element, true);
+                } else addTechnicalPropertyRow(element, false); 
+            });
+            
+            susProperties.forEach((element, index) => {
+                if (index == 0 ){
+                    addSustainabilityRow(element, true);
+                } else addSustainabilityRow(element, false); 
+            });
 
         $(document).ready(function () {
             console.log("mainIMage is:", mainImage);
@@ -402,7 +373,7 @@
                 $field.siblings('.error-message-sub').text('');
                 // Reset border color
                 $field.css('border-color', '#ced4da');
-                console.log("u did something test");
+                console.log("docu input .validate");
             });
 
             // Select2 initialization with validation clear
@@ -416,17 +387,23 @@
                     $(this).siblings('.error-message-sub').text('');
                 });
 
+
+                $.getScript("/assets/plugins/summernote/dist/summernote-lite.min.js", function() {
+                    $('#summernote').summernote({
+                        placeholder: 'Enter description',
+                        height: "300",
+                        maximumImageFileSize: 102400000, // 100MB
+                        callbacks: {
+                            onImageUploadError: function (msg) {
+                                // console.log(msg + ' (1 MB)');
+                            }
+                        }
+                    });
+                let material_description = @json($material->description);
+                $('#summernote').summernote('code', material_description);
+            });
         });
-        $('#summernote').summernote({
-            placeholder: 'Enter description',
-            height: "300",
-            maximumImageFileSize: 102400, // 100MB
-            callbacks: {
-                onImageUploadError: function (msg) {
-                    // console.log(msg + ' (1 MB)');
-                }
-            }
-        });
+
 
         function displayImage(input) {
             console.log("test display image");
@@ -482,7 +459,7 @@
             if (element) {
                 element.remove(); // Remove from DOM
             }
-            imageFiles[count] = null;
+            imageFiles[count] = "";
             console.log(`hello image removed at ${count}: `, imageFiles);
         }
 
@@ -561,6 +538,9 @@
             formData.append('year', document.querySelector('select[name="year"]').value);
             formData.append('year', document.querySelector('select[name="year"]').value);
             formData.append('description', document.querySelector('textarea[name="material_description"]').value);
+            // for(var pair of formData.entries()){
+            //     console.log(pair[0], pair[1]);
+            // }
 
             if ($("#main_material_image").val()) {
                 $('#imageError').removeClass("show");
@@ -595,7 +575,7 @@
                 if(name && value) {
                     console.log("yes u did put for normal properties");
                     properties.push({ name, value, type: 'soft' });
-                }else console.log("no norm");
+                }else console.log("no norm");   
             });
             // Technical properties
             document.querySelectorAll('#technical_properties_tableBody tr').forEach(row => {
@@ -640,7 +620,7 @@
             formData.append('_token', "{{ csrf_token() }}");
 
             $.ajax({
-                url: "{{ route('materials.store') }}",
+                url: "{{ route('materials.update', $material->m_id) }}",
                 type: "POST",
                 data: formData,
                 processData: false,
@@ -725,7 +705,7 @@
             });
         }
 
-        function addPropertyRow() {
+        function addPropertyRow(properties, first) {
             let tableBody = document.getElementById('properties_tableBody');
             let currentRows = document.querySelectorAll('#properties_tableBody tr').length;
 
@@ -734,7 +714,7 @@
                             <td style="width:50%">
                                 <div>
                                     <label for="property">Name <span class="text-danger">*</span></label>
-                                    <input class="property-name form-control form-control-xs" name="property_name"
+                                    <input class="property-name form-control form-control-xs" name="property_name" value=properties.property_name ()
                                         style=" width:100%">
                                     
                                 </div>
@@ -742,17 +722,15 @@
                             <td style="width:50%">
                                 <div>
                                     <label for="property">Value <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control form-control-xs" name="property_value"
+                                    <input type="text" class="form-control form-control-xs" name="property_value" value=properties.value
                                         style=" width:100%">
                                     
                                 </div>
-                            </td>
-                            <td>
+                            </td>` + (!first ? `<td>
                                 <div class="mt-1 text-center text-danger">
                                     <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeRow(this)"></i>
                                 </div>
-                            </td>
-                            `;
+                            </td>` : `<td> </td>`);
             tableBody.appendChild(newRow);
         }
         function removeRow(button) {
@@ -763,8 +741,7 @@
             }
         }
 
-        ////////////////////////
-        function addTechnicalPropertyRow() {
+        function addTechnicalPropertyRow(properties, first) {
             let tableBody = document.getElementById('technical_properties_tableBody');
             let currentRows = document.querySelectorAll('#technical_properties_tableBody tr').length;
 
@@ -773,7 +750,7 @@
                 <td style="width:50%">
                     <div>
                         <label for="property">Name <span class="text-danger">*</span></label>
-                        <input class="form-control form-control-xs validate" name="technical_property_name"
+                        <input class="form-control form-control-xs validate" name="technical_property_name" value=properties.property_name
                             style="width:100%">
                         
                     </div>
@@ -781,17 +758,16 @@
                 <td style="width:50%">
                     <div>
                         <label for="property">Value <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control form-control-xs validate" name="technical_property_value"
+                        <input type="text" class="form-control form-control-xs validate" name="technical_property_value" value=properties.value
                             style=" width:100%">
                         
                     </div>
-                </td>
-                <td>
-                    <div class="mt-1 text-center text-danger">
-                        <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeTechRow(this)"></i>
-                    </div>
-                </td>
-                `;
+                </td>` + (!first ? `<td>
+                                <div class="mt-1 text-center text-danger">
+                                    <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeRow(this)"></i>
+                                </div>
+                            </td>` : `<td> </td>`);
+                
             tableBody.appendChild(newRow);
         }
 
@@ -803,7 +779,7 @@
             }
         }
 
-        function addSustainabilityRow() {
+        function addSustainabilityRow(properties, first) {
             let tableBody = document.getElementById('sustainability_tableBody');
             let currentRows = document.querySelectorAll('#sustainability_tableBody tr').length;
 
@@ -812,7 +788,7 @@
                     <td style="width:50%">
                     <div>
                         <label for="property">Name <span class="text-danger">*</span></label>
-                        <input class="form-control form-control-xs validate" name="sustainability_property_name"
+                        <input class="form-control form-control-xs validate" name="sustainability_property_name" value=properties.property_name
                             style="width:100%">
                         
                     </div>
@@ -820,17 +796,15 @@
                     <td style="width:50%">
                     <div>
                         <label for="property">Value <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control form-control-xs validate" name="sustainability_property_value"
+                        <input type="text" class="form-control form-control-xs validate" name="sustainability_property_value" value=properties.property_name
                             style=" width:100%">
                         
                     </div>
-                    </td>
-                    <td>
-                    <div class="mt-1 text-center text-danger">
-                        <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeSusRow(this)"></i>
-                    </div>
-                    </td>
-                    `;
+                    </td>` + (!first ? `<td>
+                                <div class="mt-1 text-center text-danger">
+                                    <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeRow(this)"></i>
+                                </div>
+                            </td>` : `<td> </td>`);
             tableBody.appendChild(newRow);
         }
 

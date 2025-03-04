@@ -89,6 +89,7 @@ class MaterialController extends Controller
 
     public function update(Request $request, $m_id)
     {
+        dd("hello u reached update");
         return $this->handleMaterialRequest($request, $m_id);
     }
 

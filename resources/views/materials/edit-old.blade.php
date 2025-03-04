@@ -417,20 +417,20 @@
                 let reader = new FileReader();
                 reader.onload = function (e) {
                     let newDiv = document.createElement('div');
-                    newDiv.classList.add('image-container'); // Assign class for CSS styling
+                    newDiv.classList.add('image-container'); 
 
                     let img = document.createElement('img');
                     img.src = e.target.result;
                     // console.log("cursed e target result sent", img.src);
-                    img.classList.add('preview-image'); // Assign class for CSS styling
+                    img.classList.add('preview-image'); 
                     img.id = `preview-image-${imageCount}`;
 
-                    let hoverOverlay = document.createElement('div'); // Grayed-out effect on hover
+                    let hoverOverlay = document.createElement('div'); 
                     hoverOverlay.classList.add('hover-overlay');
 
-                    let toolOverlay = document.createElement('div'); // Small tool overlay
+                    let toolOverlay = document.createElement('div'); 
                     toolOverlay.classList.add('tool-overlay');
-                    toolOverlay.innerHTML = '<i class="fa fa-trash"></i>'; // FontAwesome trash icon
+                    toolOverlay.innerHTML = '<i class="fa fa-trash"></i>'; 
 
                     var currentCount = imageCount;
                     console.log(`this the count of ${img.id} right now: `, currentCount);
@@ -439,7 +439,6 @@
                         deleteSubImage(newDiv, currentCount); 
                     });
 
-                    // Append elements in the correct order
                     newDiv.appendChild(img);
                     newDiv.appendChild(hoverOverlay);
                     newDiv.appendChild(toolOverlay);

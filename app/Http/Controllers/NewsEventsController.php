@@ -32,11 +32,13 @@ class NewsEventsController extends Controller
 
         if ($request->has('date_from') && $request->input('date_from')) {
             $dateFrom = date('Y-m-d 00:00:00', strtotime($request->date_from));
+            $date_from = $request->date_from;
             $query->where('date', '>=', $dateFrom);
         }
 
         if ($request->has('date_to') && $request->input('date_to')) {
             $dateTo = date('Y-m-d 23:59:59', strtotime($request->date_to));
+            $date_to = $request->date_to;
             $query->where('date', '<=', $dateTo);
         }
 

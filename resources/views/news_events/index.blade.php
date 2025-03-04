@@ -60,7 +60,7 @@
                             </select>
                         </div>
 
-                        <div class="col-lg-3 col-md-3">
+                        <div class="col-lg-4 col-md-4">
                             <label class="form-label">Date Range</label>
                             <div class="input-group input-daterange">
                                 <input type="text" class="form-control" id="date_from" name="date_from" value="{{ $date_from }}" placeholder="Start Date">
@@ -92,7 +92,7 @@
                         <tbody>
                             @foreach($news_events as $ne)
                                 <tr>
-                                    <td class="text-center" width="10%">{{ date('d-m-Y', strtotime($ne->date)) }}</td>
+                                    <td class="text-center" width="10%">{{ date('m-d-Y', strtotime($ne->date)) }}</td>
                                     <td class="text-center" id="name" style="cursor: pointer"
                                         onclick="location.href='/news_events/{{ $ne->ne_id }}/edit'">{{ $ne->title }}</td>
                                     <td class="text-center" width="10%">
@@ -150,7 +150,6 @@
         var exit = false;
         $('.input-daterange').datepicker({
             format: "mm/dd/yyyy",
-            endDate: new Date(),
         });
         $('.input-daterange').focusin(function(e) {
             userTarget = e.target.name;

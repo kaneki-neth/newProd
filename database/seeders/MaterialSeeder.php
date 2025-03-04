@@ -54,19 +54,11 @@ class MaterialSeeder extends Seeder
                 ['type', '=', $type],
             ])->first();
 
-            $propertyId = $property ? $property->p_id : DB::table('properties')->insertGetId([
+            $property ? $property->p_id : DB::table('properties')->insertGetId([
                 'name' => 'Test Property '.ucfirst($type),
-                'type' => $type,
-                'created_by' => 1,
-                'updated_by' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-
-            DB::table('item_properties')->insert([
-                'm_id' => $materialId,
                 'value' => 'test property '.$type.' '.$idx,
-                'p_id' => $propertyId,
+                'type' => $type,
+                'm_id' => $materialId,
                 'created_by' => 1,
                 'updated_by' => 1,
                 'created_at' => now(),

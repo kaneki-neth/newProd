@@ -46,11 +46,11 @@
     <h1 class="page-header">View Material</h1>
 
     <!-- make new -->
-
+    
     <div class="panel panel-inverse">
         <div class="panel-body" id="pannel-body">
             <div class="d-flex justify-content-end">
-                <button class="btn btn-primary btn-xs">
+                <button class="btn btn-primary btn-xs" onclick="window.location.href='/material/{{$material->m_id}}/edit'">
                     Update</button>
             </div>
             <div class="row mb-3 g-0" style="margin: 0px;">

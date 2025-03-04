@@ -45,7 +45,7 @@ class MaterialController extends Controller
         $material = DB::table('materials')
             ->where('m_id', $id)
             ->first();
-
+        
         $categories = DB::table('categories')->orderBy('name', 'asc')->get();
         $selectedCategories = DB::table('item_categories')
             ->where('m_id', $id)
@@ -56,14 +56,30 @@ class MaterialController extends Controller
             ->leftJoin('properties', 'item_properties.p_id', '=', 'properties.p_id')
             ->select('item_properties.*', 'properties.name as property_name', 'properties.type')
             ->where('m_id', $id)
-            ->get();
+            ->where('properties.type', '=', "soft")
+            ->get(); 
 
+        $techProperties = DB::table('item_properties')
+                ->leftJoin('properties', 'item_properties.p_id', '=', 'properties.p_id')
+                ->select('item_properties.*', 'properties.name as property_name', 'properties.type')
+                ->where('m_id', $id)
+                ->where('properties.type', '=', "technical")
+                ->get();
+
+
+        $susProperties = DB::table('item_properties')
+                ->leftJoin('properties', 'item_properties.p_id', '=', 'properties.p_id')
+                ->select('item_properties.*', 'properties.name as property_name', 'properties.type')
+                ->where('m_id', $id)
+                ->where('properties.type', '=', "application")
+                ->get();
+        
         $images = DB::table('material_images')
             ->where('m_id', $id)
             ->pluck('image_file')
             ->toArray();
 
-        return view('materials.edit', compact('material', 'categories', 'selectedCategories', 'properties', 'images'));
+        return view('materials.edit', compact('material', 'categories', 'selectedCategories', 'properties', 'techProperties', 'susProperties', 'images'));
     }
 
     public function store(Request $request)
@@ -73,13 +89,14 @@ class MaterialController extends Controller
 
     public function update(Request $request, $m_id)
     {
+        dd("hello u reached update");
         return $this->handleMaterialRequest($request, $m_id);
     }
 
     public function show(string $m_id)
     {
         $material = DB::table('materials')
-            ->select('materials.material_code', 'materials.name', 'materials.description', 'materials.year')
+            ->select('materials.material_code', 'materials.name', 'materials.description', 'materials.year', 'm_id')
             ->where('m_id', $m_id)
             ->first();
 
@@ -162,7 +179,7 @@ class MaterialController extends Controller
                 'errors' => $validator->getMessageBag()->toArray(),
             ], 400);
         }
-
+        
         $storedImagePaths = [];
         try {
             DB::beginTransaction();
@@ -170,9 +187,11 @@ class MaterialController extends Controller
             $mainImagePath = $request->file('mainImage')->store('material_images', 'public');
             $storedImagePaths[] = $mainImagePath;
             $materialId = $this->createOrUpdateMaterial($request, $mainImagePath, $materialId);
-
+            
             $this->syncCategories($materialId, $request->input('categories'));
-            $this->syncProperties($materialId, $request->input('properties'));
+            if($request->input('properties')){
+                $this->syncProperties($materialId, $request->input('properties'));
+            }
 
             if ($request->hasFile('imageFiles')) {
                 $storedImagePaths = array_merge(
@@ -182,7 +201,6 @@ class MaterialController extends Controller
             }
 
             DB::commit();
-
             return response()->json([
                 'success' => true,
                 'message' => 'Material ' . ($materialId ? 'updated' : 'created') . ' successfully',
@@ -330,9 +348,11 @@ class MaterialController extends Controller
     // material_images table
     protected function uploadAndStoreImages($materialId, $imageFiles)
     {
+        DB::table('material_images')->where('m_id', $materialId)->delete();
+        
         $storedPaths = [];
         $imageData = [];
-
+        
         foreach ($imageFiles as $file) {
             $path = $file->store('material_images', 'public');
             $storedPaths[] = $path;

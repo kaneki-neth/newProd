@@ -9,6 +9,10 @@
         html, body {
             overflow-x: hidden;
         }
+
+        td, th {
+            border: none;
+        }
         
         .image-container {
             position: relative;
@@ -57,6 +61,12 @@
             justify-content: center;
             opacity: 0; /* Initially hidden */
             transition: opacity 0.3s ease;
+        }
+
+        .delete-option {
+            position: absolute;
+            top: 50%;
+            left: 50%;
         }
 
         /* Trash Icon inside Tool Overlay */
@@ -156,6 +166,7 @@
     <div class="panel panel-inverse">
         <div class="panel-body" id="pannel-body" style="padding: 65px !important;">
             <form method="POST" id="form-update-materials">
+                @csrf
                 <div class="row mb-3 g-0" style="margin: 0px;">
                     <!-- diri content sa left -->
                     <div class="col-8">
@@ -204,11 +215,10 @@
                     <!-- Description module -->
                     <div class="row mt-3 g-0">
                         <div class="alert alert-yellow fade" style="display: none;" id="descriptionError"></div>
-                        <label for="material_description" class="form-label">Description <span class="text-danger">*</span></label>
+                        <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
                         <div class="border" style="border-radius: 4px">
-                            <textarea class="textarea form-control" name="material_description" id="summernote"
+                            <textarea class="textarea form-control" name="description" id="summernote"
                                 placeholder="Enter text ..." rows="12">
-                                {{ old('material_description', $material->description) }}
                             </textarea>
                         </div>
                     </div>
@@ -261,9 +271,9 @@
                                                     </td>  
                                                 </tr>
                                             @endforeach
-                                            
                                         </tbody>
                                     </table>
+
                                     <table class="technical_properties_table table table-responsive"
                                         id="technical_properties_table" style="border-radius: 4px;">
                                         <thead class="table-light">
@@ -290,20 +300,20 @@
                                                     <td style="width:50%">
                                                         <div>
                                                             <label for="property">Name <span class="text-danger">*</span></label>
-                                                            <input class="property-name form-control form-control-xs" name="property_name[]" value="{{$techprop->name}}" style=" width:100%">
+                                                            <input class="property-name form-control form-control-xs" name="tech_property_name[]" value="{{$techprop->name}}" style=" width:100%">
                                                             
                                                         </div>
                                                     </td>
                                                     <td style="width:50%">
                                                         <div>
                                                             <label for="property">Value <span class="text-danger">*</span></label>
-                                                            <input type="text" class="form-control form-control-xs" name="property_value[]" value="{{$techprop->value}}" style=" width:100%">
+                                                            <input type="text" class="form-control form-control-xs" name="tech_property_value[]" value="{{$techprop->value}}" style=" width:100%">
                                                             
                                                         </div>
                                                     </td>
-                                                    <td>
+                                                    <td></td>
                                                         <div class="mt-1 text-center text-danger">
-                                                            <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeRow(this)"></i>
+                                                            <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeTechRow(this)"></i>
                                                         </div>
                                                     </td>  
                                                 </tr>
@@ -335,20 +345,20 @@
                                                     <td style="width:50%">
                                                         <div>
                                                             <label for="property">Name <span class="text-danger">*</span></label>
-                                                            <input class="property-name form-control form-control-xs" name="property_name[]" value="{{$appprop->name}}" style=" width:100%">
+                                                            <input class="property-name form-control form-control-xs" name="app_property_name[]" value="{{$appprop->name}}" style=" width:100%">
                                                             
                                                         </div>
                                                     </td>
                                                     <td style="width:50%">
                                                         <div>
                                                             <label for="property">Value <span class="text-danger">*</span></label>
-                                                            <input type="text" class="form-control form-control-xs" name="property_value[]" value="{{$techprop->value}}" style=" width:100%">
+                                                            <input type="text" class="form-control form-control-xs" name="app_property_value[]" value="{{$techprop->value}}" style=" width:100%">
                                                             
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="mt-1 text-center text-danger">
-                                                            <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeRow(this)"></i>
+                                                            <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeSusRow(this)"></i>
                                                         </div>
                                                     </td>  
                                                 </tr>
@@ -393,8 +403,9 @@
                 </div>
             
                 <div class="d-flex justify-content-start">
-                    <button class="btn btn-primary btn-md" type="submit" style="margin: 10px;" onclick="submitData()">
-                        <i class="fa fa-plus"></i> Submit
+                    <button class="btn btn-primary btn-md" type="submit" style="margin: 10px;" >
+                        <i class="fa fa-plus"></i> 
+                        Submit
                     </button>
                 </div>
             </form>
@@ -403,43 +414,462 @@
     
     <script src="/assets/js/jquery-3.6.4.min.js"></script>
     <script src="/assets/plugins/select2/dist/js/select2.min.js"></script>
-    <script src="../assets/plugins/blueimp-load-image/js/load-image.all.min.js"></script>
-    <script src="../assets/plugins/blueimp-file-upload/js/vendor/jquery.ui.widget.js"></script>
-    <script src="../assets/plugins/blueimp-file-upload/js/jquery.fileupload.js"></script>
-    <script src="../assets/plugins/blueimp-file-upload/js/jquery.fileupload-process.js"></script>
-    <script src="../assets/plugins/blueimp-file-upload/js/jquery.fileupload-image.js"></script>
-    <script src="../assets/plugins/blueimp-file-upload/js/jquery.fileupload-ui.js"></script>
-    <script src="../assets/plugins/blueimp-file-upload/js/jquery.fileupload-validate.js"></script>
-    <script src="../assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/assets/plugins/blueimp-load-image/js/load-image.all.min.js"></script>
+    <script src="/assets/plugins/blueimp-file-upload/js/vendor/jquery.ui.widget.js"></script>
+    <script src="/assets/plugins/blueimp-file-upload/js/jquery.fileupload.js"></script>
+    <script src="/assets/plugins/blueimp-file-upload/js/jquery.fileupload-process.js"></script>
+    <script src="/assets/plugins/blueimp-file-upload/js/jquery.fileupload-image.js"></script>
+    <script src="/assets/plugins/blueimp-file-upload/js/jquery.fileupload-ui.js"></script>
+    <script src="/assets/plugins/blueimp-file-upload/js/jquery.fileupload-validate.js"></script>
+    <script src="/assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $.getScript("/assets/plugins/summernote/dist/summernote-lite.min.js", function() {
-                    $('#summernote').summernote({
-                        placeholder: 'Enter description',
-                        height: "300",
-                        maximumImageFileSize: 102400000, // 100MB
-                        callbacks: {
-                            onImageUploadError: function (msg) {
-                                // console.log(msg + ' (1 MB)');
-                            }
-                        }
+        let imageCount = 0;
+        let imageFiles = [];
+        let mainImage;
+        const MAX_FILE_SIZE = 100 * 1024 * 1024;
+
+        function displayImage(input) {
+            console.log("test display image");
+            if (input.files.length > 0) {
+                let file = input.files[0];
+                if (file.size > MAX_FILE_SIZE) {
+                    swal("File is too large! Please select an image that is 100MB or under.");
+                    return;
+                }
+
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    let newDiv = document.createElement('div');
+                    newDiv.classList.add('image-container'); 
+
+                    let img = document.createElement('img');
+                    img.src = e.target.result;
+                    // console.log("cursed e target result sent", img.src);
+                    img.classList.add('preview-image'); 
+                    img.id = `preview-image-${imageCount}`;
+
+                    let hoverOverlay = document.createElement('div'); 
+                    hoverOverlay.classList.add('hover-overlay');
+
+                    let toolOverlay = document.createElement('div'); 
+                    toolOverlay.classList.add('tool-overlay');
+                    toolOverlay.innerHTML = '<i class="fa fa-trash"></i>'; 
+
+                    var currentCount = imageCount;
+                    console.log(`this the count of ${img.id} right now: `, currentCount);
+                    
+                    toolOverlay.addEventListener('click', function() {
+                        deleteSubImage(newDiv, currentCount); 
                     });
-                let material_description = @json($material->description);
-                $('#summernote').summernote('code', material_description);
+
+                    newDiv.appendChild(img);
+                    newDiv.appendChild(hoverOverlay);
+                    newDiv.appendChild(toolOverlay);
+
+                    document.getElementById('imageGallery').appendChild(newDiv);
+                    imageFiles.push(file);
+                    imageCount++;
+
+                };
+
+                reader.readAsDataURL(file);
+            }
+            console.log("this the current imageFiles list", imageFiles);
+        }
+
+        function deleteSubImage(element, count) { 
+            if (element) {
+                element.remove(); // Remove from DOM
+            }
+            imageFiles[count] = "";
+            console.log(`hello image removed at ${count}: `, imageFiles);
+        }
+
+        function displayMainImage(input) {
+            console.log("hello wawahahiawjhoaihahaoj");
+            
+            if(input) {
+                let file = input.files[0];
+                console.log(typeof file);
+                console.log("file object from input or file list", file);
+                
+                if (file.size > MAX_FILE_SIZE) {
+                        //dapat swal ni
+                        swal("File is too large! Please select an image that is 100MB or under.");
+                        return;
+                    }
+
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    console.log("this is the file object inside readeronload", file);
+                    mainImage = file;
+                    console.log("this is after setting mainImage to file", mainImage);
+                    updateMainImageItself(e.target.result);
+                };
+                reader.readAsDataURL(file); 
+            }
+            console.log("u inputted in mainImage and set as file object now", mainImage);
+        }
+        
+        function updateMainImageItself(mainImgSrc) {
+            console.log("reached update updateMainImageItself fcn");
+            
+            let img = document.getElementById('mainImage');
+            img.src = mainImgSrc;
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'cover';
+        }
+
+        // update main image sa taas
+        function updateMainImage(imageId) {
+
+            let clickedImage = document.getElementById(imageId);
+            console.log("this the imageId for clickedImage", clickedImage.id);
+            
+            if (!clickedImage) return;
+
+            let img = document.getElementById('mainImage');
+
+            img.src = clickedImage.src;
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'cover';
+        }
+
+        function addPropertyRow() {
+            let tableBody = document.getElementById('properties_tableBody');
+            let currentRows = document.querySelectorAll('#properties_tableBody tr').length;
+            
+            let newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                            <td style="width:50%">
+                                <div>
+                                    <label for="property">Name <span class="text-danger">*</span></label>
+                                    <input class="property-name form-control form-control-xs" name="property_name"
+                                        style=" width:100%">
+                                    
+                                </div>
+                            </td>
+                            <td style="width:50%">
+                                <div>
+                                    <label for="property">Value <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control form-control-xs" name="property_value"
+                                        style=" width:100%">
+                                    
+                                </div>
+                            </td>
+                            <td>
+                                <div class="mt-1 text-center text-danger">
+                                    <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeRow(this)"></i>
+                                </div>
+                            </td>
+                            `;
+            tableBody.appendChild(newRow);
+        }
+
+        function addTechnicalPropertyRow() {
+            let tableBody = document.getElementById('technical_properties_tableBody');
+            let currentRows = document.querySelectorAll('#technical_properties_tableBody tr').length;
+
+            let newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td style="width:50%">
+                    <div>
+                        <label for="property">Name <span class="text-danger">*</span></label>
+                        <input class="form-control form-control-xs validate" name="technical_property_name"
+                            style="width:100%">
+                        
+                    </div>
+                </td>
+                <td style="width:50%">
+                    <div>
+                        <label for="property">Value <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-xs validate" name="technical_property_value"
+                            style=" width:100%">
+                        
+                    </div>
+                </td>
+                <td>
+                    <div class="mt-1 text-center text-danger">
+                        <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeTechRow(this)"></i>
+                    </div>
+                </td>
+                    `;
+                
+            tableBody.appendChild(newRow);
+        }
+
+        function addSustainabilityRow(properties, first) {
+            let tableBody = document.getElementById('sustainability_tableBody');
+            let currentRows = document.querySelectorAll('#sustainability_tableBody tr').length;
+
+            let newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                    <td style="width:50%">
+                    <div>
+                        <label for="property">Name <span class="text-danger">*</span></label>
+                        <input class="form-control form-control-xs validate" name="sustainability_property_name"
+                            style="width:100%">
+                        
+                    </div>
+                    </td>
+                    <td style="width:50%">
+                    <div>
+                        <label for="property">Value <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-xs validate" name="sustainability_property_value"
+                            style=" width:100%">
+                        
+                    </div>
+                    </td>
+                    <td>
+                        <div class="mt-1 text-center text-danger">
+                            <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeSusRow(this)"></i>
+                        </div>
+                    </td>
+                    `;
+            tableBody.appendChild(newRow);
+        }
+
+        function removeSusRow(button) {
+            let currentRows = document.querySelectorAll('#sustainability_tableBody tr').length;
+            let row = button.closest('tr');
+            if (currentRows > 1) {
+                row.remove();
+            }
+        }
+
+        function removeTechRow(button) {
+            let currentRows = document.querySelectorAll('#technical_properties_tableBody tr').length;
+            let row = button.closest('tr');
+            if (currentRows > 1) {
+                row.remove();
+            }
+        }
+        
+        function removeRow(button) {
+            let currentRows = document.querySelectorAll('#properties_tableBody tr').length;
+            let row = button.closest('tr');
+            if (currentRows > 1) {
+                row.remove();
+            }
+        }
+        
+        var deleteOldSubImageIds = [];
+        $(document).ready(function () {
+            // Add input handler for all input fields
+            $('#imageError').removeClass("show");
+            $('#imageError').hide();
+            $('#imageError').empty();
+            $('#descriptionError').removeClass("show");
+            $('#descriptionError').hide();
+            $('#descriptionError').empty();
+            $(document).on('input', '.validate', function () {
+                let $field = $(this);
+                // Remove invalid class
+                $field.removeClass('is-invalid');
+                // Remove error messages (both types)
+                $field.siblings('.error-message').text('');
+                $field.siblings('.error-message-sub').text('');
+                // Reset border color
+                $field.css('border-color', '#ced4da');
+                console.log("docu input .validate");
             });
+
+            // Select2 initialization with validation clear
+            $('#multiple-select-field').select2({ placeholder: "Select Categories", width: "100%" })
+                .on('change', function () {
+                    // Clear validation styling when user makes a selection
+                    $(this).next('.select2-container')
+                        .find('.select2-selection--multiple')
+                        .removeClass('is-invalid');
+                    $(this).siblings('.error-message').text('');
+                    $(this).siblings('.error-message-sub').text('');
+                });
+
+            let material = @json($material);
+            $('#mainImage').attr('src', '/storage/' + material.image_file + '?t=' + new Date().getTime())
+            $.getScript("/assets/plugins/summernote/dist/summernote-lite.min.js", function() {
+                $('#summernote').summernote({
+                    placeholder: 'Enter description',
+                    height: "300",
+                    maximumImageFileSize: 102400000, // 100MB
+                    callbacks: {
+                        onImageUploadError: function (msg) {
+                            // console.log(msg + ' (1 MB)');
+                        }
+                    }
+                });
+                $('#summernote').summernote('code', material.description);
+            });
+
+            let oldSubImages = @json($images);
+            if(oldSubImages) {
+                oldSubImages.forEach(sub_image => {
+                    imagePath = '/storage/' + sub_image.image_file + '?t=' + new Date().getTime();
+
+                    let newDiv = document.createElement('div');
+                    newDiv.classList.add('image-container');
+
+                    let img = document.createElement('img');
+                    img.src = imagePath;
+                    img.classList.add('preview-image');
+
+                    let hoverOverlay = document.createElement('div');
+                    hoverOverlay.classList.add('hover-overlay');
+
+                    let toolOverlay = document.createElement('div');
+                    toolOverlay.classList.add('tool-overlay');
+                    toolOverlay.innerHTML = '<i class="fa fa-trash"></i>';
+
+                    toolOverlay.addEventListener('click', function() {
+                        let mi_id = sub_image.mi_id;
+                        deleteOldSubImage(newDiv, mi_id);
+                    });
+
+                    newDiv.appendChild(img);
+                    newDiv.appendChild(hoverOverlay);
+                    newDiv.appendChild(toolOverlay);
+
+                    document.getElementById('imageGallery').appendChild(newDiv);
+                });
+            }
         });
+
+        function deleteOldSubImage(element, id) {
+            deleteOldSubImageIds.push(id);
+            element.remove();
+        }
 
         $( "#form-update-materials" ).on( "submit", function( event ) {
             event.preventDefault();
 
             let formData = new FormData(this);
-            formData.append('_token', '{{ csrf_token() }}');
-                
-                
 
+            //---------------------------------------------------------------
+            let properties = [];
+            let propertyNames = document.getElementsByName('property_name[]');
+            let techPropertyNames = document.getElementsByName('tech_property_name[]');
+            let appPropertyNames = document.getElementsByName('app_property_name[]');
+            let propertyValues = document.getElementsByName('property_value[]');
+            let techPropertyValues = document.getElementsByName('tech_property_value[]');
+            let appPropertyValues = document.getElementsByName('app_property_value[]');
+
+            for (let i = 0; i < propertyNames.length; i++) {
+                properties.push({
+                    name: propertyNames[i].value,
+                    value: propertyValues[i].value,
+                    type: 'soft'
+                });
+            }
+
+            for (let i = 0; i < techPropertyNames.length; i++) {
+                properties.push({
+                    name: techPropertyNames[i].value,
+                    value: techPropertyValues[i].value,
+                    type: 'technical'
+                });
+            }
+
+            for (let i = 0; i < appPropertyNames.length; i++) {
+                properties.push({
+                    name: appPropertyNames[i].value,
+                    value: appPropertyValues[i].value,
+                    type: 'application'
+                });
+            }
+
+            properties.forEach((property, index) => {
+                formData.append(`properties[${index}][name]`, property.name);
+                formData.append(`properties[${index}][value]`, property.value);
+                formData.append(`properties[${index}][type]`, property.type);
+            });
+
+            imageFiles.forEach((file, index) => {
+                formData.append('imageFiles[]', file);
+            });
+
+            if($('#main_material_image')[0].files[0]){
+                formData.append('mainImage', $('#main_material_image')[0].files[0]);
+            }
+            //---------------------------------------------------------------
+
+            deleteOldSubImageIds.forEach(id => {
+                formData.append('deleteOldSubImageIds[]', id);
+            });
+
+            formData.append('_token', '{{ csrf_token() }}');
+            for(var pair of formData.entries()){
+                console.log(pair[0], pair[1]);
+            }
+
+            $.ajax({
+                url: "{{ route('materials.update', $material->m_id) }}",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    console.log("work??????????");
+                    
+                    console.log(response);
+                    // Handle success - maybe redirect or show success message
+                    showLoading();
+                    setTimeout(() => {
+                        showSuccessMessage("Material created successfully!", "{{ route('materials.index') }}");
+                    }, 2000);
+
+                },
+                error: function (xhr) {
+                    if (xhr.status === 400) {
+                        const errors = xhr.responseJSON.errors;
+                        console.log("these the errors: ", errors);
+                        // Display each error message
+                        Object.keys(errors).forEach(field => {
+                            console.log("the field currently is: ", field);
+                            const errorMessage = errors[field][0];
+                            const inputField = $(`[name="${field}"]`);
+                            
+                            if (field === "mainImage") {
+                                console.log("wow mainimage field error");
+                                $('#imageError').addClass("show");
+                                $('#imageError').show();
+                                $('#imageError').text(errorMessage);
+                            }
+                            if (field === "description"){
+                                $('#descriptionError').addClass("show");
+                                $('#descriptionError').show();
+                                $('#descriptionError').text(errorMessage);
+                            }
+
+                            if (inputField.hasClass('select2')) {
+                                // Handle Select2 fields
+                                inputField.next('.select2-container')
+                                    .find('.select2-selection--multiple')
+                                    .addClass('is-invalid');
+                            } else {
+                                // Handle regular inputs
+                                inputField.addClass('is-invalid');
+                            }
+
+                            // Display error message
+                            const errorSpan = inputField.siblings('.error-message');
+                            if (errorSpan.length) {
+                                errorSpan.text(errorMessage);
+                            } else {
+                                // For select2, add error message after the select2 container
+                                if (inputField.hasClass('select2')) {
+                                    inputField.next('.select2-container').after(`<span class="error-message">${errorMessage}</span>`);
+                                } else {
+                                    inputField.after(`<span class="error-message">${errorMessage}</span>`);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
         });
 
 
     </script>
-      
 @endsection

@@ -227,12 +227,13 @@
         if(subImages) {
             subImages.forEach(sub_image => {
                 imagePath = '/storage/' + sub_image.image_file + '?t=' + new Date().getTime();
-                
+
                 let newDiv = document.createElement('div');
                 newDiv.classList.add('image-container');
-                
+
                 let img = document.createElement('img');
                 img.src = imagePath;
+                img.classList.add('preview-image');
 
                 let hoverOverlay = document.createElement('div');
                 hoverOverlay.classList.add('hover-overlay');

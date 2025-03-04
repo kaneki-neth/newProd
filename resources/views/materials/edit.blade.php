@@ -427,14 +427,14 @@
                 let material_description = @json($material->description);
                 $('#summernote').summernote('code', material_description);
             });
-        }
+        });
 
         $( "#form-update-materials" ).on( "submit", function( event ) {
             event.preventDefault();
 
             let formData = new FormData(this);
             formData.append('_token', '{{ csrf_token() }}');
-
+                
                 
 
         });

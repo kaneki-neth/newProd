@@ -137,6 +137,11 @@ class NewsEventsController extends Controller
 
             DB::commit();
 
+            if ($request->has('subImagesToDelete')) {
+                $sub_image_ids = $request->input('subImagesToDelete');
+                DB::table('news_events_images')->whereIn('nei_id', $sub_image_ids)->delete();
+            }
+
             $message = $ne_id
                 ? ($category == 'news' ? 'News updated successfully.' : 'Event updated successfully.')
                 : ($category == 'news' ? 'News created successfully.' : 'Event created successfully.');
@@ -166,6 +171,8 @@ class NewsEventsController extends Controller
             'mainImage' => ($ne_id ? 'sometimes' : 'required').'|image|mimes:jpeg,png,jpg,gif,svg|max:102400',
             'sub_images' => 'sometimes|array',
             'sub_images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:102400',
+            'subImagesToDelete' => 'sometimes|array',
+            'subImagesToDelete.*' => 'integer',
         ], messages: [
             'category.required' => 'The category is required.',
             'title.required' => 'The title field is required.',
@@ -204,16 +211,5 @@ class NewsEventsController extends Controller
         foreach ($imagePaths as $imagePath) {
             Storage::disk('public')->delete($imagePath);
         }
-    }
-
-    public function deleteSubImage($sub_image_id)
-    {
-        $imagePath = DB::table('news_events_images')->where('nei_id', $sub_image_id)->value('image_file');
-        if ($imagePath) {
-            Storage::disk('public')->delete($imagePath);
-        }
-        DB::table('news_events_images')->where('nei_id', $sub_image_id)->delete();
-
-        return response()->json(['success' => true], 200);
     }
 }

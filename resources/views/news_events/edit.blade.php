@@ -202,6 +202,7 @@
 <script src="/assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
 <script src="/assets/plugins/select2/dist/js/select2.min.js"></script>
 <script>
+    var deleteOldSubImageIds = [];
     $(document).ready(function() {
         let subImages = @json($subImages);
         let news_event = @json($news_event);
@@ -258,21 +259,8 @@
     });
 
     function deleteOldSubImage(element, id) {
-        url = '/news_events/delete_sub_image/' + id;
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-            },
-            success: function(response) {
-                // console.log(response);
-                element.remove();
-            },
-            error: function(xhr, status, error) {
-                // console.log(error);
-            }
-        });
+        deleteOldSubImageIds.push(id);
+        element.remove();
     }
 
     $('#date').datepicker({
@@ -281,8 +269,7 @@
         todayHighlight: true,
         orientation: "bottom"
     });
-</script>
-<script>
+
     function displayMainImage(input) {
         $('mainImagePreview').css('border', '1px solid #ccc');
         $('#mainImage-msg').text('');
@@ -357,6 +344,9 @@
         if($('#mainImage')[0].files[0]){
             formData.append('mainImage', $('#mainImage')[0].files[0]);
         }
+        deleteOldSubImageIds.forEach(id => {
+            formData.append('subImagesToDelete[]', id);
+        });
 
         imageFiles.forEach((file, index) => {
             if(!deletedImageFileIndexes.includes(index)) {

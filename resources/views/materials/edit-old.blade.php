@@ -529,7 +529,7 @@
 
         });
 
-
+        //ERRORS STARTED HERE AND ADDPROPERTYROW LOGIC 
         function submitData() {
             let formData = new FormData();
             formData.append('code', document.querySelector('input[name="code"]').value);
@@ -562,6 +562,7 @@
             // Collect properties from all tables
             let properties = [];
             // Regular properties (soft)
+            //ERROR HERE
             document.querySelectorAll('#properties_tableBody tr').forEach(row => {
                 console.log("this the row", row);
                 let name = row.querySelector('input[name="property_name"]').value;

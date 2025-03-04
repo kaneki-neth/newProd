@@ -5,8 +5,8 @@
 @section('content')
 
 <link href="/assets/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
-<link href="../assets/plugins/summernote/dist/summernote-lite.css" rel="stylesheet" />
-<link href="../assets/plugins/select2/dist/css/select2.min.css" rel="stylesheet" />
+<link href="/assets/plugins/summernote/dist/summernote-lite.css" rel="stylesheet" />
+<link href="/assets/plugins/select2/dist/css/select2.min.css" rel="stylesheet" />
 
 <style>
     .select2-search { display: none; }
@@ -48,7 +48,7 @@
 
 <ol class="breadcrumb float-xl-end">
     <li class="breadcrumb-item"><a href="{{ route('news_events.index') }}">News and Events</a></li>
-    <li class="breadcrumb-item"><a href="javascript:;">Add News/Event</a></li>
+    <li class="breadcrumb-item"><a href="javascript:;">Edit News/Event</a></li>
 </ol>
 <h1 class="page-header">News and Events List</h1>
 
@@ -59,21 +59,21 @@
                 <div class="form-group">
                     <label for="category" class="form-label">Category <span class="text-danger">*</span></label>
                     <select class="form-control select2" id="category" name="category">
-                        <option value="news">News</option>
-                        <option value="events">Events</option>
+                        <option value="news" {{ $news_event->category == 'news'? 'selected':'' }}>News</option>
+                        <option value="events" {{ $news_event->category == 'events'? 'selected':'' }}>Events</option>
                     </select>
                     <span id="category-msg" class="error-msg text-danger"></span>
                 </div>
 
                 <div class="form-group mt-2">
                     <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="title" name="title" placeholder="Title" onkeyup="remove_error(this)">
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Title">
                     <span id="title-msg" class="error-msg text-danger"></span>
                 </div>
 
                 <div class="form-group mt-2">
                     <label for="date" class="form-label">Date <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="date" name="date" placeholder="Date" onkeyup="remove_error(this)">
+                    <input type="text" class="form-control" id="date" name="date" placeholder="Date">
                     <span id="date-msg" class="error-msg text-danger"></span>
                 </div>
 
@@ -117,30 +117,49 @@
 
 <script src="/assets/js/jquery-3.6.4.min.js"></script>
 <script src="/assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
-<script src="../assets/plugins/summernote/dist/summernote-lite.min.js"></script>
-<script src="../assets/plugins/select2/dist/js/select2.min.js"></script>
+<script src="/assets/plugins/select2/dist/js/select2.min.js"></script>
 <script>
+    $(document).ready(function() {
+        let news_event = @json($news_event);
+        document.querySelector('select[name="category"]').value = news_event.category;
+        $('#title').val(news_event.title);
+        $('#date').val(news_event.date);
+        $('#mainImagePreview').attr('src', '/storage/' + news_event.image_file + '?t=' + new Date().getTime());
+        
+        $.getScript("/assets/plugins/summernote/dist/summernote-lite.min.js", function() {
+            $('#summernote').summernote({
+                placeholder: 'Enter description',
+                height: "300",
+                maximumImageFileSize: 102400000, // 100MB
+                callbacks: {
+                    onImageUploadError: function (msg) {
+                        // console.log(msg + ' (1 MB)');
+                    }
+                }
+            });
+            $('#summernote').summernote('code', news_event.description);
+        });
+
+        if(news_event.sub_images) {
+            news_event.sub_images.forEach(sub_image => {
+                $('#imageGallery').append(
+                    '<div style="border-radius: 4px; flex: 0 0 auto; width: 25%; aspect-ratio: 1/1; background: var(--bs-component-border-color); display: flex; align-items: center; justify-content: center; cursor: pointer;">' +
+                    '<img src="' + sub_image + '" style="width: 100%; height: 100%; object-fit: cover;">' +
+                    '</div>'
+                );
+            });
+        }
+    });
+
     $('#date').datepicker({
         format: 'yyyy-mm-dd',
         autoclose: true,
         todayHighlight: true,
         orientation: "bottom"
     });
-    $('#summernote').summernote({
-        placeholder: 'Enter description',
-        height: "300",
-        maximumImageFileSize: 102400000, // 100MB
-        callbacks: {
-            onImageUploadError: function (msg) {
-                // console.log(msg + ' (1 MB)');
-            }
-        }
-    });
 </script>
 <script>
     function displayMainImage(input) {
-        $('mainImagePreview').css('border', '1px solid #ccc');
-        $('#mainImage-msg').text('');
         if (input.files && input.files[0]) {
             var reader = new FileReader();
             reader.onload = function (e) {
@@ -185,7 +204,7 @@
         }
 
         $.ajax({
-            url: '{{ route("news_events.store") }}',
+            url: '{{ route("news_events.update", ['ne_id' => $news_event->ne_id]) }}',
             type: 'POST',
             data: formData,
             processData: false,

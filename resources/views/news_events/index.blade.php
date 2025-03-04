@@ -94,7 +94,7 @@
                                 <tr>
                                     <td class="text-center" width="10%">{{ date('d-m-Y', strtotime($ne->date)) }}</td>
                                     <td class="text-center" id="name" style="cursor: pointer"
-                                        onclick="location.href='/news_events/edit/{{ $ne->ne_id }}'">{{ $ne->title }}</td>
+                                        onclick="location.href='/news_events/{{ $ne->ne_id }}/edit'">{{ $ne->title }}</td>
                                     <td class="text-center" width="10%">
                                         @if($ne->category == 'event')
                                             <span class="badge" style="background-color: orange;">Event</span>

@@ -52,7 +52,17 @@ class NewsEventsController extends Controller
 
     public function edit($ne_id)
     {
-        //
+        $news_event = DB::table('news_events')
+            ->select('ne_id', 'category', 'title', 'date', 'description', 'image_file')
+            ->where('ne_id', $ne_id)
+            ->first();
+
+        $sub_images = DB::table('news_events_images')
+            ->select('image_file')
+            ->where('ne_id', $ne_id)
+            ->get();
+
+        return view('news_events.edit', compact('news_event', 'sub_images'));
     }
 
     public function store(Request $request)
@@ -82,18 +92,30 @@ class NewsEventsController extends Controller
         try {
             DB::beginTransaction();
 
-            $mainImagePath = $request->file('mainImage')->store('news_events', 'public');
-            $storedImagePaths[] = $mainImagePath;
+            $mainImagePath = null;
+            if ($request->has('mainImage')) {
+                if ($ne_id) {
+                    $oldMainImage = DB::table('news_events')->where('ne_id', $ne_id)->value('image_file');
+                    if ($oldMainImage) {
+                        Storage::disk('public')->delete($oldMainImage);
+                    }
+                }
+                $mainImagePath = $request->file('mainImage')->store('news_events', 'public');
+                $storedImagePaths[] = $mainImagePath;
+            }
             $category = $request->category;
             $data = [
                 'category' => $category,
                 'title' => $request->title,
                 'date' => $request->date,
                 'description' => $request->description,
-                'image_file' => $mainImagePath,
                 'updated_by' => auth()->id(),
                 'updated_at' => now(),
             ];
+
+            if ($request->has('mainImage')) {
+                $data['image_file'] = $mainImagePath;
+            }
 
             if ($ne_id) {
                 DB::table('news_events')->where('ne_id', $ne_id)->update($data);
@@ -136,7 +158,7 @@ class NewsEventsController extends Controller
             'title' => 'required|max:255',
             'date' => 'required|date',
             'description' => 'required',
-            'mainImage' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:102400',
+            'mainImage' => ($ne_id ? 'sometimes' : 'required').'|image|mimes:jpeg,png,jpg,gif,svg|max:102400',
             'sub_images' => 'sometimes|array',
             'sub_images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:102400',
         ], messages: [

@@ -8,4 +8,4 @@ Route::get('/news_events/create', [NewsEventsController::class, 'create'])->name
 Route::post('/news_events/create', [NewsEventsController::class, 'store'])->name('news_events.store');
 Route::get('/news_events/{ne_id}/edit', [NewsEventsController::class, 'edit'])->name('news_events.edit');
 Route::post('/news_events/{ne_id}/edit', [NewsEventsController::class, 'update'])->name('news_events.update');
-Route::post('/news_events/delete_sub_image/{sub_image_id}', [NewsEventsController::class, 'deleteSubImage'])->name('news_events.delete_sub_image');
+Route::get('/news_events/{ne_id}', [NewsEventsController::class, 'show'])->name('news_events.show');

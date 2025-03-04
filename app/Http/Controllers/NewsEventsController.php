@@ -45,6 +45,22 @@ class NewsEventsController extends Controller
         return view('news_events.index', compact('news_events', 'title', 'category', 'date_from', 'date_to'));
     }
 
+    public function show($ne_id)
+    {
+        $news_event = DB::table('news_events')
+            ->select('ne_id', 'category', 'title', 'date', 'description', 'image_file')
+            ->where('ne_id', $ne_id)
+            ->first();
+
+        $subImages = DB::table('news_events_images')
+            ->select('nei_id', 'image_file')
+            ->where('ne_id', $ne_id)
+            ->get()
+            ->toArray();
+
+        return view('news_events.show', compact('news_event', 'subImages'));
+    }
+
     public function create()
     {
         return view('news_events.create');

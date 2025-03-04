@@ -9,27 +9,30 @@
             overflow-x: hidden;
         }
 
-        /* .thumbnail-container {
-                    width: 100%;
-                    max-width: 300px;
-                    aspect-ratio: 1 / 1;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    text-align: center;
-                    font-size: clamp(10px, 2.5vw, 15px);
-                    padding: 10px;
-                    }
+        .dropzone-container {
+            width: 100%;
+            max-width: 300px;
+            /* Adjust as needed */
+            aspect-ratio: 1 / 1;
+            /* Maintain square aspect ratio */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: clamp(10px, 2.5vw, 15px);
+            /* Makes text responsive */
+            padding: 10px;
+        }
 
-                    .thumbnail {
-                    width: 100%;
-                    height: 100%;
-                    min-height: 0;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    flex-direction: column;
-                    } */
+        .dropzone {
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
     </style>
     <link href="../assets/plugins/summernote/dist/summernote-lite.css" rel="stylesheet" />
     <link href="../assets/plugins/dropzone/dist/min/dropzone.min.css" rel="stylesheet" />
@@ -60,31 +63,26 @@
                                 <span class="error-message" style="color: red;"></span>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-2">
                                     <label for="date" class="form-label">Date <span class="text-danger">*</span></label>
                                     <input class="form-control" id="datepicker-autoClose" name="date"
                                         value="{{ now()->format('Y-m-d') }}">
                                     <span class="error-message" style="color: red;"></span>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="video_url" class="form-label">Video URL <span
-                                            class="text-danger">*</span></label>
-                                    <input class="form-control" name="video_url" id="urlInput"
-                                        placeholder="Paste video URL here" {{--
-                                        placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" --}}
-                                        onchange="fetchThumbnail()">
-                                    <span class="error-message" style="color: red;"></span>
-                                </div>
                             </div>
                             <!-- description module here -->
-                            <div class="col-12 mt-6">
+                            <div class="col-mt-6">
                                 <label for="description" class="form-label">Description <span
                                         class="text-danger">*</span></label>
-
                                 <div class="border" style="border-radius: 4px">
                                     <textarea class="textarea form-control" name="description" id="summernote"
                                         placeholder="Enter text ..." rows="12"></textarea>
-                                    <span class="error-message" id="descriptionError" style="color: red;"></span>
+                                    <span class="error-message" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <!-- other details -->
+                            <div class="row">
+                                <div class="col-12 mt-3">
                                 </div>
                             </div>
                         </div>
@@ -97,18 +95,17 @@
                 </div>
                 <div class="col-4 d-flex align-items-end flex-column">
                     <!-- show image content -->
-                    <div class="col-9 thumbnail-container" style="margin-left: auto">
+                    <div class="col-9 dropzone-container" style="margin-left: auto">
                         <!-- main/big image -->
-                        <div style="aspect-ratio: 16 / 9; width: 100%; margin-bottom: 20px;">
-                            <div id="thumbnail" class="d-flex justify-content-center align-items-center border rounded"
-                                style="height: 100%;">
-                                <img id="thumbnailPreview" src=""
-                                    style="max-width: 100%; max-height: 100%; object-fit: cover; display: none; cursor: pointer;"
-                                    onclick="openVideoUrl()" />
-                                <div id="thumbnailPlaceholder" class="text-center text-muted">
-                                    <i class="fa fa-image fa-3x mb-2"></i>
-                                    <p>Video thumbnail will appear here</p>
-                                </div>
+                        <div style=" aspect-ratio: 1 / 1;">
+                            <div id="dropzone">
+                                <form action="/videos/store" class="dropzone needsclick" id="dropzoneVideo" name="video">
+                                    @csrf
+                                    <div class="dz-message needsclick">
+                                        Drop file <b>here</b> or <b>click</b> to upload.<br />
+                                    </div>
+                                </form>
+                                <span class="error-message" style="color: red;"></span>
                             </div>
                         </div>
                     </div>
@@ -127,94 +124,31 @@
                 autoclose: true
             });
 
-            // Clear error message and remove is-invalid class when input changes
-            $("input").on("input", function () {
-                $(this).next(".error-message").text("");
-                $(this).removeClass("is-invalid");
-            });
 
-            $("textarea").on("change", function () {
-                $(this).next(".error-message").text("");
-                $(this).removeClass("is-invalid");
-            });
         });
-
-        function fetchThumbnail() {
-            const urlInput = document.getElementById("urlInput");
-            const thumbnailPreview = document.getElementById("thumbnailPreview");
-            const thumbnailPlaceholder = document.getElementById("thumbnailPlaceholder");
-
-            let url = urlInput.value.trim();
-            if (!url) {
-                thumbnailPreview.style.display = "none";
-                thumbnailPlaceholder.style.display = "block";
-                return;
+        Dropzone.options.dropzoneVideo = {
+            paramName: "video",
+            acceptedFiles: "video/mp4,video/mov,video/avi,video/wmv",
+            maxFiles: 1,
+            maxFilesize: 100,
+            dictInvalidFileType: "Only video files are allowed!",
+            dictFileTooBig: "File is too large! Max size: 100MB",
+            autoProcessQueue: false,
+            init: function () {
+                window.dropzoneInstance = this;
             }
-
-            // Show loading state
-            thumbnailPlaceholder.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>';
-
-            fetch(`/get-thumbnail?url=${encodeURIComponent(url)}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.thumbnail) {
-                        thumbnailPreview.src = data.thumbnail;
-                        thumbnailPreview.style.display = "block";
-                        thumbnailPlaceholder.style.display = "none";
-                    } else {
-                        thumbnailPreview.style.display = "none";
-                        thumbnailPlaceholder.innerHTML = '<i class="fa fa-exclamation-circle fa-3x mb-2"></i><p>Could not load thumbnail</p>';
-                        thumbnailPlaceholder.style.display = "block";
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching thumbnail:', error);
-                    thumbnailPreview.style.display = "none";
-                    thumbnailPlaceholder.innerHTML = '<i class="fa fa-exclamation-circle fa-3x mb-2"></i><p>Error loading thumbnail</p>';
-                    thumbnailPlaceholder.style.display = "block";
-                });
-        }
-
-        // Add event listener for input changes
-        document.getElementById("urlInput").addEventListener('input', debounce(fetchThumbnail, 500));
-
-        // Debounce function to prevent too many API calls
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-
-        // Dropzone.options.dropzoneVideo = {
-        //     paramName: "video",
-        //     acceptedFiles: "video/mp4,video/mov,video/avi,video/wmv",
-        //     maxFiles: 1,
-        //     maxFilesize: 100,
-        //     dictInvalidFileType: "Only video files are allowed!",
-        //     dictFileTooBig: "File is too large! Max size: 100MB",
-        //     autoProcessQueue: false,
-        //     init: function () {
-        //         window.dropzoneInstance = this;
-        //     }
-        // };
+        };
 
 
         function submitData() {
             let formData = new FormData();
 
-            // if (dropzoneInstance.files[0]) {
-            //     formData.append('video', dropzoneInstance.files[0]);
-            // }
+            if (dropzoneInstance.files[0]) {
+                formData.append('video', dropzoneInstance.files[0]);
+            }
 
             formData.append('title', document.querySelector('input[name="title"]').value);
             formData.append('date', document.querySelector('input[name="date"]').value);
-            formData.append('video_url', document.querySelector('input[name="video_url"]').value);
             formData.append('description', document.querySelector('textarea[name="description"]').value);
             console.log(formData);
 
@@ -229,10 +163,7 @@
                 success: function (response) {
                     console.log(response);
                     // Handle success - maybe redirect or show success message
-                    // window.location.href = "{{ route('videos.index') }}";
-                    location.reload();
-                    console.log(response.videoId);
-                    console.log("success");
+                    window.location.href = "{{ route('videos.index') }}";
                 },
                 error: function (xhr) {
                     if (xhr.status === 400) {
@@ -275,31 +206,14 @@
             height: "300",
             maximumImageFileSize: 102400, // 100MB
             toolbar: [
+                // [groupName, [list of button]]
                 ['style', ['bold', 'italic', 'underline', 'clear']],
                 ['font', ['strikethrough', 'superscript', 'subscript']],
                 ['fontsize', ['fontsize']],
                 ['color', ['color']],
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['height', ['height']]
-            ],
-            callbacks: {
-                onChange: function (contents) {
-                    const strippedContent = $('<div>').html(contents).text().trim();
-                    $('#descriptionError').toggle(strippedContent === '');
-                }
-            }
+            ]
         });
-
-        // Show warning initially if empty
-        $(document).ready(function () {
-            $('#descriptionWarning').show();
-        });
-
-        function openVideoUrl() {
-            const url = document.getElementById('urlInput').value.trim();
-            if (url) {
-                window.open(url, '_blank');
-            }
-        }
     </script>
 @endsection

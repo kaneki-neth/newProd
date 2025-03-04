@@ -3,6 +3,13 @@
 @section('title', 'Videos')
 
 @section('content')
+    <style>
+        .scrollable-cell {
+            max-height: 100px;
+            overflow-y: auto;
+        }
+    </style>
+
     <ol class="breadcrumb float-xl-end">
         <li class="breadcrumb-item"><a href="javascript:;">Videos</a></li>
     </ol>
@@ -21,13 +28,32 @@
                         <tr>
                             <th>Title</th>
                             <th>Description</th>
+                            <th>Video URL</th>
+                            <th>Date</th>
+                            <th class="text-center" width="5%">View</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($videos as $video)
                             <tr>
-                                <td>{{ $video->title }}</td>
-                                <td>{{ $video->description }}</td>
+                                <td id="name" style="color:#28acb5" onclick="location.href='/videos/edit/{{ $video->v_id }}'">
+                                    {{ $video->title }}
+                                </td>
+                                <td>
+                                    <div class="scrollable-cell">
+                                        {!! strip_tags($video->description, '<p><a><b><i><u><strong><em><ul><ol><li><img>') !!}
+                                    </div>
+                                </td>
+                                <td id="video_url" style="color:#28acb5"
+                                    onclick="window.open('{{ $video->video_url }}', '_blank')">
+                                    {{ $video->video_url }}
+                                </td>
+                                <td>{{ $video->date }}</td>
+                                <td class="text-center">
+                                    <a href="/videos/show/{{ $video->v_id }}" class="btn btn-primary btn-xs">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

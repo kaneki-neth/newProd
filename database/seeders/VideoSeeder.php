@@ -16,7 +16,7 @@ class VideoSeeder extends Seeder
             'title' => 'Video Title 1',
             'description' => 'Video Description 1',
             'date' => '2025-03-03',
-            'video_file' => null,
+            'video_url' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
             'created_by' => 1,
             'updated_by' => 1,
         ]);
@@ -25,7 +25,7 @@ class VideoSeeder extends Seeder
             'title' => 'Video Title 2',
             'description' => 'Video Description 2',
             'date' => '2025-03-03',
-            'video_file' => null,
+            'video_url' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
             'created_by' => 1,
             'updated_by' => 1,
         ]);

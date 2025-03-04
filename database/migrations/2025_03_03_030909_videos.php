@@ -12,10 +12,11 @@ return new class extends Migration {
     {
         Schema::create('videos', function (Blueprint $table) {
             $table->id('v_id');
-            $table->string('video_file')->nullable();
+            $table->string('video_url')->nullable();
             $table->string('title');
             $table->date('date')->default(now());
-            $table->string('description');
+            $table->longText('description');
+            $table->tinyInteger('status')->default(1);
 
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();

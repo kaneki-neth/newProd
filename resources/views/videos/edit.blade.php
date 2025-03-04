@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Add Video')
+@section('title', 'Edit Video')
 
 @section('content')
     <style>
@@ -8,40 +8,15 @@
         body {
             overflow-x: hidden;
         }
-
-        /* .thumbnail-container {
-                    width: 100%;
-                    max-width: 300px;
-                    aspect-ratio: 1 / 1;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    text-align: center;
-                    font-size: clamp(10px, 2.5vw, 15px);
-                    padding: 10px;
-                    }
-
-                    .thumbnail {
-                    width: 100%;
-                    height: 100%;
-                    min-height: 0;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    flex-direction: column;
-                    } */
     </style>
-    <link href="../assets/plugins/summernote/dist/summernote-lite.css" rel="stylesheet" />
-    <link href="../assets/plugins/dropzone/dist/min/dropzone.min.css" rel="stylesheet" />
-    <script src="../assets/plugins/dropzone/dist/min/dropzone.min.js"></script>
 
-    <link href="../assets/plugins/summernote/dist/summernote-lite.css" rel="stylesheet" />
+    <link href="/assets/plugins/summernote/dist/summernote-lite.css" rel="stylesheet" />
 
     <ol class="breadcrumb float-xl-end">
         <li class="breadcrumb-item"><a href="{{ route('videos.index') }}">Videos</a></li>
-        <li class="breadcrumb-item"><a href="javascript:;">Add Video</a></li>
+        <li class="breadcrumb-item"><a href="javascript:;">Edit Video</a></li>
     </ol>
-    <h1 class="page-header">Add Video</h1>
+    <h1 class="page-header">Edit Video</h1>
 
     <!-- make new -->
 
@@ -51,49 +26,63 @@
                 <!-- diri content sa left -->
                 <div class="col-8">
                     <!-- initial text inputs: name, code, category, year -->
-                    <form action="/videos/store" method="post">
-
+                    <form action="/videos/update/{{ $video->v_id }}" method="post">
+                        @csrf
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control form-control-xs" name="title" placeholder="...">
+                                <input type="text" class="form-control form-control-xs" name="title" placeholder="..."
+                                    value="{{ $video->title }}">
                                 <span class="error-message" style="color: red;"></span>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="date" class="form-label">Date <span class="text-danger">*</span></label>
                                     <input class="form-control" id="datepicker-autoClose" name="date"
-                                        value="{{ now()->format('Y-m-d') }}">
+                                        value="{{ $video->date }}">
                                     <span class="error-message" style="color: red;"></span>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="video_url" class="form-label">Video URL <span
                                             class="text-danger">*</span></label>
                                     <input class="form-control" name="video_url" id="urlInput"
-                                        placeholder="Paste video URL here" {{--
-                                        placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" --}}
+                                        placeholder="Paste video URL here" value="{{ $video->video_url }}"
                                         onchange="fetchThumbnail()">
                                     <span class="error-message" style="color: red;"></span>
                                 </div>
                             </div>
                             <!-- description module here -->
-                            <div class="col-12 mt-6">
+                            <div class="col-mt-6">
                                 <label for="description" class="form-label">Description <span
                                         class="text-danger">*</span></label>
-
                                 <div class="border" style="border-radius: 4px">
                                     <textarea class="textarea form-control" name="description" id="summernote"
-                                        placeholder="Enter text ..." rows="12"></textarea>
+                                        placeholder="Enter text ..."
+                                        rows="12">{!! strip_tags($video->description, '<p><a><b><i><u><strong><em><ul><ol><li><img>') !!}</textarea>
                                     <span class="error-message" id="descriptionError" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <!-- other details -->
+                            <div class="row">
+                                <div class="col-6 mt-3">
+                                    <div class="d-flex justify-content-start">
+                                        <button class="btn btn-primary btn-md" style="margin: 10px;" onclick="submitData()">
+                                            Update
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-6 mt-3">
+                                    <div class="d-flex justify-content-end">
+                                        <label for="enabled" class=" form-label">Enabled </label>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="enabled" name="status"
+                                                checked>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </form>
-                    <div class="d-flex justify-content-start">
-                        <button class="btn btn-primary btn-md" style="margin: 10px;" onclick="submitData()">
-                            <i class=" fa fa-plus"></i> Submit
-                        </button>
-                    </div>
                 </div>
                 <div class="col-4 d-flex align-items-end flex-column">
                     <!-- show image content -->
@@ -118,7 +107,7 @@
         </div>
     </div>
     <script src="/assets/js/jquery-3.6.4.min.js"></script>
-    <script src="../assets/plugins/summernote/dist/summernote-lite.min.js"></script>
+    <script src="/assets/plugins/summernote/dist/summernote-lite.min.js"></script>
 
     <script>
         $(document).ready(function () {
@@ -133,10 +122,11 @@
                 $(this).removeClass("is-invalid");
             });
 
-            $("textarea").on("change", function () {
+            $("textarea").on("input", function () {
                 $(this).next(".error-message").text("");
-                $(this).removeClass("is-invalid");
             });
+
+            fetchThumbnail();
         });
 
         function fetchThumbnail() {
@@ -191,48 +181,27 @@
             };
         }
 
-        // Dropzone.options.dropzoneVideo = {
-        //     paramName: "video",
-        //     acceptedFiles: "video/mp4,video/mov,video/avi,video/wmv",
-        //     maxFiles: 1,
-        //     maxFilesize: 100,
-        //     dictInvalidFileType: "Only video files are allowed!",
-        //     dictFileTooBig: "File is too large! Max size: 100MB",
-        //     autoProcessQueue: false,
-        //     init: function () {
-        //         window.dropzoneInstance = this;
-        //     }
-        // };
-
-
         function submitData() {
             let formData = new FormData();
-
-            // if (dropzoneInstance.files[0]) {
-            //     formData.append('video', dropzoneInstance.files[0]);
-            // }
 
             formData.append('title', document.querySelector('input[name="title"]').value);
             formData.append('date', document.querySelector('input[name="date"]').value);
             formData.append('video_url', document.querySelector('input[name="video_url"]').value);
             formData.append('description', document.querySelector('textarea[name="description"]').value);
-            console.log(formData);
-
-            formData.append('_token', "{{ csrf_token() }}");
+            formData.append('status', $('#enabled').is(':checked') ? 1 : 0);
+            formData.append("_METHOD", "PUT");
+            formData.append("_token", "{{ csrf_token() }}");
 
             $.ajax({
-                url: "{{ route('videos.store') }}",
+                url: "{{ route('videos.update', $video->v_id) }}",
                 type: "POST",
                 data: formData,
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    console.log(response);
-                    // Handle success - maybe redirect or show success message
-                    // window.location.href = "{{ route('videos.index') }}";
-                    location.reload();
-                    console.log(response.videoId);
-                    console.log("success");
+                    // Redirect to the videos index page on success
+                    window.location.href = "{{ route('videos.edit', $video->v_id) }}";
+                    // window.location.reload();
                 },
                 error: function (xhr) {
                     if (xhr.status === 400) {
@@ -275,6 +244,7 @@
             height: "300",
             maximumImageFileSize: 102400, // 100MB
             toolbar: [
+                // [groupName, [list of button]]
                 ['style', ['bold', 'italic', 'underline', 'clear']],
                 ['font', ['strikethrough', 'superscript', 'subscript']],
                 ['fontsize', ['fontsize']],
@@ -288,11 +258,6 @@
                     $('#descriptionError').toggle(strippedContent === '');
                 }
             }
-        });
-
-        // Show warning initially if empty
-        $(document).ready(function () {
-            $('#descriptionWarning').show();
         });
 
         function openVideoUrl() {

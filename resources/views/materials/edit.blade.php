@@ -412,22 +412,22 @@
     <script src="../assets/plugins/blueimp-file-upload/js/jquery.fileupload-validate.js"></script>
     <script src="../assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
     <script>
-        $(function() {
+        $(document).ready(function () {
             $.getScript("/assets/plugins/summernote/dist/summernote-lite.min.js", function() {
-                $('#summernote').summernote({
-                    placeholder: 'Enter description',
-                    height: "300",
-                    maximumImageFileSize: 102400000, // 100MB
-                    callbacks: {
-                        onImageUploadError: function (msg) {
-                            // console.log(msg + ' (1 MB)');
+                    $('#summernote').summernote({
+                        placeholder: 'Enter description',
+                        height: "300",
+                        maximumImageFileSize: 102400000, // 100MB
+                        callbacks: {
+                            onImageUploadError: function (msg) {
+                                // console.log(msg + ' (1 MB)');
+                            }
                         }
-                    }
-                });
-            let material_description = @json($material->description);
-            $('#summernote').summernote('code', material_description);
-        });
-
+                    });
+                let material_description = @json($material->description);
+                $('#summernote').summernote('code', material_description);
+            });
+        }
 
         $( "#form-update-materials" ).on( "submit", function( event ) {
             event.preventDefault();

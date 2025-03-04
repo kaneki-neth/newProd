@@ -52,27 +52,26 @@ class MaterialController extends Controller
             ->pluck('c_id')
             ->toArray();
 
-        $properties = DB::table('item_properties')
-            ->leftJoin('properties', 'item_properties.p_id', '=', 'properties.p_id')
-            ->select('item_properties.*', 'properties.name as property_name', 'properties.type')
+        
+        $properties = DB::table('properties')
+            ->select('*')
             ->where('m_id', $id)
-            ->where('properties.type', '=', "soft")
+            ->where('type', '=', "soft")
             ->get(); 
 
-        $techProperties = DB::table('item_properties')
-                ->leftJoin('properties', 'item_properties.p_id', '=', 'properties.p_id')
-                ->select('item_properties.*', 'properties.name as property_name', 'properties.type')
-                ->where('m_id', $id)
-                ->where('properties.type', '=', "technical")
-                ->get();
+        $techProperties = DB::table('properties')
+            ->select('*')
+            ->where('m_id', $id)
+            ->where('type', '=', "technical")
+            ->get(); 
+
+        $susProperties = DB::table('properties')
+            ->select('*')
+            ->where('m_id', $id)
+            ->where('type', '=', "application")
+            ->get(); 
 
 
-        $susProperties = DB::table('item_properties')
-                ->leftJoin('properties', 'item_properties.p_id', '=', 'properties.p_id')
-                ->select('item_properties.*', 'properties.name as property_name', 'properties.type')
-                ->where('m_id', $id)
-                ->where('properties.type', '=', "application")
-                ->get();
         
         $images = DB::table('material_images')
             ->where('m_id', $id)

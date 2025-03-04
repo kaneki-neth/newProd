@@ -105,7 +105,6 @@ class NewsEventsController extends Controller
         }
 
         $storedImagePaths = [];
-        $ddMsg = '';
         try {
             DB::beginTransaction();
 
@@ -135,9 +134,7 @@ class NewsEventsController extends Controller
             }
 
             if ($ne_id) {
-                $ddMsg = 'Updating news_events: '.$ne_id;
                 DB::table('news_events')->where('ne_id', $ne_id)->update($data);
-                $ddMsg = 'Updated news_events';
             } else {
                 $data['created_by'] = auth()->id();
                 $data['created_at'] = now();
@@ -167,8 +164,6 @@ class NewsEventsController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             $this->deleteImages($storedImagePaths);
-
-            dd($e->getMessage(), $request->all(), $ddMsg);
 
             return response()->json([
                 'success' => false,

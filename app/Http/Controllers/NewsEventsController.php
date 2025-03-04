@@ -57,12 +57,12 @@ class NewsEventsController extends Controller
             ->where('ne_id', $ne_id)
             ->first();
 
-        $sub_images = DB::table('news_events_images')
-            ->select('image_file')
+        $subImages = DB::table('news_events_images')
             ->where('ne_id', $ne_id)
-            ->get();
+            ->pluck('image_file')
+            ->toArray();
 
-        return view('news_events.edit', compact('news_event', 'sub_images'));
+        return view('news_events.edit', compact('news_event', 'subImages'));
     }
 
     public function store(Request $request)
@@ -144,6 +144,8 @@ class NewsEventsController extends Controller
             DB::rollBack();
             $this->deleteImages($storedImagePaths);
 
+            dd($e->getMessage());
+
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while processing the request.',
@@ -154,7 +156,7 @@ class NewsEventsController extends Controller
     protected function validateRequest(Request $request, $ne_id = null)
     {
         return Validator::make($request->all(), [
-            'category' => 'required|in:news,events',
+            'category' => 'required|in:news,event',
             'title' => 'required|max:255',
             'date' => 'required|date',
             'description' => 'required',

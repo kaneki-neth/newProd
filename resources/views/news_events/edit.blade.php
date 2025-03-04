@@ -60,7 +60,7 @@
                     <label for="category" class="form-label">Category <span class="text-danger">*</span></label>
                     <select class="form-control select2" id="category" name="category">
                         <option value="news" {{ $news_event->category == 'news'? 'selected':'' }}>News</option>
-                        <option value="events" {{ $news_event->category == 'events'? 'selected':'' }}>Events</option>
+                        <option value="event" {{ $news_event->category == 'events'? 'selected':'' }}>Events</option>
                     </select>
                     <span id="category-msg" class="error-msg text-danger"></span>
                 </div>
@@ -120,6 +120,7 @@
 <script src="/assets/plugins/select2/dist/js/select2.min.js"></script>
 <script>
     $(document).ready(function() {
+        let subImages = @json($subImages);
         let news_event = @json($news_event);
         document.querySelector('select[name="category"]').value = news_event.category;
         $('#title').val(news_event.title);
@@ -140,11 +141,12 @@
             $('#summernote').summernote('code', news_event.description);
         });
 
-        if(news_event.sub_images) {
-            news_event.sub_images.forEach(sub_image => {
+        if(subImages) {
+            subImages.forEach(sub_image => {
+                imagePath = '/storage/' + sub_image + '?t=' + new Date().getTime();
                 $('#imageGallery').append(
                     '<div style="border-radius: 4px; flex: 0 0 auto; width: 25%; aspect-ratio: 1/1; background: var(--bs-component-border-color); display: flex; align-items: center; justify-content: center; cursor: pointer;">' +
-                    '<img src="' + sub_image + '" style="width: 100%; height: 100%; object-fit: cover;">' +
+                    '<img src="' + imagePath + '" style="width: 100%; height: 100%; object-fit: cover;">' +
                     '</div>'
                 );
             });

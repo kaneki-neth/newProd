@@ -60,7 +60,7 @@
                     <label for="category" class="form-label">Category <span class="text-danger">*</span></label>
                     <select class="form-control select2" id="category" name="category">
                         <option value="news">News</option>
-                        <option value="events">Events</option>
+                        <option value="event">Events</option>
                     </select>
                     <span id="category-msg" class="error-msg text-danger"></span>
                 </div>

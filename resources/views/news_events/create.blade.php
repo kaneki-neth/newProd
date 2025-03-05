@@ -193,7 +193,7 @@
                             style="border-radius: 4px; flex: 0 0 auto; width: 25%; aspect-ratio: 1/1; background: var(--bs-component-border-color); display: flex; align-items: center; justify-content: center; cursor: pointer;"
                             onclick="document.getElementById('sub_images').click();">
                             <input type="file" accept="image/*" id="sub_images" style="display: none;"
-                                onchange="displayImage(this)">
+                                onchange="displayImage(this)" multiple>
                             <i class="fa fa-plus fa-2x text-white"></i>
                         </div>
                     </div>
@@ -248,11 +248,11 @@
     let imageFiles = [];
     let deletedImageFileIndexes = [];
     function displayImage(input) {
-        if (input.files.length > 0) {
-            let file = input.files[0];
+        for (let i = 0; i < input.files.length; i++) {
+            let file = input.files[i];
             if (file.size > 102400000) {
                 swal("File is too large! Please select an image that is 100MB or under.");
-                return;
+                continue;
             }
 
             let reader = new FileReader();

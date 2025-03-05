@@ -349,6 +349,8 @@
                                 rm_error(this);
                             });
                         $('#' + key + '-msg').text(element[0]);
+
+                        Swal.close()
                     }
                 }
             }

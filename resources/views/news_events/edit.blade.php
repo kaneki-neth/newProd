@@ -141,6 +141,11 @@
 <div class="panel panel-inverse">
     <div class="panel-body" id="pannel-body">
         <div class="row">
+            <div class="col-md-12 d-flex justify-content-start gap-2">
+                <a href="/news_events/{{ $news_event->ne_id }}" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> View</a>
+            </div>
+        </div>
+        <div class="row mt-3">
             <div id="fields" class="col-md-7 mb-3">
                 <div class="form-group">
                     <label for="category" class="form-label">Category <span class="text-danger">*</span></label>

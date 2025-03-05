@@ -179,7 +179,13 @@ class NewsEventsController extends Controller
         if ($request->has('date') && $request->date) {
             $request->merge(['date' => date('Y-m-d', strtotime($request->date))]);
         }
-        $request->merge(['description' => strip_tags($request->description)]);
+        if (! preg_match('/>(\s*[^<\s].*?)</', $request->description)) {
+            $request->merge(['description' => strip_tags($request->description)]);
+        }
+        if ($request->description == strip_tags($request->description)) {
+            $request->merge(['description' => trim(str_replace('&nbsp;', '', $request->description))]);
+        }
+        // <p>&nbsp;</p><p><br></p> not handled yet
 
         return Validator::make($request->all(), [
             'category' => 'required|in:news,event',

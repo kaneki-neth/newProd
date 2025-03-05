@@ -225,7 +225,8 @@
         maximumImageFileSize: 102400000, // 100MB
         callbacks: {
             onImageUploadError: function (msg) {
-                // console.log(msg + ' (1 MB)');
+                swal("File is too large! Please select an image that is 100MB or under.");
+                return;
             }
         }
     });
@@ -295,6 +296,7 @@
     }
 
     function submitData() {
+        showLoading();
         var formData = new FormData();
         formData.append('_token', '{{ csrf_token() }}'); 
         formData.append('category', document.querySelector('select[name="category"]').value);
@@ -321,6 +323,16 @@
                 location.reload();
             },
             error: function (xhr, status, error) {
+                if (xhr.status === 413) {
+                    console.log('inside 413');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Content Too Large',
+                        html: 'The contents are too large!<br>Please reduce the size of the contents.',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
                 const errors = xhr.responseJSON.errors;
 
                 for (const key in errors) {

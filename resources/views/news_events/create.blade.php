@@ -26,6 +26,9 @@
         background-color: white;
         top: 0px !important;
     }
+    .error-input {
+        border: 1px solid red !important;
+    }
 
     #img-container {
         max-width: 80%;
@@ -150,13 +153,13 @@
 
                 <div class="form-group mt-2">
                     <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="title" name="title" placeholder="Title" onkeyup="remove_error(this)">
+                    <input type="text" class="form-control" id="title" name="title" placeholder="Title">
                     <span id="title-msg" class="error-msg text-danger"></span>
                 </div>
 
                 <div class="form-group mt-2">
                     <label for="date" class="form-label">Date <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="date" name="date" placeholder="Date" onkeyup="remove_error(this)">
+                    <input type="text" class="form-control" id="date" name="date" placeholder="Date">
                     <span id="date-msg" class="error-msg text-danger"></span>
                 </div>
 
@@ -208,6 +211,8 @@
         autoclose: true,
         todayHighlight: true,
         orientation: "bottom"
+    }).on('changeDate', function() {
+        rm_error(this);
     });
     $('#summernote').summernote({
         placeholder: 'Enter description',
@@ -222,7 +227,7 @@
 </script>
 <script>
     function displayMainImage(input) {
-        $('mainImagePreview').css('border', '1px solid #ccc');
+        $('#mainImagePreview').removeClass('error-input');
         $('#mainImage-msg').text('');
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -322,12 +327,24 @@
                         } else if (key == 'description') {
                             $input_id = 'description-container';
                         }
-                        $("#" + $input_id).css('border', '1px solid red');
+                        $("#" + $input_id).addClass('error-input')
+                            .on('keyup change', function() {
+                                rm_error(this);
+                            });
                         $('#' + key + '-msg').text(element[0]);
                     }
                 }
             }
         });
+    }
+
+    function rm_error(element) {
+        $(element).removeClass('error-input');
+        let msg_id = element.id;
+        if(msg_id == "description-container") {
+            msg_id = "description";
+        }
+        $('#' + msg_id + '-msg').text('');
     }
 </script>
 

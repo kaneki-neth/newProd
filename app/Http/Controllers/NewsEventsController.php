@@ -176,6 +176,10 @@ class NewsEventsController extends Controller
 
     protected function validateRequest(Request $request, $ne_id = null)
     {
+        if ($request->has('date')) {
+            $request->merge(['date' => date('Y-m-d', strtotime($request->date))]);
+        }
+
         return Validator::make($request->all(), [
             'category' => 'required|in:news,event',
             'title' => 'required|max:255',

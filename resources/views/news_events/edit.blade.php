@@ -208,7 +208,9 @@
         let news_event = @json($news_event);
         document.querySelector('select[name="category"]').value = news_event.category;
         $('#title').val(news_event.title);
-        $('#date').val(news_event.date);
+        let date = new Date(news_event.date);
+        let formattedDate = date.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        $('#date').val(formattedDate);
         $('#mainImagePreview').attr('src', '/storage/' + news_event.image_file + '?t=' + new Date().getTime());
         
         $.getScript("/assets/plugins/summernote/dist/summernote-lite.min.js", function() {
@@ -264,7 +266,7 @@
     }
 
     $('#date').datepicker({
-        format: 'yyyy-mm-dd',
+        format: 'M d, yyyy',
         autoclose: true,
         todayHighlight: true,
         orientation: "bottom"

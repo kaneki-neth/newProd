@@ -53,7 +53,7 @@
     <div class="panel-body" id="pannel-body">
         <div class="row">
             <div class="col-md-7">
-                <h3>{{ $news_event->title }}</h3>
+                <h2>{{ $news_event->title }}</h2>
                 <p><i class="fa fa-calendar"></i> {{ date('M d, Y', strtotime($news_event->date)) }}</p>
                 <p><?php echo $news_event->description ?></p>
             </div>

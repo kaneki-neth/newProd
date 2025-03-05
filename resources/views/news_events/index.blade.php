@@ -92,7 +92,7 @@
                         <tbody>
                             @foreach($news_events as $ne)
                                 <tr>
-                                    <td class="text-center" width="10%">{{ date('m-d-Y', strtotime($ne->date)) }}</td>
+                                    <td class="text-center" width="10%">{{ date('M d, Y', strtotime($ne->date)) }}</td>
                                     <td class="text-center" id="name" style="cursor: pointer"
                                         onclick="location.href='/news_events/{{ $ne->ne_id }}/edit'">{{ $ne->title }}</td>
                                     <td class="text-center" width="10%">
@@ -104,7 +104,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-center" width="10%">{{ date('m-d-Y', strtotime($ne->date)) }}</td>
+                                    <td class="text-center" width="10%">{{ date('M d, Y', strtotime($ne->date)) }}</td>
                                     <td class="text-center" id="name" style="cursor: pointer"
                                         onclick="location.href='/news_events/{{ $ne->ne_id }}'">{{ $ne->title }}</td>
                                     <td class="text-center" width="10%">
@@ -161,7 +161,7 @@
         var userTarget = "";
         var exit = false;
         $('.input-daterange').datepicker({
-            format: "mm/dd/yyyy",
+            format: 'M d, yyyy',
         });
         $('.input-daterange').focusin(function(e) {
             userTarget = e.target.name;

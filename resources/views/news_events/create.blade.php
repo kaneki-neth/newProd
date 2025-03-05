@@ -204,7 +204,7 @@
 <script src="../assets/plugins/select2/dist/js/select2.min.js"></script>
 <script>
     $('#date').datepicker({
-        format: 'yyyy-mm-dd',
+        format: 'M d, yyyy',
         autoclose: true,
         todayHighlight: true,
         orientation: "bottom"

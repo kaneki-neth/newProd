@@ -55,14 +55,13 @@
                         </div>
                         <!-- description module here -->
                         <div class="col-12 mt-6">
-
+                            <div class="alert alert-yellow fade" style="display: none;" id="descriptionError"></div>
                             <label for="description" class="form-label">Description <span
                                     class="text-danger">*</span></label>
-
                             <div class="border" style="border-radius: 4px">
                                 <textarea class="textarea form-control" name="description" id="summernote"
                                     placeholder="Enter text ..." rows="12"></textarea>
-                                <span class="error-message" id="descriptionError" style="color: red;"></span>
+                                {{-- <span class="error-message" id="descriptionError" style="color: red;"></span> --}}
                             </div>
                         </div>
                     </div>
@@ -141,7 +140,6 @@
 
             $("textarea").on("change", function () {
                 $(this).next(".error-message").text("");
-                $(this).removeClass("is-invalid");
             });
         });
 
@@ -207,6 +205,12 @@
             formData.append('description', document.querySelector('textarea[name="description"]').value);
             formData.append('_token', "{{ csrf_token() }}");
 
+            if ($("#summernote").val()) {
+                $('#descriptionError').removeClass("show");
+                $('#descriptionError').hide();
+                $('#descriptionError').empty();
+            }
+
             $.ajax({
                 url: "{{ route('videos.store') }}",
                 type: "POST",
@@ -223,6 +227,12 @@
                         Object.keys(errors).forEach(field => {
                             const errorMessage = errors[field][0];
                             const inputField = $(`[name="${field}"]`);
+
+                            if (field === "description") {
+                                $('#descriptionError').addClass("show");
+                                $('#descriptionError').show();
+                                $('#descriptionError').text(errorMessage);
+                            }
 
                             if (inputField.hasClass('select2')) {
                                 // Handle Select2 fields
@@ -243,7 +253,7 @@
                                 if (inputField.hasClass('select2')) {
                                     inputField.next('.select2-container').after(`<span class="error-message">${errorMessage}</span>`);
                                 } else {
-                                    inputField.after(`<span class="error-message">${errorMessage}</span>`);
+                                    // inputField.after(`<span class="error-message">${errorMessage}</span>`);
                                 }
                             }
                         });
@@ -253,26 +263,11 @@
             });
         }
 
-
-        // Show warning initially if empty
-        $(document).ready(function () {
-            $('#descriptionWarning').show();
-        });
-
         function openVideoUrl() {
             const url = document.getElementById('urlInput').value.trim();
             if (url) {
                 window.open(url, '_blank');
             }
-        }
-
-        function rm_error(element) {
-            $(element).removeClass('error-input');
-            let msg_id = element.id;
-            if (msg_id == "description-container") {
-                msg_id = "description";
-            }
-            $('#' + msg_id + '-msg').text('');
         }
     </script>
 @endsection

@@ -54,13 +54,13 @@
                         </div>
                         <!-- description module here -->
                         <div class="col-mt-6">
+                            <div class="alert alert-yellow fade" style="display: none;" id="descriptionError"></div>
                             <label for="description" class="form-label">Description <span
                                     class="text-danger">*</span></label>
                             <div class="border" style="border-radius: 4px">
                                 <textarea class="textarea form-control" name="description" id="summernote"
                                     placeholder="Enter text ..."
                                     rows="12">{!! strip_tags($video->description, '<p><a><b><i><u><strong><em><ul><ol><li><img>') !!}</textarea>
-                                <span class="error-message" id="descriptionError" style="color: red;"></span>
                             </div>
                         </div>
                         <!-- other details -->
@@ -205,6 +205,12 @@
             formData.append('description', document.querySelector('textarea[name="description"]').value);
             formData.append('status', $('#status').is(':checked') ? 1 : 0);
 
+            if ($("#summernote").val()) {
+                $('#descriptionError').removeClass("show");
+                $('#descriptionError').hide();
+                $('#descriptionError').empty();
+            }
+
             let url = "/videos/update/" + {{ $video->v_id }};
             $.ajax({
                 url: url,
@@ -238,23 +244,32 @@
                             // Add error class to the input
                             inputField.addClass('is-invalid');
 
+                            if (field === "description") {
+                                $('#descriptionError').addClass("show");
+                                $('#descriptionError').show();
+                                $('#descriptionError').text(errorMessage);
+                            }
+
                             // Find the error message span and update its text
                             const errorSpan = inputField.siblings('.error-message');
                             if (errorSpan.length) {
                                 errorSpan.text(errorMessage).css('color', 'red');
                             } else {
                                 // If no error span exists, create one
-                                inputField.after(`<span class="error-message" style="color: red">${errorMessage}</span>`);
+                                // inputField.after(`<span class="error-message">${errorMessage}</span>`);
                             }
 
-                            // Special handling for summernote editor if it's the description field
-                            if (field === 'description') {
-                                $('.note-editor').addClass('is-invalid');
-                            }
                         });
                     } else {
                         // Handle other types of errors
-                        alert('An error occurred while updating the video. Please try again.');
+                        swal.fire({
+                            title: 'Error',
+                            text: 'An error occurred while updating the video. Please try again.',
+                            icon: 'error',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#007bff',
+                            timer: 3000
+                        });
                     }
                 }
             });

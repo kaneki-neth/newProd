@@ -242,6 +242,14 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="row g-0 mt-3">
+                            <div class="d-flex flex-row gap-2">
+                                <label class="form-label" for="enabled">Enabled <span class="text-danger">*</span></label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="enabled" name="enabled" {{ $material->enabled ? 'checked' : '' }}>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row mt-3 g-0">
                             <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
                             <span id="description-msg" class="error-msg text-danger" ></span>
@@ -833,11 +841,10 @@
             deleteOldAppProps.forEach(element => {
                 formData.append('deleteOldAppProps[]', element);
             });
+            
+            formData.set('enabled', $('#enabled').is(':checked') ? 1 : 0);
 
             formData.append('_token', '{{ csrf_token() }}');
-            for(var pair of formData.entries()){
-                console.log(pair[0], pair[1]);
-            }
 
             $.ajax({
                 url: "{{ route('materials.update', $material->m_id) }}",

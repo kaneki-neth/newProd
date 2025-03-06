@@ -7,6 +7,14 @@
         #name:hover {
             font-weight: bold;
         }
+        .custom-input {
+            height: 30px;
+        }
+        .select2-search { display: none; }
+        span.select2-selection.select2-selection--single {
+            height: 30px !important;
+        }
+
     </style>
 
     <ol class="breadcrumb float-xl-end">
@@ -42,6 +50,23 @@
                             </div>
                         </div>
 
+                        <div class="col-lg-2 col-md-2">
+                            <label class="form-label">Status</label>
+                            <select class="select2 form-control" id="enabled" name="enabled">
+                                <option value="">All</option>
+                                <option value="1" {{ $enabled == 1 ? 'selected' : '' }}>Enabled</option>
+                                <option value="0" {{ $enabled == 0 ? 'selected' : '' }}>Disabled</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-2 col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">Year</label>
+                                <input type="text" class="form-control form-control-sm custom-input" id="material_code"
+                                    name="material_code" value="{{ $material_code }}" placeholder="..." autocomplete="off">
+                            </div>
+                        </div>
+
                         <div class="col-lg-2 col-md-3 mt-2">
                             <div class="d-flex" style="margin-top:8%">
                                 <button class="btn btn-primary btn-xs px-2 m-1"> Search</button>
@@ -49,6 +74,8 @@
                                     class="btn btn-outline-primary btn-xs px-2 m-1"> Clear</button>
                             </div>
                         </div>
+                        
+                        
                     </div>
                 </form>
 
@@ -59,6 +86,7 @@
                             <tr>
                                 <th class="text-center" width="30%">Material Code</th>
                                 <th width="60%">Material Name</th>
+                                <th class="text-center" width="10%">Status</th>
                                 <th class="text-center" width="10%">Year</th>
                             </tr>
                         </thead>
@@ -69,6 +97,13 @@
                                     <td id="name" style="color:#28acb5; cursor: pointer;"
                                         onclick="location.href='/material/show/{{ $material->m_id }}'">
                                         {{ $material->name }}
+                                    </td>
+                                    <td class="text-center" width="10%">
+                                        @if($material->enabled)
+                                            <i class="fa fa-check text-success"></i>
+                                        @else
+                                            <i class="fa fa-times text-danger"></i>
+                                        @endif
                                     </td>
                                     <td class="text-center">{{ $material->year }}</td>
                                 </tr>

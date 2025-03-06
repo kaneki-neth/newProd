@@ -208,6 +208,17 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="row g-0 mt-3">
+                        <div class="d-flex align-items-center justify-around">
+                            <label class="form-label mr-3" for="enabled">Enabled:</label>
+                            @if($material->enabled == 1)
+                                <span class="badge bg-primary rounded-pill">Enabled</span>
+                            @else
+                                <span class="badge bg-warning rounded-pill">Disabled</span>
+                            @endif
+                        </div>
+                    </div>
     
                     <div class="row mt-3 g-0">
                         <div class="alert alert-yellow fade" style="display: none;" id="descriptionError"></div>

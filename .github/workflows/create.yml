@@ -1,0 +1,201 @@
+name: Create and deploy
+on:
+  create:
+    branches:
+      - production
+      - staging
+      - pre-staging
+env:
+  branch_name: ${{ github.head_ref || github.ref_name }}
+jobs:
+  deploy_job:
+    runs-on: ubuntu-latest
+    name: deploy
+    steps:
+      - name: Create app
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{secrets.SSH_HOST}}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSPHRASE }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            #DOMAIN PRODUCTION: vars.PROD_DOMAIN
+            #DOMAIN STAGING: vars.STG_DOMAIN
+            #DOMAIN PRE-STAGING: vars.PRE_STG_DOMAIN
+            #MYSQL PRODUCTION: secrets.MYSQL_PROD_USERNAME, secrets.MYSQL_PROD_PASSWORD, secrets.MYSQL_PROD_DB
+            #MYSQL STAGING: secrets.MYSQL_STG_USERNAME, secrets.MYSQL_STG_PASSWORD, secrets.MYSQL_STG_DB
+            #MYSQL PRE-STAGING: secrets.MYSQL_PRE_STG_USERNAME, secrets.MYSQL_PRE_STG_PASSWORD, secrets.MYSQL_PRE_STG_DB
+            #BRANCHES: production, staging, pre-staging
+            #DEPLOYMENT CYCLE: pre-staging -> staging -> production -> main
+
+            #OPEN SSH AGENT, ADD SSH KEY TO AGENT
+            eval "$(ssh-agent -s)"
+            ssh-add ~/.ssh/id_rsa
+
+            #CHECK IF PRODUCTION, STAGING, PRE STAGING
+            if [ ${{ env.branch_name }} == "production" ] || [ ${{ env.branch_name }} == "staging" ] || [ ${{ env.branch_name }} == "pre-staging" ]; then
+
+              REPO_NAME="${{ github.event.repository.name }}"
+              WEB_DIR="/var/www"
+              PROJECT_DIR="${WEB_DIR}/${REPO_NAME}"
+
+              #DB NAME IF NO SECRET DB NAME VARIABLE
+              DB_NAME="${REPO_NAME}"
+              DB_NAME=${DB_NAME//./-}
+
+              #FIX REPOSITORY NAME AS DOMAIN
+              DOMAIN="${REPO_NAME}"
+
+              #FIX DOMAIN AND PROJECT DIR
+              READABLE_DOMAIN=${DOMAIN//./-}
+              PROJECT_DIR="${WEB_DIR}/${READABLE_DOMAIN}"
+
+              if [ "${{ env.branch_name }}" == "production" ]; then
+                if [ "${{ vars.PROD_DOMAIN }}" != "" ]; then
+                  DOMAIN="${{ vars.PROD_DOMAIN }}"
+                fi
+
+                if [ "${{ secrets.MYSQL_PROD_DB }}" != "" ]; then
+                  DB_NAME="${{ secrets.MYSQL_PROD_DB }}"
+                else
+                  DB_NAME="prod-${DB_NAME}"
+                fi
+
+                #PRODUCTION CREATE DATABASE, SILENT ERROR AND SKIP IF DATABASE CREATION ERROR
+                if [ "${{ secrets.MYSQL_PROD_USERNAME }}" != "" ] && [ "${{ secrets.MYSQL_PROD_PASSWORD }}" != "" ]; then
+                  #for root usage: echo "${{ secrets.SSH_PASSPHRASE }}" | sudo -S mysqladmin -u ${{ secrets.MYSQL_PROD_USERNAME }} -p"${{ secrets.MYSQL_PROD_PASSWORD }}" create "${DB_NAME}" > /dev/null 2>&1 &
+                  mysql -u'${{ secrets.MYSQL_PROD_USERNAME }}' -p'${{ secrets.MYSQL_PROD_PASSWORD }}' -e "CREATE DATABASE ${DB_NAME};" > /dev/null 2>&1 &
+                fi
+              elif [ "${{ env.branch_name }}" == "staging" ]; then
+                if [ "${{ vars.STG_DOMAIN }}" != "" ]; then
+                  DOMAIN="${{ vars.STG_DOMAIN }}"
+                else
+                  DOMAIN="stg.${DOMAIN}"
+                fi
+
+                if [ "${{ secrets.MYSQL_STG_DB }}" != "" ]; then
+                  DB_NAME="${{ secrets.MYSQL_STG_DB }}"
+                else
+                  DB_NAME="stg-${DB_NAME}"
+                fi
+
+                #STAGING CREATE DATABASE, SILENT ERROR AND SKIP IF DATABASE CREATION ERROR
+                if [ "${{ secrets.MYSQL_STG_USERNAME }}" != "" ] && [ "${{ secrets.MYSQL_STG_PASSWORD }}" != "" ]; then
+                  mysql -u'${{ secrets.MYSQL_STG_USERNAME }}' -p'${{ secrets.MYSQL_STG_PASSWORD }}' -e "CREATE DATABASE ${DB_NAME};" > /dev/null 2>&1 &
+                fi
+              elif [ "${{ env.branch_name }}" == "pre-staging" ]; then
+                if [ ${{ vars.PRE_STG_DOMAIN }} != "" ]; then
+                  DOMAIN="${{ vars.PRE_STG_DOMAIN }}"
+                else
+                  DOMAIN="pre-stg.${DOMAIN}"
+                fi
+
+                if [ "${{ secrets.MYSQL_PRE_STG_DB }}" != "" ]; then
+                  DB_NAME="${{ secrets.MYSQL_PRE_STG_DB }}"
+                else
+                  DB_NAME="pre-stg-${DB_NAME}"
+                fi
+
+                if [ "${{ secrets.MYSQL_PRE_STG_USERNAME }}" != "" ] && [ "${{ secrets.MYSQL_PRE_STG_PASSWORD }}" != "" ]; then
+                  mysql -u'${{ secrets.MYSQL_PRE_STG_USERNAME }}' -p'${{ secrets.MYSQL_PRE_STG_PASSWORD }}' -e "CREATE DATABASE ${DB_NAME};" > /dev/null 2>&1 &
+                fi
+              fi
+
+              #CHECK IF PROJECT DIRECTORY EXIST, OTHERWISE CREATE ITE
+              if [ ! -d "$PROJECT_DIR" ]; then
+                echo "${{ secrets.SSH_PASSPHRASE }}" | sudo -S mkdir ${PROJECT_DIR}
+                echo "${{ secrets.SSH_PASSPHRASE }}" | sudo -S chown -R ${{ secrets.SSH_USERNAME }}:${{ secrets.SSH_USERNAME }} ${PROJECT_DIR}
+              fi
+
+              #CHECK BRANCH DIRECTORY IF NOT CREATED INSIDE THE PROJECT DIRECTORY
+              if [ ! -d "$PROJECT_DIR/${{ env.branch_name }}" ]; then
+                mkdir ${PROJECT_DIR}/${{ env.branch_name }}
+
+                #CREATE THE app FOLDER ON THE PROJECT DIRECTORY BRANCH DIR IF NOT EXIST
+                if [ ! -d "$PROJECT_DIR/${{ env.branch_name }}/app" ]; then
+                  mkdir ${PROJECT_DIR}/${{ env.branch_name }}/app
+                fi
+
+                #UPDATE PROJECT DIR
+                PROJECT_DIR+="/${{ env.branch_name }}/app"
+
+                #CLONE FILES
+                git clone --branch ${{ env.branch_name }} git@github.com:${{ github.repository }}.git ${PROJECT_DIR}
+
+                #GO TO PROJECT DIR, SET AS WORKSPACE
+                cd ${PROJECT_DIR}
+
+                #IF .env EXIST THEN CREATE env BASE ON BRANCH
+                if [ -d ".do" ] && [ -f ".do/.env.${{ env.branch_name }}" ]; then
+                  cp -f .do/.env.${{ env.branch_name }} .env
+                fi
+
+                #IF vendor.zip EXIST, THEN REMOVE EXISTING VENDOR AND UNZIP THE NEW ONE
+                if [ -f "vendor.zip" ]; then
+                  if [ -d "vendor" ]; then
+                    rm -rf vendor
+                  fi
+
+                  unzip vendor.zip
+                else
+                  #IF THERES A composer.json RUN THE INSTALLATION
+                  if [ -f "composer.json" ]; then
+                    composer install --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-reqs
+                  fi
+                fi
+
+                #IF THERES ARTISAN, RUN OPTIMIZE, STORAGE LINK, MIGRATION AND SEEDER
+                if [ -f "artisan" ]; then
+                  php artisan optimize:clear
+                  php artisan storage:link
+
+                  if [ -d "database" ]; then
+                    php artisan migrate --force > /dev/null 2>&1 &
+                  fi
+
+                  if [ -d "database/seeders" ]; then
+                    php artisan db:seed -n > /dev/null 2>&1 &
+                  fi
+                fi
+
+                . ./.do/build.sh ${{ env.branch_name }}
+
+                #REPLACE DOMAIN, DOMAIN ALIAS, DOCUMENT ROOT ON DEFAULT CONF
+                while read line; do
+                  echo $(sed -e "s/<domain>/${DOMAIN}/g;s/<domainAlias>/${DOMAIN}/g;s/<documentRoot>/${READABLE_DOMAIN}/g;s/<branch>/${{ env.branch_name }}/g" <<< $line)
+                done < .do/app.conf > /home/${{ secrets.SSH_USERNAME }}/${DOMAIN}.conf
+
+                #COPY DEFAULT CONF FROM HOME USER TO APACHE CONF DIR
+                #ENABLE THE CONF
+                #RELOAD APACHE
+                #ACTIVATE CERTBOT
+                echo "${{ secrets.SSH_PASSPHRASE }}" | sudo -S mv /home/${{ secrets.SSH_USERNAME }}/${DOMAIN}.conf /etc/apache2/sites-available/${DOMAIN}.conf
+                echo "${{ secrets.SSH_PASSPHRASE }}" | sudo -S a2ensite ${DOMAIN}
+                echo "${{ secrets.SSH_PASSPHRASE }}" | sudo -S systemctl reload apache2
+                echo "${{ secrets.SSH_PASSPHRASE }}" | sudo -S certbot --apache certonly -n -d ${DOMAIN}
+
+                #IF NO SSL CONF GENERATED THEN CREATE ONE (DISABLE IF DOMAIN IS IN CLOUDFLARE)
+                # if [ -f "/etc/apache2/sites-available/${DOMAIN}-le-ssl.conf" ]; then
+                #   echo "${{ secrets.SSH_PASSPHRASE }}" | sudo -S a2dissite ${DOMAIN}-le-ssl
+                #   echo "${{ secrets.SSH_PASSPHRASE }}" | sudo -S systemctl reload apache2
+                #   echo "${{ secrets.SSH_PASSPHRASE }}" | sudo -S unlink /etc/apache2/sites-available/${DOMAIN}-le-ssl.conf
+                # fi
+
+                # #REPLACE DOMAIN, DOMAIN ALIAS, DOCUMENT ROOT ON SSL CONF (DISABLE IF DOMAIN IS IN CLOUDFLARE)
+                # while read line; do
+                #   echo $(sed -e "s/<domain>/${DOMAIN}/g;s/<domainAlias>/${DOMAIN}/g;s/<documentRoot>/${READABLE_DOMAIN}/g;s/<branch>/${{ env.branch_name }}/g" <<< $line)
+                # done < .do/app-ssl.conf > /home/${{ secrets.SSH_USERNAME }}/${DOMAIN}-le-ssl.conf
+
+                # #COPY SSL CONF FROM HOME USER TO APACHE CONF DIR
+                # #ENABLE THE CONF
+                # #RELOAD APACHE
+                # #ACTIVATE CERTBOT
+                # echo "${{ secrets.SSH_PASSPHRASE }}" | sudo -S mv /home/${{ secrets.SSH_USERNAME }}/${DOMAIN}-le-ssl.conf /etc/apache2/sites-available/${DOMAIN}-le-ssl.conf
+                # echo "${{ secrets.SSH_PASSPHRASE }}" | sudo -S a2ensite ${DOMAIN}-le-ssl
+                # echo "${{ secrets.SSH_PASSPHRASE }}" | sudo -S systemctl reload apache2
+
+                . ./.do/start.sh ${{ env.branch_name }}
+              fi
+              
+            fi

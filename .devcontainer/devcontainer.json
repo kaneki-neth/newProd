@@ -1,0 +1,27 @@
+{
+	"name": "PHP and Mysql",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/home/app",
+	"forwardPorts": [80,8080],
+	"postCreateCommand": "/bin/bash .devcontainer/init.sh",
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"bmewburn.vscode-intelephense-client",
+		"MehediDracula.php-namespace-resolver",
+		"MS-vsliveshare.vsliveshare-pack",
+		"EditorConfig.EditorConfig",
+		"wongjn.php-sniffer",
+		"Github.copilot",
+		"rangav.vscode-thunder-client",
+		"ritwickdey.liveserver",
+		"esbenp.prettier-vscode",
+		"formulahendry.code-runner",
+		"streetsidesoftware.code-spell-checker",
+		"oderwat.indent-rainbow",
+		"formulahendry.auto-rename-tag",
+		"xabikos.javascriptsnippets",
+		"pranaygp.vscode-css-peek",
+		"kamikillerto.vscode-colorize"
+	]
+}

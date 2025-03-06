@@ -9,6 +9,78 @@
             overflow-x: hidden;
         }
 
+        .image-container {
+            position: relative;
+            flex: 0 0 auto;
+            width: 25%;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--bs-component-border-color);
+            border-radius: 4px;
+        }
+
+        /* Image Styles */
+        .preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 1px solid #d1c3c0;
+        }
+
+        /* Grayed-Out Hover Overlay */
+        .hover-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0);
+            /* Fully transparent by default */
+            transition: background 0.3s ease;
+        }
+
+        /* Small Tool Overlay (Trash Icon) */
+        .tool-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50%;
+            /* Adjust percentage as needed */
+            height: 50%;
+            /* Adjust percentage as needed */
+            background: var(--bs-component-border-color);
+            border-radius: 10%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            /* Initially hidden */
+            transition: opacity 0.3s ease;
+        }
+
+        /* Trash Icon inside Tool Overlay */
+        .tool-overlay i {
+            font-size: 24px;
+            color: white;
+            /* Adjust color if needed */
+        }
+
+        /* Hover Effects (CSS-Only) */
+        .image-container:hover .hover-overlay {
+            background: rgba(0, 0, 0, 0.3);
+            /* Grayed out on hover */
+        }
+
+        .image-container:hover .tool-overlay {
+            opacity: 1;
+            /* Tool overlay appears fully */
+        }
+
+
         .error-message {
             color: red;
             font-size: 12px;
@@ -136,6 +208,7 @@
                     </div>
                     <!-- description module here -->
                     <div class="row mt-3 g-0">
+                        <div class="alert alert-yellow fade" style="display: none;" id="descriptionError"></div>
                         <label for="material_description" class="form-label">Description <span
                                 class="text-danger">*</span></label>
                         <div class="border" style="border-radius: 4px">
@@ -163,20 +236,18 @@
                                         <tr>
                                             <td style="width:50%">
                                                 <div>
-                                                    <label class="form-label" for="property">Name <span
-                                                            class="text-danger">*</span></label>
-                                                    <input class="property-name form-control form-control-xs validate"
+                                                    <label class="form-label" for="property">Name </label>
+                                                    <input class="property-name form-control form-control-xs "
                                                         name="property_name" id="property-name-field" style=" width:100%">
-                                                    <span class="error-message-sub"></span>
+
                                                 </div>
                                             </td>
                                             <td style="width:50%">
                                                 <div>
-                                                    <label class="form-label" for="property">Value <span
-                                                            class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control form-control-xs validate"
+                                                    <label class="form-label" for="property">Value </label>
+                                                    <input type="text" class="form-control form-control-xs "
                                                         name="property_value" style=" width:100%">
-                                                    <span class="error-message-sub"></span>
+
                                                 </div>
                                             </td>
                                             <td>
@@ -200,20 +271,18 @@
                                         <tr>
                                             <td style="width:50%">
                                                 <div>
-                                                    <label class="form-label" for="property">Name <span
-                                                            class="text-danger">*</span></label>
-                                                    <input class="form-control form-control-xs validate"
+                                                    <label class="form-label" for="property">Name </label>
+                                                    <input class="form-control form-control-xs "
                                                         name="technical_property_name" style="width:100%">
-                                                    <span class="error-message-sub"></span>
+
                                                 </div>
                                             </td>
                                             <td style="width:50%">
                                                 <div>
-                                                    <label class="form-label" for="property">Value <span
-                                                            class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control form-control-xs validate"
+                                                    <label class="form-label" for="property">Value </label>
+                                                    <input type="text" class="form-control form-control-xs "
                                                         name="technical_property_value" style=" width:100%">
-                                                    <span class="error-message-sub"></span>
+
                                                 </div>
                                             </td>
                                         </tr>
@@ -234,20 +303,18 @@
                                         <tr>
                                             <td style="width:50%">
                                                 <div>
-                                                    <label class="form-label" for="property">Name <span
-                                                            class="text-danger">*</span></label>
-                                                    <input class="form-control form-control-xs validate"
+                                                    <label class="form-label" for="property">Name </label>
+                                                    <input class="form-control form-control-xs "
                                                         name="sustainability_property_name" style="width:100%">
-                                                    <span class="error-message-sub"></span>
+
                                                 </div>
                                             </td>
                                             <td style="width:50%">
                                                 <div>
-                                                    <label class="form-label" for="property">Value <span
-                                                            class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control form-control-xs validate"
+                                                    <label class="form-label" for="property">Value </label>
+                                                    <input type="text" class="form-control form-control-xs "
                                                         name="sustainability_property_value" style=" width:100%">
-                                                    <span class="error-message-sub"></span>
+
                                                 </div>
                                             </td>
                                         </tr>
@@ -263,12 +330,14 @@
                 <div class="col-4 d-flex align-items-end flex-column" style="height: 100%">
                     <!-- show image content -->
                     <div class="row g-0">
-
                         <div class="col-9" style="margin-left: auto">
+                            <div class="alert alert-yellow fade" id="imageError"></div>
                             <label class="form-label">Upload Image</label>
                             <!-- main/big image -->
-                            <div style="border:1px solid var(--bs-component-border-color); border-radius:4px; aspect-ratio: 1 / 1; margin-left: 0 !important; margin-right: 0 !important;"
-                                class="row g-0">
+                            <div style="border:1px solid var(--bs-component-border-color); border-radius:4px; aspect-ratio: 1 / 1; margin-left: 0 !important; margin-right: 0 !important; cursor: pointer;"
+                                class="row g-0" onclick="document.getElementById('main_material_image').click();">
+                                <input type="file" accept="image/*" id="main_material_image" style="display: none;"
+                                    onchange="displayMainImage(this)">
                                 <img src='/assets/userProfile/no-image-avail.jpg' id="mainImage">
                             </div>
                             <!-- container for the stuff to append -->
@@ -315,19 +384,21 @@
     <script>
         let imageCount = 0;
         let imageFiles = [];
+        let mainImage;
         const MAX_FILE_SIZE = 100 * 1024 * 1024;
 
-        function rm_error(element) {
-            $(element).removeClass('error-input');
-            let msg_id = element.id;
-            if (msg_id == "description-container") {
-                msg_id = "description";
-            }
-            $('#' + msg_id + '-msg').text('');
-        }
 
         $(document).ready(function () {
+            console.log("mainIMage is:", mainImage);
+            console.log("mainIMage is type:", typeof mainImage);
+
             // Add input handler for all input fields
+            $('#imageError').removeClass("show");
+            $('#imageError').hide();
+            $('#imageError').empty();
+            $('#descriptionError').removeClass("show");
+            $('#descriptionError').hide();
+            $('#descriptionError').empty();
             $(document).on('input', '.validate', function () {
                 let $field = $(this);
                 // Remove invalid class
@@ -337,12 +408,7 @@
                 $field.siblings('.error-message-sub').text('');
                 // Reset border color
                 $field.css('border-color', '#ced4da');
-            });
-
-            // Add Summernote change handler to remove error state
-            $('#summernote').on('summernote.change', function () {
-                $('.note-editor').css('border', '');
-                $(this).siblings('.error-message').text('');
+                console.log("u did something test");
             });
 
             // Select2 initialization with validation clear
@@ -368,11 +434,71 @@
             }
         });
 
-
-
         function displayImage(input) {
+            console.log("test display image");
             if (input.files.length > 0) {
                 let file = input.files[0];
+                if (file.size > MAX_FILE_SIZE) {
+                    swal("File is too large! Please select an image that is 100MB or under.");
+                    return;
+                }
+
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    let newDiv = document.createElement('div');
+                    newDiv.classList.add('image-container'); // Assign class for CSS styling
+
+                    let img = document.createElement('img');
+                    img.src = e.target.result;
+                    // console.log("cursed e target result sent", img.src);
+                    img.classList.add('preview-image'); // Assign class for CSS styling
+                    img.id = `preview-image-${imageCount}`;
+
+                    let hoverOverlay = document.createElement('div'); // Grayed-out effect on hover
+                    hoverOverlay.classList.add('hover-overlay');
+
+                    let toolOverlay = document.createElement('div'); // Small tool overlay
+                    toolOverlay.classList.add('tool-overlay');
+                    toolOverlay.innerHTML = '<i class="fa fa-trash"></i>'; // FontAwesome trash icon
+
+                    var currentCount = imageCount;
+                    console.log(`this the count of ${img.id} right now: `, currentCount);
+
+                    toolOverlay.addEventListener('click', function () {
+                        deleteSubImage(newDiv, currentCount);
+                    });
+
+                    // Append elements in the correct order
+                    newDiv.appendChild(img);
+                    newDiv.appendChild(hoverOverlay);
+                    newDiv.appendChild(toolOverlay);
+
+                    document.getElementById('imageGallery').appendChild(newDiv);
+                    imageFiles.push(file);
+                    imageCount++;
+
+                };
+
+                reader.readAsDataURL(file);
+            }
+            console.log("this the current imageFiles list", imageFiles);
+        }
+
+        function deleteSubImage(element, count) {
+            if (element) {
+                element.remove(); // Remove from DOM
+            }
+            imageFiles[count] = null;
+            console.log(`hello image removed at ${count}: `, imageFiles);
+        }
+
+        function displayMainImage(input) {
+            console.log("hello wawahahiawjhoaihahaoj");
+
+            if (input) {
+                let file = input.files[0];
+                console.log(typeof file);
+                console.log("file object from input or file list", file);
 
                 if (file.size > MAX_FILE_SIZE) {
                     //dapat swal ni
@@ -382,50 +508,36 @@
 
                 let reader = new FileReader();
                 reader.onload = function (e) {
-                    let newDiv = document.createElement('div');
-                    newDiv.style.flex = '0 0 auto';
-                    newDiv.style.width = '25%';
-                    newDiv.style.aspectRatio = '1 / 1';
-                    newDiv.style.overflow = 'hidden';
-                    newDiv.style.display = 'flex';
-                    newDiv.style.alignItems = 'center';
-                    newDiv.style.justifyContent = 'center';
-                    newDiv.style.border = '1px solid var(--bs-component-border-color)';
-                    newDiv.style.borderRadius = '4px';
-
-                    let img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.style.width = '100%';
-                    img.style.height = '100%';
-                    img.style.objectFit = 'cover';
-                    img.style.border = '1px solid #d1c3c0';
-                    img.id = `preview-image-${imageCount}`;
-                    img.onclick = function () {
-                        updateMainImage(img.id);
-
-                    };
-
-                    newDiv.appendChild(img);
-                    document.getElementById('imageGallery').appendChild(newDiv);
-
-                    imageFiles.push(file);
-                    imageCount++;
-
-                    updateMainImage(img.id);
+                    console.log("this is the file object inside readeronload", file);
+                    mainImage = file;
+                    console.log("this is after setting mainImage to file", mainImage);
+                    updateMainImageItself(e.target.result);
                 };
-
-
                 reader.readAsDataURL(file);
             }
-            console.log(imageFiles);
+            console.log("u inputted in mainImage and set as file object now", mainImage);
+        }
+
+        function updateMainImageItself(mainImgSrc) {
+            console.log("reached update updateMainImageItself fcn");
+
+            let img = document.getElementById('mainImage');
+            img.src = mainImgSrc;
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'cover';
         }
 
         // update main image sa taas
         function updateMainImage(imageId) {
+
             let clickedImage = document.getElementById(imageId);
+            console.log("this the imageId for clickedImage", clickedImage.id);
+
             if (!clickedImage) return;
 
             let img = document.getElementById('mainImage');
+
             img.src = clickedImage.src;
             img.style.width = '100%';
             img.style.height = '100%';
@@ -456,13 +568,16 @@
             formData.append('year', document.querySelector('select[name="year"]').value);
             formData.append('description', document.querySelector('textarea[name="material_description"]').value);
 
-            if ($("#material_image").val() === "") {
-                swal("Image should not be empty!");
-                e.preventDefault();
+            if ($("#main_material_image").val()) {
+                $('#imageError').removeClass("show");
+                $('#imageError').hide();
+                $('#imageError').empty();
             }
-            if ($("#summernote").val() === "") {
-                swal("Description should not be empty!");
-                e.preventDefault();
+
+            if ($("#summernote").val()) {
+                $('#descriptionError').removeClass("show");
+                $('#descriptionError').hide();
+                $('#descriptionError').empty();
             }
 
             // Append categories as array
@@ -475,34 +590,58 @@
             let properties = [];
             // Regular properties (soft)
             document.querySelectorAll('#properties_tableBody tr').forEach(row => {
+                console.log("this the row", row);
                 let name = row.querySelector('input[name="property_name"]').value;
+                console.log("name check if null ba or not", name);
+                console.log("name check if null ba or not (type)", typeof name);
+
                 let value = row.querySelector('input[name="property_value"]').value;
-                properties.push({ name, value, type: 'soft' });
+                console.log("value check if null ba or not", value);
+                console.log("value check if null ba or not(type)", typeof value);
+                if (name && value) {
+                    console.log("yes u did put for normal properties");
+                    properties.push({ name, value, type: 'soft' });
+                } else console.log("no norm");
             });
             // Technical properties
             document.querySelectorAll('#technical_properties_tableBody tr').forEach(row => {
                 let name = row.querySelector('input[name="technical_property_name"]').value;
                 let value = row.querySelector('input[name="technical_property_value"]').value;
-                properties.push({ name, value, type: 'technical' });
+                if (name && value) {
+                    console.log("yes u did put for tech properties");
+                    properties.push({ name, value, type: 'technical' });
+                } else console.log("no tech");
             });
             // Sustainability properties
             document.querySelectorAll('#sustainability_tableBody tr').forEach(row => {
                 let name = row.querySelector('input[name="sustainability_property_name"]').value;
                 let value = row.querySelector('input[name="sustainability_property_value"]').value;
-                properties.push({ name, value, type: 'application' });
+                if (name && value) {
+                    console.log("yes u did put for sus properties");
+                    properties.push({ name, value, type: 'application' });
+                } else console.log("no sus");
+
             });
+
+            console.log("properties array", properties);
 
             // Append properties to FormData
             properties.forEach((prop, index) => {
-                formData.append(`properties[${index}][name]`, prop.name);
-                formData.append(`properties[${index}][value]`, prop.value);
-                formData.append(`properties[${index}][type]`, prop.type);
+                if (prop.name && prop.value) {
+                    console.log("append becoz has both naem adn value");
+                    formData.append(`properties[${index}][name]`, prop.name);
+                    formData.append(`properties[${index}][value]`, prop.value);
+                    formData.append(`properties[${index}][type]`, prop.type);
+                } else console.log("did not append becoz no value in both naem adn value");
+
             });
 
             // Append image files
             imageFiles.forEach((file, index) => {
                 formData.append('imageFiles[]', file);
             });
+            console.log("appending mainImage now", mainImage);
+            formData.append('mainImage', mainImage ?? "")
 
             formData.append('_token', "{{ csrf_token() }}");
 
@@ -513,6 +652,8 @@
                 processData: false,
                 contentType: false,
                 success: function (response) {
+                    console.log("work??????????");
+
                     console.log(response);
                     showLoading();
                     setTimeout(() => {
@@ -522,16 +663,26 @@
                 error: function (xhr) {
                     if (xhr.status === 400) {
                         const errors = xhr.responseJSON.errors;
-
+                        console.log("these the errors: ", errors);
                         // Display each error message
                         Object.keys(errors).forEach(field => {
+                            console.log("the field currently is: ", field);
                             const errorMessage = errors[field][0];
                             const inputField = $(`[name="${field}"]`);
 
-                            if (field === 'material_description') {
-                                // Add red border to Summernote editor
-                                $('.note-editor').css('border', '1px solid red');
-                            } else if (inputField.hasClass('select2')) {
+                            if (field === "mainImage") {
+                                console.log("wow mainimage field error");
+                                $('#imageError').addClass("show");
+                                $('#imageError').show();
+                                $('#imageError').text(errorMessage);
+                            }
+                            if (field === "description") {
+                                $('#descriptionError').addClass("show");
+                                $('#descriptionError').show();
+                                $('#descriptionError').text(errorMessage);
+                            }
+
+                            if (inputField.hasClass('select2')) {
                                 // Handle Select2 fields
                                 inputField.next('.select2-container')
                                     .find('.select2-selection--multiple')
@@ -583,28 +734,28 @@
 
             let newRow = document.createElement('tr');
             newRow.innerHTML = `
-                                    <td style="width:50%">
-                                        <div>
-                                            <label for="property">Name <span class="text-danger">*</span></label>
-                                            <input class="property-name form-control form-control-xs validate" name="property_name"
-                                                style=" width:100%">
-                                            <span class="error-message-sub"></span>
-                                        </div>
-                                    </td>
-                                    <td style="width:50%">
-                                        <div>
-                                            <label for="property">Value <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control form-control-xs validate" name="property_value"
-                                                style=" width:100%">
-                                            <span class="error-message-sub"></span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="mt-1 text-center text-danger">
-                                            <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeRow(this)"></i>
-                                        </div>
-                                    </td>
-                                    `;
+                                <td style="width:50%">
+                                    <div>
+                                        <label for="property">Name <span class="text-danger">*</span></label>
+                                        <input class="property-name form-control form-control-xs" name="property_name"
+                                            style=" width:100%">
+
+                                    </div>
+                                </td>
+                                <td style="width:50%">
+                                    <div>
+                                        <label for="property">Value <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control form-control-xs" name="property_value"
+                                            style=" width:100%">
+
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="mt-1 text-center text-danger">
+                                        <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeRow(this)"></i>
+                                    </div>
+                                </td>
+                                `;
             tableBody.appendChild(newRow);
         }
         function removeRow(button) {
@@ -622,28 +773,28 @@
 
             let newRow = document.createElement('tr');
             newRow.innerHTML = `
-                        <td style="width:50%">
-                            <div>
-                                <label for="property">Name <span class="text-danger">*</span></label>
-                                <input class="form-control form-control-xs validate" name="technical_property_name"
-                                    style="width:100%">
-                                <span class="error-message-sub"></span>
-                            </div>
-                        </td>
-                        <td style="width:50%">
-                            <div>
-                                <label for="property">Value <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control form-control-xs validate" name="technical_property_value"
-                                    style=" width:100%">
-                                <span class="error-message-sub"></span>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="mt-1 text-center text-danger">
-                                <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeTechRow(this)"></i>
-                            </div>
-                        </td>
-                        `;
+                    <td style="width:50%">
+                        <div>
+                            <label for="property">Name <span class="text-danger">*</span></label>
+                            <input class="form-control form-control-xs validate" name="technical_property_name"
+                                style="width:100%">
+
+                        </div>
+                    </td>
+                    <td style="width:50%">
+                        <div>
+                            <label for="property">Value <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-xs validate" name="technical_property_value"
+                                style=" width:100%">
+
+                        </div>
+                    </td>
+                    <td>
+                        <div class="mt-1 text-center text-danger">
+                            <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeTechRow(this)"></i>
+                        </div>
+                    </td>
+                    `;
             tableBody.appendChild(newRow);
         }
 
@@ -661,28 +812,28 @@
 
             let newRow = document.createElement('tr');
             newRow.innerHTML = `
-                            <td style="width:50%">
-                            <div>
-                                <label for="property">Name <span class="text-danger">*</span></label>
-                                <input class="form-control form-control-xs validate" name="sustainability_property_name"
-                                    style="width:100%">
-                                <span class="error-message-sub"></span>
-                            </div>
-                            </td>
-                            <td style="width:50%">
-                            <div>
-                                <label for="property">Value <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control form-control-xs validate" name="sustainability_property_value"
-                                    style=" width:100%">
-                                <span class="error-message-sub"></span>
-                            </div>
-                            </td>
-                            <td>
-                            <div class="mt-1 text-center text-danger">
-                                <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeSusRow(this)"></i>
-                            </div>
-                            </td>
-                            `;
+                        <td style="width:50%">
+                        <div>
+                            <label for="property">Name <span class="text-danger">*</span></label>
+                            <input class="form-control form-control-xs validate" name="sustainability_property_name"
+                                style="width:100%">
+
+                        </div>
+                        </td>
+                        <td style="width:50%">
+                        <div>
+                            <label for="property">Value <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-xs validate" name="sustainability_property_value"
+                                style=" width:100%">
+
+                        </div>
+                        </td>
+                        <td>
+                        <div class="mt-1 text-center text-danger">
+                            <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeSusRow(this)"></i>
+                        </div>
+                        </td>
+                        `;
             tableBody.appendChild(newRow);
         }
 

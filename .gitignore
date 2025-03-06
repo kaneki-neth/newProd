@@ -23,4 +23,12 @@ yarn-error.log
 /.zed
 .env
 
+.hidden
+.exclude
+
+apache.access.log
+apache.error.log
+error.log
+php.error.log
+
 .DS_Store

@@ -7,6 +7,35 @@
         html, body {
             overflow-x: hidden;
         }
+
+        td, th {
+            border: none;
+        }
+
+        .custom-input {
+            height: 30px;
+        }
+
+        .select2.select2-container .selection .select2-selection.select2-selection--multiple {
+            height: 30px !important;
+            min-height: 30px !important;
+        }
+
+        .select2.select2-container .selection .select2-selection.select2-selection--single {
+            height: 30px !important;
+            min-height: 30px !important;
+        }
+
+        .col-4 > .row {
+            width: 100%; 
+            min-width: 100%; 
+        }
+
+        div img#mainImagePreview {
+            width: 100%;
+            height: auto;     
+            object-fit: contain;        
+        }
         
         .image-container {
         position: relative;
@@ -21,7 +50,6 @@
         border-radius: 4px;
     }
 
-        /* Image Styles */
         .preview-image {
             width: 100%;
             height: 100%;
@@ -29,49 +57,63 @@
             border: 1px solid #d1c3c0;
         }
 
-        /* Grayed-Out Hover Overlay */
         .hover-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0); /* Fully transparent by default */
+            background: rgba(0, 0, 0, 0); 
             transition: background 0.3s ease;
         }
 
-        /* Small Tool Overlay (Trash Icon) */
         .tool-overlay {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 50%; /* Adjust percentage as needed */
-            height: 50%; /* Adjust percentage as needed */
+            width: 50%; 
+            height: 50%;
             background: var(--bs-component-border-color);
             border-radius: 10%;
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0; /* Initially hidden */
+            opacity: 0; 
             transition: opacity 0.3s ease;
         }
 
-        /* Trash Icon inside Tool Overlay */
         .tool-overlay i {
             font-size: 24px;
-            color: white; /* Adjust color if needed */
+            color: white; 
         }
 
-        /* Hover Effects (CSS-Only) */
         .image-container:hover .hover-overlay {
-            background: rgba(0, 0, 0, 0.3); /* Grayed out on hover */
+            background: rgba(0, 0, 0, 0.3); 
         }
 
         .image-container:hover .tool-overlay {
-            opacity: 1; /* Tool overlay appears fully */
+            opacity: 1; 
         }
 
+        .error-msg {
+            position: relative;
+            top: -5px;
+            background-color: white;
+        }
+        .error-msg#description-msg {
+            position: relative;
+            background-color: white;
+            top: 0px;
+        }
+        .error-msg#mainImage {
+            position: relative;
+            background-color: white;
+            top: 0px !important;
+        }
+        .error-input {
+            border: 1px solid red !important;
+        }
 
         .error-message {
             color: red;
@@ -113,33 +155,26 @@
 
         #imageGallery::-webkit-scrollbar {
             width: 8px;
-            /* Makes the scrollbar thinner */
             height: 8px;
-            /* Adjusts horizontal scrollbar thickness */
         }
 
         #imageGallery::-webkit-scrollbar-track {
             background: #f1f1f1;
-            /* Light gray background */
             border-radius: 10px;
         }
 
         #imageGallery::-webkit-scrollbar-thumb {
             background: #888;
-            /* Darker gray for the scrollbar handle */
             border-radius: 10px;
         }
 
         #imageGallery::-webkit-scrollbar-thumb:hover {
             background: #555;
-            /* Darker on hover */
         }
 
         #imageGallery {
             scrollbar-width: thin;
-            /* Makes the scrollbar thinner */
             scrollbar-color: #888 #f1f1f1;
-            /* Thumb color and track color */
         }
     </style>
 
@@ -152,39 +187,40 @@
     </ol>
     <h1 class="page-header">Add Material</h1>
 
-    <!-- make new -->
-    
     <div class="panel panel-inverse">
-        <div class="panel-body" id="pannel-body" style="padding: 65px !important;">
+        <div class="panel-body" id="pannel-body" style="padding: 45px !important;">
             <div class="row mb-3 g-0" style="margin: 0px;">
-                <!-- diri content sa left -->
-                <div class="col-8">
-                    <!-- initial text inputs: name, code, category, year -->
+                <div class="d-flex justify-content-start">
+                    <button class="btn btn-primary btn-xs" onclick="location.href='/material'">
+                        <i class="fa fa-arrow-left"></i> Back
+                    </button>
+                </div>
+                <div class="col-8 mt-3">
                     <div class="row">
                         <div class="col">
                             <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control form-control-xs validate" name="name" placeholder="...">
-                            <span class="error-message"></span>
+                            <input type="text" class="form-control form-control-xs validate custom-input" name="name" placeholder="..." id="name">
+                            <span id="name-msg" class="error-message"></span>
                         </div>
                         <div class="col-md-4">
                             <label for="code" class="form-label">Code <span class="text-danger">*</span></label>
                             <input type="text"
-                                class="form-control form-control-xs validate @error('code') is-invalid @enderror"
+                                class="form-control form-control-xs validate @error('code') is-invalid @enderror custom-input" id="code"
                                 name="code" value="{{ old('code') }}" placeholder="...">
-                            <span class="error-message"></span>
+                                <span id="code-msg" class="error-message"></span>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mt-3">
                         <div class="col">
                             <label for="categories" class="form-label">Category <span class="text-danger">*</span></label>
-                                <select class="form-control select2 validate" id="multiple-select-field"
-                                    name="categories" type="text" onkeyup="remove_error(this)" multiple>
+                                <select class="form-control select2 validate" id="categories"
+                                    name="categories[]" type="text" multiple>
                                     @foreach ($categories as $category)
                                         <option value="{{ $category->c_id }}">{{ $category->name }}</option>
                                     @endforeach
                                 </select>
-                            <span class="error-message"></span>
-                        </div>
+                                <span id="categories-msg" class="error-message"></span>
+                                </div>
                         <div class="col-md-2">
                             <label for="year" class="form-label">Year <span class="text-danger">*</span></label>
                             <select class="form-control select2-container select2" id="year" name="year">
@@ -198,16 +234,14 @@
                             </select>
                         </div>
                     </div>
-                    <!-- description module here -->
                     <div class="row mt-3 g-0">
-                        <div class="alert alert-yellow fade" style="display: none;" id="descriptionError"></div>
                         <label for="material_description" class="form-label" >Description <span class="text-danger">*</span></label>
-                        <div class="border" style="border-radius: 4px">
+                        <span id="description-msg" class="error-msg text-danger" ></span>
+                        <div id="description" class="border form-control" style="border-radius: 4px; padding: 0px;" >
                             <textarea class="textarea form-control" name="material_description" id="summernote"
                                 placeholder="Enter text ..." rows="12"></textarea>
                         </div>
                     </div>
-                    <!-- other details -->
                     <div class="row">
                         <div class="col-12 mt-3">
                             <div style="border-radius: 4px;">
@@ -318,45 +352,38 @@
                         </div>
                     </div>
                 </div>
-                <!-- end of content on the left -->
 
-                <!-- content on the right aka image and submit button -->
                 <div class="col-4 d-flex align-items-end flex-column" style="height: 100%">
-                    <!-- show image content -->
                     <div class="row g-0">
                         <div class="col-9" style="margin-left: auto">
-                            <div class="alert alert-yellow fade" id="imageError"></div>
                             <label class="form-label">Upload Image</label>
-                            <!-- main/big image -->
+                            <span id="mainImage-msg" class="error-message"></span>
+                            
                             <div style="border:1px solid var(--bs-component-border-color); border-radius:4px; aspect-ratio: 1 / 1; margin-left: 0 !important; margin-right: 0 !important; cursor: pointer;"
-                                class="row g-0" onclick="document.getElementById('main_material_image').click();">
-                                <input type="file" accept="image/*" id="main_material_image" style="display: none;"
+                                class="row g-0" onclick="document.getElementById('mainImage').click();">
+                                <input type="file" accept="image/*" id="mainImage" style="display: none;"
                                         onchange="displayMainImage(this)">
-                                <img src='/assets/userProfile/no-image-avail.jpg' id="mainImage">
+                                <img src='/assets/userProfile/no-image-avail.jpg' id="mainImagePreview">
                             </div>
-                            <!-- container for the stuff to append -->
                             <div id="imageGallery"
                                 style="display: flex; gap: 10px; overflow-x: auto; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-top: 8px">
-                                <!-- Add Button Square -->
                                 <div id="createButton"
                                     style="border-radius: 4px; flex: 0 0 auto; width: 25%; aspect-ratio: 1/1; background: var(--bs-component-border-color); display: flex; align-items: center; justify-content: center; cursor: pointer;"
                                     onclick="document.getElementById('material_image').click();">
                                     <input type="file" accept="image/*" id="material_image" style="display: none;"
-                                        onchange="displayImage(this)">
+                                        onchange="displayImage(this)" multiple>
                                     <i class="fa fa-plus fa-2x text-white"></i>
                                 </div>
-                                <!-- Dynamically added squares will be appended here -->
                             </div>
                         </div>
                     </div>
                     
                 </div>
-                <!-- end of content on the right -->
                 <div class="d-flex justify-content-start">
-                        <button class="btn btn-primary btn-md" style="margin: 10px;" onclick="submitData()">
+                        <button class="btn btn-primary btn-xs" style="margin: 10px;" onclick="submitData()">
                             <i class="fa fa-plus"></i> Submit
                         </button>
-                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -376,97 +403,83 @@
     <script src="../assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
 
     <script>
+        $('#material').addClass('active');
         let imageCount = 0;
         let imageFiles = [];
         let mainImage;
         const MAX_FILE_SIZE = 100 * 1024 * 1024;
         
+        $('#summernote').summernote({
+            placeholder: 'Enter description',
+            height: "300",
+            maximumImageFileSize: 102400000,
+            callbacks: {
+                onImageUploadError: function (msg) {
+                }
+            }
+        });
 
-        $(document).ready(function () {
-            console.log("mainIMage is:", mainImage);
-            console.log("mainIMage is type:", typeof mainImage);
-            
-            // Add input handler for all input fields
+        $(document).ready(function () {            
             $('#imageError').removeClass("show");
             $('#imageError').hide();
             $('#imageError').empty();
             $('#descriptionError').removeClass("show");
             $('#descriptionError').hide();
             $('#descriptionError').empty();
-            $(document).on('input', '.validate', function () {
-                let $field = $(this);
-                // Remove invalid class
-                $field.removeClass('is-invalid');
-                // Remove error messages (both types)
-                $field.siblings('.error-message').text('');
-                $field.siblings('.error-message-sub').text('');
-                // Reset border color
-                $field.css('border-color', '#ced4da');
-                console.log("u did something test");
-            });
+            // $(document).on('input', '.validate', function () {
+            //     let $field = $(this);
+            //     $field.removeClass('is-invalid');
+            //     $field.siblings('.error-message').text('');
+            //     $field.siblings('.error-message-sub').text('');
+            //     $field.css('border-color', '#ced4da');
+            // });
 
-            // Select2 initialization with validation clear
-            $('#multiple-select-field').select2({ placeholder: "Select Categories", width: "100%" })
+            $('#categories').select2({ placeholder: "Select Categories", width: "100%" })
                 .on('change', function () {
-                    // Clear validation styling when user makes a selection
                     $(this).next('.select2-container')
                         .find('.select2-selection--multiple')
-                        .removeClass('is-invalid');
+                        .removeClass('error-input');
                     $(this).siblings('.error-message').text('');
                     $(this).siblings('.error-message-sub').text('');
                 });
 
         });
-        $('#summernote').summernote({
-            placeholder: 'Enter description',
-            height: "300",
-            maximumImageFileSize: 102400, // 100MB
-            callbacks: {
-                onImageUploadError: function (msg) {
-                    // console.log(msg + ' (1 MB)');
-                }
-            }
-        });
+        
 
         function displayImage(input) {
-            console.log("test display image");
-            if (input.files.length > 0) {
-                let file = input.files[0];
-                if (file.size > MAX_FILE_SIZE) {
+            for (let i = 0; i < input.files.length; i++) {
+                let file = input.files[i];
+                if (file.size > 102400000) {
                     swal("File is too large! Please select an image that is 100MB or under.");
-                    return;
+                    continue;
                 }
 
                 let reader = new FileReader();
                 reader.onload = function (e) {
                     let newDiv = document.createElement('div');
-                    newDiv.classList.add('image-container'); // Assign class for CSS styling
+                    newDiv.classList.add('image-container'); 
 
                     let img = document.createElement('img');
                     img.src = e.target.result;
-                    // console.log("cursed e target result sent", img.src);
-                    img.classList.add('preview-image'); // Assign class for CSS styling
+                    img.classList.add('preview-image'); 
                     img.id = `preview-image-${imageCount}`;
 
-                    let hoverOverlay = document.createElement('div'); // Grayed-out effect on hover
+                    let hoverOverlay = document.createElement('div'); 
                     hoverOverlay.classList.add('hover-overlay');
 
-                    let toolOverlay = document.createElement('div'); // Small tool overlay
+                    let toolOverlay = document.createElement('div'); 
                     toolOverlay.classList.add('tool-overlay');
-                    toolOverlay.innerHTML = '<i class="fa fa-trash"></i>'; // FontAwesome trash icon
+                    toolOverlay.innerHTML = '<i class="fa fa-trash"></i>'; 
 
                     var currentCount = imageCount;
-                    console.log(`this the count of ${img.id} right now: `, currentCount);
                     
                     toolOverlay.addEventListener('click', function() {
                         deleteSubImage(newDiv, currentCount); 
                     });
 
-                    // Append elements in the correct order
                     newDiv.appendChild(img);
                     newDiv.appendChild(hoverOverlay);
                     newDiv.appendChild(toolOverlay);
-
                     document.getElementById('imageGallery').appendChild(newDiv);
                     imageFiles.push(file);
                     imageCount++;
@@ -475,61 +488,52 @@
 
                 reader.readAsDataURL(file);
             }
-            console.log("this the current imageFiles list", imageFiles);
         }
 
         function deleteSubImage(element, count) { 
             if (element) {
-                element.remove(); // Remove from DOM
+                element.remove(); 
             }
-            imageFiles[count] = null;
-            console.log(`hello image removed at ${count}: `, imageFiles);
+            imageFiles[count] = "";
         }
 
-        function displayMainImage(input) {
-            console.log("hello wawahahiawjhoaihahaoj");
+        function displayMainImage(input) {  
+            $('#mainImagePreview').removeClass('error-input');
+            $('#mainImage-msg').text('');
+            console.log("input", input);
             
             if(input) {
                 let file = input.files[0];
-                console.log(typeof file);
-                console.log("file object from input or file list", file);
                 
                 if (file.size > MAX_FILE_SIZE) {
-                        //dapat swal ni
                         swal("File is too large! Please select an image that is 100MB or under.");
                         return;
                     }
 
                 let reader = new FileReader();
                 reader.onload = function (e) {
-                    console.log("this is the file object inside readeronload", file);
                     mainImage = file;
-                    console.log("this is after setting mainImage to file", mainImage);
+                    console.log("main image is currently ", mainImage);
+                    console.log(e.target.result);
+                    
                     updateMainImageItself(e.target.result);
                 };
                 reader.readAsDataURL(file); 
             }
-            console.log("u inputted in mainImage and set as file object now", mainImage);
         }
         
-        function updateMainImageItself(mainImgSrc) {
-            console.log("reached update updateMainImageItself fcn");
-            
-            let img = document.getElementById('mainImage');
+        function updateMainImageItself(mainImgSrc) {            
+            let img = document.getElementById('mainImagePreview');
             img.src = mainImgSrc;
             img.style.width = '100%';
             img.style.height = '100%';
             img.style.objectFit = 'cover';
         }
 
-        // update main image sa taas
         function updateMainImage(imageId) {
 
-            let clickedImage = document.getElementById(imageId);
-            console.log("this the imageId for clickedImage", clickedImage.id);
-            
+            let clickedImage = document.getElementById(imageId);            
             if (!clickedImage) return;
-
             let img = document.getElementById('mainImage');
 
             img.src = clickedImage.src;
@@ -538,23 +542,8 @@
             img.style.objectFit = 'cover';
         }
 
-        //purely for testing naunsa na ang images
-        $('#update_user').submit(function (e) {
-            e.preventDefault();
-            $(".btn").attr("disabled", true);
-            let formData = new FormData(this);
-            formData.append('_token', `{{ csrf_token() }}`);
-            console.log("this the image files array", imageFiles);
-
-            imageFiles.forEach((file, index) => {
-                formData.append(`material_image_${index}`, file);
-                console.log("this the file appended just now", file);
-            });
-
-        });
-
-
         function submitData() {
+            showLoading();
             let formData = new FormData();
             formData.append('code', document.querySelector('input[name="code"]').value);
             formData.append('name', document.querySelector('input[name="name"]').value);
@@ -562,79 +551,54 @@
             formData.append('year', document.querySelector('select[name="year"]').value);
             formData.append('description', document.querySelector('textarea[name="material_description"]').value);
 
-            if ($("#main_material_image").val()) {
-                $('#imageError').removeClass("show");
-                $('#imageError').hide();    
-                $('#imageError').empty(); 
-            }
-
             if ($("#summernote").val()) {
                 $('#descriptionError').removeClass("show");
                 $('#descriptionError').hide();    
                 $('#descriptionError').empty(); 
             }
 
-            // Append categories as array
-            let categories = $('#multiple-select-field').val();
+            let categories = $('#categories').val();
             categories.forEach((c_id, index) => {
                 formData.append(`categories[${index}]`, c_id);
             });
 
-            // Collect properties from all tables
             let properties = [];
-            // Regular properties (soft)
             document.querySelectorAll('#properties_tableBody tr').forEach(row => {
-                console.log("this the row", row);
                 let name = row.querySelector('input[name="property_name"]').value;
-                console.log("name check if null ba or not", name);
-                console.log("name check if null ba or not (type)", typeof name);
                 
                 let value = row.querySelector('input[name="property_value"]').value;
-                console.log("value check if null ba or not", value);
-                console.log("value check if null ba or not(type)", typeof value);
                 if(name && value) {
-                    console.log("yes u did put for normal properties");
                     properties.push({ name, value, type: 'soft' });
-                }else console.log("no norm");
+                }
             });
-            // Technical properties
             document.querySelectorAll('#technical_properties_tableBody tr').forEach(row => {
                 let name = row.querySelector('input[name="technical_property_name"]').value;
                 let value = row.querySelector('input[name="technical_property_value"]').value;
                 if(name && value) {
-                    console.log("yes u did put for tech properties");
                     properties.push({ name, value, type: 'technical' });
-                } else console.log("no tech");
+                }
             });
-            // Sustainability properties
             document.querySelectorAll('#sustainability_tableBody tr').forEach(row => {
                 let name = row.querySelector('input[name="sustainability_property_name"]').value;
                 let value = row.querySelector('input[name="sustainability_property_value"]').value;
                 if(name && value) {
-                    console.log("yes u did put for sus properties");
                     properties.push({ name, value, type: 'application' });
-                } else console.log("no sus");
+                }
                 
             });
-
-            console.log("properties array", properties);
-            
-            // Append properties to FormData
             properties.forEach((prop, index) => {
                 if (prop.name && prop.value){              
-                    console.log("append becoz has both naem adn value");
                     formData.append(`properties[${index}][name]`, prop.name);
                     formData.append(`properties[${index}][value]`, prop.value);
                     formData.append(`properties[${index}][type]`, prop.type);
-                } else console.log("did not append becoz no value in both naem adn value");
+                }
 
             });
-
-            // Append image files
             imageFiles.forEach((file, index) => {
-                formData.append('imageFiles[]', file);
+                if(file){
+                    formData.append('imageFiles[]', file);
+                }
             });
-            console.log("appending mainImage now", mainImage);
             formData.append('mainImage', mainImage ?? "")
 
             formData.append('_token', "{{ csrf_token() }}");
@@ -646,83 +610,58 @@
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    console.log("work??????????");
-                    
                     console.log(response);
-                    // Handle success - maybe redirect or show success message
-                    showLoading();
-                    setTimeout(() => {
-                        showSuccessMessage("Material created successfully!", "{{ route('materials.index') }}");
-                    }, 2000);
-
+                    window.location.href='/material';
                 },
                 error: function (xhr) {
                     if (xhr.status === 400) {
                         const errors = xhr.responseJSON.errors;
-                        console.log("these the errors: ", errors);
-                        // Display each error message
-                        Object.keys(errors).forEach(field => {
-                            console.log("the field currently is: ", field);
-                            const errorMessage = errors[field][0];
-                            const inputField = $(`[name="${field}"]`);
-                            
-                            if (field === "mainImage") {
-                                console.log("wow mainimage field error");
-                                $('#imageError').addClass("show");
-                                $('#imageError').show();
-                                $('#imageError').text(errorMessage);
-                            }
-                            if (field === "description"){
-                                $('#descriptionError').addClass("show");
-                                $('#descriptionError').show();
-                                $('#descriptionError').text(errorMessage);
-                            }
-
-                            if (inputField.hasClass('select2')) {
-                                // Handle Select2 fields
-                                inputField.next('.select2-container')
-                                    .find('.select2-selection--multiple')
-                                    .addClass('is-invalid');
-                            } else {
-                                // Handle regular inputs
-                                inputField.addClass('is-invalid');
-                            }
-
-                            // Display error message
-                            const errorSpan = inputField.siblings('.error-message');
-                            if (errorSpan.length) {
-                                errorSpan.text(errorMessage);
-                            } else {
-                                // For select2, add error message after the select2 container
-                                if (inputField.hasClass('select2')) {
-                                    inputField.next('.select2-container').after(`<span class="error-message">${errorMessage}</span>`);
+                        console.log("these the errors", errors);
+                        
+                        for (const key in errors) {
+                            if (Object.hasOwnProperty.call(errors, key)) {
+                                const element = errors[key];
+                                let $input_id = key;
+                                console.log("this the key", key);
+                                
+                                if(key == 'categories') {
+                                    $('.select2-container .selection .select2-selection--multiple').addClass('error-input');
+                                    $('#' + key + '-msg').text(element[0]);
                                 } else {
-                                    inputField.after(`<span class="error-message">${errorMessage}</span>`);
+                                    
+                                    if (key == 'mainImage'){
+                                        $input_id = 'mainImagePreview';
+                                    }
+
+                                    $("#" + $input_id).addClass('error-input')
+                                        .on('keyup change', function() {
+                                            rm_error(this);
+                                        });
+                                    $('#' + key + '-msg').text(element[0]);
                                 }
                             }
+                        }
+
+                        Swal.close();
+                    }
+                    else if(xhr.status === 413) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Content Too Large',
+                            html: 'The contents are too large!<br>Please reduce the size of the contents.',
+                            confirmButtonText: 'OK'
                         });
+                        return;
                     }
                 }
             });
 
-            // Local validation
-            $(".validate").each(function () {
-                let $field = $(this);
-                let $container = $field.is("select") ? $field.next(".select2-container") : $field; // Handle Select2 and normal fields
+            function rm_error(element) {
+                $(element).removeClass('error-input');
+                $('#' + element.id + '-msg').text('');
+            }
 
-                if (!$field.val()) {
-                    if ($container.find(".select2-selection").length) {
-                        $container.find(".select2-selection").css("border", "1px solid red");
-                    } else {
-                        $field.addClass('is-invalid');
-                    }
-
-                    // Remove existing error messages
-                    $container.siblings('.error-message').remove();
-                    // Add new error message
-                    $container.after('<span class="error-message" style="color: red;">This field should not be empty</span>');
-                }
-            });
+            
         }
 
         function addPropertyRow() {
@@ -733,7 +672,7 @@
             newRow.innerHTML = `
                             <td style="width:50%">
                                 <div>
-                                    <label for="property">Name <span class="text-danger">*</span></label>
+                                    <label for="property">Name </label>
                                     <input class="property-name form-control form-control-xs" name="property_name"
                                         style=" width:100%">
                                     
@@ -741,14 +680,14 @@
                             </td>
                             <td style="width:50%">
                                 <div>
-                                    <label for="property">Value <span class="text-danger">*</span></label>
+                                    <label for="property">Value </label>
                                     <input type="text" class="form-control form-control-xs" name="property_value"
                                         style=" width:100%">
                                     
                                 </div>
                             </td>
-                            <td>
-                                <div class="mt-1 text-center text-danger">
+                            <td class="d-flex justify-content-center align-items-center" style="height:100%">
+                                <div class="d-flex flex-column justify-content-end align-items-center text-danger mt-3" style="height: 23px">
                                     <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeRow(this)"></i>
                                 </div>
                             </td>
@@ -758,9 +697,8 @@
         function removeRow(button) {
             let currentRows = document.querySelectorAll('#properties_tableBody tr').length;
             let row = button.closest('tr');
-            if (currentRows > 1) {
-                row.remove();
-            }
+            row.remove();
+            
         }
 
         ////////////////////////
@@ -772,7 +710,7 @@
             newRow.innerHTML = `
                 <td style="width:50%">
                     <div>
-                        <label for="property">Name <span class="text-danger">*</span></label>
+                        <label for="property">Name</label>
                         <input class="form-control form-control-xs validate" name="technical_property_name"
                             style="width:100%">
                         
@@ -780,14 +718,14 @@
                 </td>
                 <td style="width:50%">
                     <div>
-                        <label for="property">Value <span class="text-danger">*</span></label>
+                        <label for="property">Value </label>
                         <input type="text" class="form-control form-control-xs validate" name="technical_property_value"
                             style=" width:100%">
                         
                     </div>
                 </td>
-                <td>
-                    <div class="mt-1 text-center text-danger">
+                <td class="d-flex justify-content-center align-items-center" style="height:100%">
+                    <div class="d-flex flex-column justify-content-end align-items-center text-danger mt-3" style="height: 23px">
                         <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeTechRow(this)"></i>
                     </div>
                 </td>
@@ -798,9 +736,9 @@
         function removeTechRow(button) {
             let currentRows = document.querySelectorAll('#technical_properties_tableBody tr').length;
             let row = button.closest('tr');
-            if (currentRows > 1) {
-                row.remove();
-            }
+            
+            row.remove();
+            
         }
 
         function addSustainabilityRow() {
@@ -811,7 +749,7 @@
             newRow.innerHTML = `
                     <td style="width:50%">
                     <div>
-                        <label for="property">Name <span class="text-danger">*</span></label>
+                        <label for="property">Name </label>
                         <input class="form-control form-control-xs validate" name="sustainability_property_name"
                             style="width:100%">
                         
@@ -819,16 +757,16 @@
                     </td>
                     <td style="width:50%">
                     <div>
-                        <label for="property">Value <span class="text-danger">*</span></label>
+                        <label for="property">Value </label>
                         <input type="text" class="form-control form-control-xs validate" name="sustainability_property_value"
                             style=" width:100%">
                         
                     </div>
                     </td>
-                    <td>
-                    <div class="mt-1 text-center text-danger">
-                        <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeSusRow(this)"></i>
-                    </div>
+                    <td class="d-flex justify-content-center align-items-center" style="height:100%">
+                        <div class="d-flex flex-column justify-content-end align-items-center text-danger mt-3" style="height: 23px">
+                            <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeSusRow(this)"></i>
+                        </div>
                     </td>
                     `;
             tableBody.appendChild(newRow);
@@ -837,9 +775,8 @@
         function removeSusRow(button) {
             let currentRows = document.querySelectorAll('#sustainability_tableBody tr').length;
             let row = button.closest('tr');
-            if (currentRows > 1) {
-                row.remove();
-            }
+            row.remove();
+            
         }
     </script>
 @endsection

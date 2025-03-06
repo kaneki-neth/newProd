@@ -56,7 +56,7 @@ class NewsEventsController extends Controller
     public function show($ne_id)
     {
         $news_event = DB::table('news_events')
-            ->select('ne_id', 'category', 'title', 'date', 'description', 'image_file')
+            ->select('ne_id', 'category', 'title', 'date', 'description', 'image_file', 'enabled')
             ->where('ne_id', $ne_id)
             ->first();
 

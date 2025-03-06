@@ -65,7 +65,14 @@
         </div>
         <div class="row mt-3">
             <div class="col-md-7">
-                <h2>{{ $news_event->title }}</h2>
+                <div class="d-flex align-items-center">
+                    <h2 class="me-2">{{ $news_event->title }}</h2>
+                    @if($news_event->enabled == 1)
+                        <span class="badge bg-primary rounded-pill">Enabled</span>
+                    @else
+                        <span class="badge bg-warning rounded-pill">Disabled</span>
+                    @endif
+                </div>
                 <p><i class="fa fa-calendar"></i> {{ date('F d, Y', strtotime($news_event->date)) }}</p>
                 <p><?php echo $news_event->description ?></p>
             </div>

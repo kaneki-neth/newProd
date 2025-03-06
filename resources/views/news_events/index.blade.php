@@ -32,7 +32,7 @@
     <h1 class="page-header">News and Events List</h1>
 
     <div class="panel panel-inverse">
-        <div class="panel-body">
+        <div class="panel-body" id="pannel-body">
             <div class="table-responsive" style="overflow-x: hidden">
                 <div class="d-flex justify-content-end">
                     <button class="btn btn-primary btn-xs" onclick="location.href='/news_events/create'">
@@ -126,6 +126,7 @@
     <script src="/assets/plugins/moment/min/moment.min.js"></script>
 
     <script>
+        $("#pannel-body").attr("style", 'min-height: 78vh;');
         $('#news_events').addClass('active');
 
         var tblrows = 0;

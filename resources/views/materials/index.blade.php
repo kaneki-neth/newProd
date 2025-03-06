@@ -23,7 +23,7 @@
                         New</button>
                 </div>
 
-                <form id="form-search" style="">
+                <form id="form-search">
                     <input type="hidden" name="filter" value="true">
                     <div class="row">
                         <div class="col-lg-2 col-md-3">
@@ -66,7 +66,7 @@
                             @foreach($materials as $material)
                                 <tr>
                                     <td>{{ $material->material_code }}</td>
-                                    <td id="name" style="color:#28acb5"
+                                    <td id="name" style="color:#28acb5; cursor: pointer;"
                                         onclick="location.href='/material/show/{{ $material->m_id }}'">
                                         {{ $material->name }}
                                     </td>
@@ -78,9 +78,9 @@
                     
                 </div>
             </div>
-            <div class="d-flex justify-content-end align-items-bottom mt-1">
-                {{ $materials->links('pagination::bootstrap-4') }}
-            </div>
+        </div>
+        <div class="panel-body d-flex flex-col justify-content-end align-items-bottom mt-1 pt-0">
+            {{ $materials->links('pagination::bootstrap-4') }}
         </div>
     </div>
 
@@ -95,11 +95,11 @@
 
     <script>
         $('#material').addClass('active');
+        $("#pannel-body").attr("style", 'min-height: 78vh;');
 
         var tblrows = 0;
         var height = screen.height;
-        $("#pannel-body").attr("style", 'min-height: 78vh;');
-        tblrows = parseInt(height * 0.45) - 30;
+        tblrows = parseInt(height * 0.8) - 30;
 
         $('#data-table-scroller').DataTable({
             deferRender: true,

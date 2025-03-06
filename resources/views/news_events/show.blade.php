@@ -65,7 +65,14 @@
         </div>
         <div class="row mt-3">
             <div class="col-md-7">
-                <h2>{{ $news_event->title }}</h2>
+                <div class="d-flex align-items-center">
+                    <h2 class="me-2">{{ $news_event->title }}</h2>
+                    @if($news_event->enabled == 1)
+                        <span class="badge bg-primary rounded-pill">Enabled</span>
+                    @else
+                        <span class="badge bg-warning rounded-pill">Disabled</span>
+                    @endif
+                </div>
                 <p><i class="fa fa-calendar"></i> {{ date('F d, Y', strtotime($news_event->date)) }}</p>
                 <p><?php echo $news_event->description ?></p>
             </div>
@@ -92,7 +99,7 @@
 <script src="/assets/js/jquery-3.6.4.min.js"></script>
 <script>
     $('#news_events').addClass('active');
-    $("#pannel-body").attr("style", 'height: 78vh;');
+    $("#pannel-body").attr("style", 'min-height: 78vh;');
 </script>
 
 @endsection('content')

@@ -149,7 +149,7 @@
             </div>
         </div>
         <div class="row mt-3">
-            <div id="fields" class="col-md-7 mb-3">
+            <div id="fields" class="col-md-7">
                 <div class="form-group">
                     <label for="category" class="form-label">Category <span class="text-danger">*</span></label>
                     <select class="form-control select2" id="category" name="category">
@@ -181,7 +181,7 @@
                 </div>
             </div>
 
-            <div id="images" class="col-md-5 mb-3">
+            <div id="images" class="col-md-5">
                 <div id="img-container">
                     <label class="form-label">Upload Image <span class="text-danger">*</span></label>
                     <div id="main-img-container" class="row g-0">
@@ -203,7 +203,13 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex justify-content-start">
+        <div class="mt-3 d-flex flex-row gap-2">
+            <label class="form-label" for="enabled">Enabled <span class="text-danger">*</span></label>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="enabled" name="enabled" checked>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start mt-3">
             <button class="btn btn-primary btn-xs" onclick="submitData()">Submit</button>
         </div>
     </div>
@@ -307,6 +313,7 @@
         formData.append('title', $('#title').val());
         formData.append('date', $('#date').val());
         formData.append('description', $('#summernote').val());
+        formData.append('enabled', $('#enabled').is(':checked') ? 1 : 0);
         if($('#mainImage')[0].files[0]){
             formData.append('mainImage', $('#mainImage')[0].files[0]);
         }

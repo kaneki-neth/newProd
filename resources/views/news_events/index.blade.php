@@ -60,6 +60,15 @@
                             </select>
                         </div>
 
+                        <div class="col-lg-2 col-md-2">
+                            <label class="form-label">Status</label>
+                            <select class="select2 form-control" id="enabled" name="enabled">
+                                <option value="">All</option>
+                                <option value="1" {{ $enabled == 1 ? 'selected' : '' }}>Enabled</option>
+                                <option value="0" {{ $enabled == 0 ? 'selected' : '' }}>Disabled</option>
+                            </select>
+                        </div>
+
                         <div class="col-lg-4 col-md-4">
                             <label class="form-label">Date Range</label>
                             <div class="input-group input-daterange">
@@ -86,7 +95,8 @@
                             <tr>
                                 <th class="text-center" width="15%">Date</th>
                                 <th class="text-center">Title</th>
-                                <th class="text-center" width="15%">Category</th>
+                                <th class="text-center" width="10%">Category</th>
+                                <th class="text-center" width="10%">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -95,11 +105,18 @@
                                     <td class="text-center" width="15%">{{ date('F d, Y', strtotime($ne->date)) }}</td>
                                     <td class="" id="name" style="cursor: pointer"
                                         onclick="location.href='/news_events/{{ $ne->ne_id }}'">{{ $ne->title }}</td>
-                                    <td class="text-center" width="15%">
+                                    <td class="text-center" width="10%">
                                         @if($ne->category == 'event')
                                             <span class="badge" style="background-color: orange;">Event</span>
                                         @else
                                             <span class="badge bg-info">News</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center" width="10%">
+                                        @if($ne->enabled)
+                                            <i class="fa fa-check text-success"></i>
+                                        @else
+                                            <i class="fa fa-times text-danger"></i>
                                         @endif
                                     </td>
                                 </tr>

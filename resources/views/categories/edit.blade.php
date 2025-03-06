@@ -41,7 +41,7 @@
         <label for="enabled" class="col-sm-4 col-form-label form-label">Enabled</label>
         <div class = "col-sm-8">
             <div class="form-check form-switch align-middle">
-                <input class="form-check-input" type="checkbox" id="enabled" name="enabled" checked>
+                <input class="form-check-input" type="checkbox" id="enabled" name="enabled" {{ $category->enabled ? 'checked' : '' }}>
             </div>
         </div>
     </div>

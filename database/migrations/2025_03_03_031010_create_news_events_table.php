@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('date');
             $table->longText('description');
             $table->string('image_file');
+            $table->tinyInteger('enabled')->default(1);
 
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();

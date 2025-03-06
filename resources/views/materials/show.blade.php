@@ -3,218 +3,390 @@
 @section('title', 'Vuew Material')
 
 @section('content')
-    <style>
+<style>
+        html, body {
+            overflow-x: hidden;
+        }
+
+        td, th {
+            border: none;
+        }
+        
+        div img#mainImage {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;        
+            object-fit: contain;
+        }
+
+        .col-4 > .row {
+            width: 100%;
+            min-width: 100%; 
+        }
+
+        .image-container {
+            position: relative;
+            flex: 0 0 auto;
+            width: 25%;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--bs-component-border-color);
+            border-radius: 4px;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 1px solid #d1c3c0;
+        }
+
+        .hover-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0); 
+            transition: background 0.3s ease;
+        }
+
+        .tool-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50%; /* Adjust percentage as needed */
+            height: 50%; /* Adjust percentage as needed */
+            background: var(--bs-component-border-color);
+            border-radius: 10%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0; 
+            transition: opacity 0.3s ease;
+        }
+
+        .delete-option {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+
+        .tool-overlay i {
+            font-size: 24px;
+            color: white; 
+        }
+
+        .image-container:hover .hover-overlay {
+            background: rgba(0, 0, 0, 0.3); 
+        }
+
+        .image-container:hover .tool-overlay {
+            opacity: 1; 
+        }
+
+        .error-message {
+            color: red;
+            font-size: 12px;
+            display: block;
+            margin-top: 5px;
+            position: relative;
+            background-color: white;
+        }
+
+        .select2 {
+            width: 100% !important;
+        }
+
+        .input-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .select2-container {
+            position: relative;
+        }
+
+        .select2-container--default .select2-selection--multiple.is-invalid {
+            border-color: red !important;
+        }
+
+        .select2-container--default .select2-selection--single:has(+ select:invalid) {
+            border: 1px solid red !important;
+        }
+
+        .is-invalid {
+            border-color: red !important;
+        }
+
+        input.is-invalid {
+            border-color: red !important;
+        }
+
         #imageGallery::-webkit-scrollbar {
             width: 8px;
-            /* Makes the scrollbar thinner */
             height: 8px;
-            /* Adjusts horizontal scrollbar thickness */
         }
 
         #imageGallery::-webkit-scrollbar-track {
             background: #f1f1f1;
-            /* Light gray background */
             border-radius: 10px;
         }
 
         #imageGallery::-webkit-scrollbar-thumb {
             background: #888;
-            /* Darker gray for the scrollbar handle */
             border-radius: 10px;
         }
 
         #imageGallery::-webkit-scrollbar-thumb:hover {
             background: #555;
-            /* Darker on hover */
         }
 
         #imageGallery {
             scrollbar-width: thin;
-            /* Makes the scrollbar thinner */
             scrollbar-color: #888 #f1f1f1;
-            /* Thumb color and track color */
         }
     </style>
-
-
-    <link href="../assets/plugins/summernote/dist/summernote-lite.css" rel="stylesheet" />
-
+    <link href="/assets/plugins/summernote/dist/summernote-lite.css" rel="stylesheet" />
     <ol class="breadcrumb float-xl-end">
         <li class="breadcrumb-item"><a href="{{ route('materials.index') }}">Materials</a></li>
         <li class="breadcrumb-item"><a href="javascript:;">Material</a></li>
     </ol>
-    <h1 class="page-header">View Material</h1>
+    <h1 class="page-header">Material</h1>
 
-    <!-- make new -->
-    
     <div class="panel panel-inverse">
-        <div class="panel-body" id="pannel-body">
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-primary btn-xs" onclick="window.location.href='/material/{{$material->m_id}}/edit'">
-                    Update</button>
+        <div class="panel-body" id="pannel-body" style="padding: 45px !important;">
+            <div class="d-flex justify-content-start gap-2">
+                <button class="btn btn-primary btn-xs" type="submit" style="" onclick="location.href='/material'">
+                    <i class="fa fa-arrow-left"></i> 
+                    Back
+                </button>
+                <button class="btn btn-primary btn-xs" type="submit" style="" onclick="location.href=`/material/{{$material->m_id}}/edit`">
+                    <i class="fa fa-edit"></i> 
+                    Edit
+                </button>
             </div>
-            <div class="row mb-3 g-0" style="margin: 0px;">
-                <!-- diri content sa left -->
-                <div class="col-8">
-                    <!-- initial text inputs: name, code, category, year -->
+            <form method="POST" id="form-update-materials">
+                @csrf
+                <div class="row mb-3 g-0" style="margin: 0px;">
+                    <div class="col-8 mt-3">
                     <div class="row">
-                        <div style="width: 50%">
+                        <div class="col">
                             <label for="name" class="form-label">Name </label>
-                            <input type="text" class="form-control form-control-xs" name="name"
-                                value="{{ $material->name }}" readonly>
+                            <div class="form-control">
+                                {{ $material->name}}
+                            </div>
                         </div>
-                        <div style="width: 50%" class="col-md-4">
+                        <div class="col-md-4">
                             <label for="code" class="form-label">Code </label>
-                            <input type="text" class="form-control form-control-xs" name="code"
-                                value="{{ $material->material_code }}" readonly>
-                            <span class="error-message"></span>
-                        </div>
-                        <div style="width: 80%">
-                            <label for="categories" class="form-label">Category </label>
-                            @foreach ($categories as $category)
-                                <p>{{ $category->category_name }}</p>
-                            @endforeach
-                        </div>
-                        <div style="width: 20%" class="col-md-2">
-                            <label for="year" class="form-label">Year </label>
-                            <input type="text" class="form-control form-control-xs" name="year"
-                                value="{{ $material->year }}" readonly>
-                        </div>
-                    </div>
-                    <!-- description module here -->
-                    <div class="row mt-3 g-0">
-                        <label for="material_description" class="form-label">Description </label>
-                        <div class="border" style="border-radius: 4px">
-                            <p>{{ $material->description }}</p>
-                        </div>
-                    </div>
-                    <!-- other details -->
-                    <div class="row">
-                        <div class="col-12 mt-3">
-                            <div style="border-radius: 4px;">
-                                <table class="properties_table table table-responsive" id="properties_table"
-                                    style="border-radius: 4px;">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Properties</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="properties_tableBody" style="border-radius: 4px;">
-                                        <tr>
-                                            <td style="width:50%">
-                                                <div>
-                                                    @foreach ($soft_properties as $property)
-                                                        <input class="property-name form-control form-control-xs"
-                                                            name="property_name" id="property-name-field" style=" width:100%"
-                                                            value="{{ $property->property_name }} " readonly>
-                                                    @endforeach
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <table class="technical_properties_table table table-responsive"
-                                    id="technical_properties_table" style="border-radius: 4px;">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Technical Properties</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="technical_properties_tableBody">
-                                        <tr>
-                                            <td style="width:50%">
-                                                <div>
-                                                    @foreach ($technical_properties as $property)
-                                                        <input class="form-control form-control-xs"
-                                                            name="technical_property_name" style="width:100%"
-                                                            value="{{ $property->property_name }}" readonly>
-                                                    @endforeach
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <table class="sustainability_table table table-responsive" id="sustainability_table">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Sustainability and Application</th>
-                                            <th></th>
-                                        </tr>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="sustainability_tableBody">
-                                        <tr>
-                                            <td style="width:50%">
-                                                <div>
-                                                    @foreach ($application_properties as $property)
-                                                        <input class="form-control form-control-xs"
-                                                            name="sustainability_property_name" style="width:100%"
-                                                            value="{{ $property->property_name }}" readonly>
-                                                    @endforeach
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div class="form-control">
+                                {{ $material->material_code}}
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- end of content on the left -->
+    
+                    <div class="row mt-3">
+                        <div class="col">
+                            <label class="form-label">Category</label>
+                            <div class="form-control">
+                                @foreach ($categories as $category)
+                                    @if(in_array($category->c_id, $selectedCategories))
+                                        <span class="badge" style="background-color: #28acb5">{{ $category->name }}</span>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-2">
+                            <label class="form-label">Year</label>
+                            <div class="form-control">
+                                {{ $material->year }}
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="row mt-3 g-0">
+                        <div class="alert alert-yellow fade" style="display: none;" id="descriptionError"></div>
+                        <label for="description" class="form-label">Description </label>
+                        <div class="border form-control" style="border-radius: 4px; height: 350px; overflow: auto;">
+                            @php
+                                echo $material->description;
+                            @endphp
+                        </div>
+                    </div>
+                    <div class="row">
+                            <div class="col-12 mt-3">
+                                <div style="border-radius: 4px;">
+                                    <table class="properties_table table table-responsive" id="properties_table" style="border-radius: 4px;">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Properties</th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="properties_tableBody" style="border-radius: 4px;">
+                                            @if(count($properties) < 1)
+                                                <tr>
+                                                    <td colspan="3">
+                                                        <span>No Data available..</span>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                            @forEach($properties as $prop)
+                                                <tr>
+                                                    <td style="width:50%">
+                                                        <div>
+                                                            <label for="property" class="form-label">Name</label> 
+                                                            <div class="form-control">
+                                                                {{ $prop->name }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="width:50%">
+                                                        <div>
+                                                            <label for="property" class="form-label">Value</label>
+                                                            <div class="form-control">
+                                                                {{ $prop->value }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td> </td>  
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
 
-                <!-- content on the right aka image and submit button -->
+                                    <table class="technical_properties_table table table-responsive"
+                                        id="technical_properties_table" style="border-radius: 4px;">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Technical Properties</th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="technical_properties_tableBody">
+                                            @if(count($techProperties) < 1)
+                                                <tr>
+                                                    <td colspan="3">
+                                                        <span>No Data available..</span>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                            @forEach($techProperties as $techProp)
+                                                <tr>
+                                                    <td style="width:50%">
+                                                        <div>
+                                                            <label for="property" class="form-label">Name</label> 
+                                                            <div class="form-control">
+                                                                {{ $techProp->name }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="width:50%">
+                                                        <div>
+                                                            <label for="property" class="form-label">Value</label>
+                                                            <div class="form-control">
+                                                                {{ $techProp->value }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td> </td>  
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                    <table class="sustainability_table table table-responsive" id="sustainability_table">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Sustainability and Application</th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="sustainability_tableBody">
+                                            @if(count($susProperties) < 1)
+                                                <tr>
+                                                    <td colspan="3">
+                                                        <span>No Data available..</span>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                            @foreach($susProperties as $appProp)
+                                                <tr>
+                                                    <td style="width:50%">
+                                                        <div>
+                                                            <label for="property" class="form-label">Name</label> 
+                                                            <div class="form-control">
+                                                                {{ $appProp->name }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="width:50%">
+                                                        <div>
+                                                            <label for="property" class="form-label">Value</label>
+                                                            <div class="form-control">
+                                                                {{ $appProp->value }}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td> </td>  
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+    
+                </div>
+               
                 <div class="col-4 d-flex align-items-end flex-column" style="height: 100%">
-                    <!-- show image content -->
                     <div class="row g-0">
                         <div class="col-9" style="margin-left: auto">
-                            <!-- main/big image -->
+                            <div class="alert alert-yellow fade" id="imageError"></div>
+                            <label class="form-label">Image</label>
                             <div style="border:1px solid var(--bs-component-border-color); border-radius:4px; aspect-ratio: 1 / 1; margin-left: 0 !important; margin-right: 0 !important;"
                                 class="row g-0">
-                                <img src="{{ asset('material_images/' . basename(optional($images)->first())) }}"
-                                    id="mainImage">
+                                <img src='{{ asset('storage').'/'.$material->image_file}}' id="mainImage">
                             </div>
-                            <!-- container for the stuff to append -->
-
-                            <div id="imageGallery"
-                                style="display: flex; gap: 10px; overflow-x: auto; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-top: 8px">
-                                <!-- Add Button Square -->
-                                <div
-                                    style="border-radius: 4px; flex: 0 0 auto; width: 25%; aspect-ratio: 1/1; background: var(--bs-component-border-color); display: flex; align-items: center; justify-content: center; cursor: pointer;">
-                                    @if (optional($images)->first())
-                                        @foreach ($images as $image)
-                                            @if ($image != optional($images)->first())
-                                                <img src="{{ asset('material_images/' . basename($image)) }}"
-                                                    style="width: 100%; height: 100%; object-fit: cover;">
-                                            @endif
-                                        @endforeach
-                                    @endif
+                            @if (count($images) > 0)
+                                <div id="imageGallery"
+                                    style="display: flex; gap: 10px; overflow-x: auto; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-top: 8px">
+                                    @foreach ($images as $image)
+                                        <div class="image-container">
+                                            <img class="preview-image" src="{{ asset('/storage' . '/' . $image->image_file) }}">
+                                        </div>
+                                    @endforeach
                                 </div>
-                                <!-- Dynamically added squares will be appended here -->
-                            </div>
+                            @endif
                         </div>
                     </div>
-
+                    
                 </div>
-            </div>
+        
+            </form>
         </div>
     </div>
 
 
     <script src="/assets/js/jquery-3.6.4.min.js"></script>
-
-    <script src="../assets/plugins/summernote/dist/summernote-lite.min.js"></script>
     <script src="/assets/plugins/select2/dist/js/select2.min.js"></script>
-    <script src="../assets/plugins/blueimp-load-image/js/load-image.all.min.js"></script>
-    <script src="../assets/plugins/blueimp-file-upload/js/vendor/jquery.ui.widget.js"></script>
-    <script src="../assets/plugins/blueimp-file-upload/js/jquery.fileupload.js"></script>
-    <script src="../assets/plugins/blueimp-file-upload/js/jquery.fileupload-process.js"></script>
-    <script src="../assets/plugins/blueimp-file-upload/js/jquery.fileupload-image.js"></script>
-    <script src="../assets/plugins/blueimp-file-upload/js/jquery.fileupload-ui.js"></script>
-    <script src="../assets/plugins/blueimp-file-upload/js/jquery.fileupload-validate.js"></script>
-    <script src="../assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
 
     <script>
+        $('#material').addClass('active');
+        $(document).ready(function () {
+            $('#imageError').removeClass("show");
+            $('#imageError').hide();
+            $('#imageError').empty();
+            let material = @json($material);
+        });
+
+        
     </script>
 @endsection

@@ -28,7 +28,7 @@ class MaterialController extends Controller
 
         $query = $query->orderBy('name', 'asc');
 
-        $materials = $query->get();
+        $materials = $query->paginate(20);
 
         return view('materials.index', compact('materials', 'name', 'material_code'));
     }
@@ -45,38 +45,39 @@ class MaterialController extends Controller
         $material = DB::table('materials')
             ->where('m_id', $id)
             ->first();
-        
+
         $categories = DB::table('categories')->orderBy('name', 'asc')->get();
         $selectedCategories = DB::table('item_categories')
             ->where('m_id', $id)
             ->pluck('c_id')
             ->toArray();
 
-        
+
         $properties = DB::table('properties')
             ->select('*')
             ->where('m_id', $id)
             ->where('type', '=', "soft")
-            ->get(); 
+            ->get();
 
         $techProperties = DB::table('properties')
             ->select('*')
             ->where('m_id', $id)
             ->where('type', '=', "technical")
-            ->get(); 
+            ->get();
 
         $susProperties = DB::table('properties')
             ->select('*')
             ->where('m_id', $id)
             ->where('type', '=', "application")
-            ->get(); 
+            ->get();
 
-
-        
         $images = DB::table('material_images')
+            ->select('mi_id', 'image_file')
             ->where('m_id', $id)
-            ->pluck('image_file')
+            ->get()
             ->toArray();
+
+        // dd(compact('material', 'categories', 'selectedCategories', 'properties', 'techProperties', 'susProperties', 'images'));
 
         return view('materials.edit', compact('material', 'categories', 'selectedCategories', 'properties', 'techProperties', 'susProperties', 'images'));
     }
@@ -88,53 +89,56 @@ class MaterialController extends Controller
 
     public function update(Request $request, $m_id)
     {
-        dd("hello u reached update");
         return $this->handleMaterialRequest($request, $m_id);
     }
 
     public function show(string $m_id)
     {
         $material = DB::table('materials')
-            ->select('materials.material_code', 'materials.name', 'materials.description', 'materials.year', 'm_id')
+            ->select('materials.material_code', 'materials.name', 'materials.description', 'materials.year', 'm_id', 'image_file')
             ->where('m_id', $m_id)
             ->first();
 
         $categories = DB::table('item_categories')
             ->leftJoin('categories', 'item_categories.c_id', '=', 'categories.c_id')
-            ->select('categories.name as category_name', 'categories.description as category_description')
+            ->select('categories.name', 'categories.description as category_description', 'categories.c_id')
             ->where('m_id', $m_id)
             ->orderBy('categories.name', 'asc')
             ->get();
 
+        $selectedCategories = DB::table('item_categories')
+            ->where('m_id', $m_id)
+            ->pluck('c_id')
+            ->toArray();
+
+
         $images = DB::table('material_images')
+            ->select('mi_id', 'image_file')
             ->where('m_id', $m_id)
-            ->pluck('image_file')
-            ->first();
+            ->get()
+            ->toArray();
 
-        $soft_properties = DB::table('item_properties')
-            ->leftJoin('properties', 'item_properties.p_id', '=', 'properties.p_id')
-            ->select('item_properties.*', 'properties.name as property_name', 'properties.type')
+        $properties = DB::table('properties')
+        ->select('*')
+        ->where('m_id', $m_id)
+        ->where('type', '=', "soft")
+        ->get();
+
+        $techProperties = DB::table('properties')
+            ->select('*')
             ->where('m_id', $m_id)
-            ->where('properties.type', 'soft')
+            ->where('type', '=', "technical")
             ->get();
 
-        $technical_properties = DB::table('item_properties')
-            ->leftJoin('properties', 'item_properties.p_id', '=', 'properties.p_id')
-            ->select('item_properties.*', 'properties.name as property_name', 'properties.type')
+        $susProperties = DB::table('properties')
+            ->select('*')
             ->where('m_id', $m_id)
-            ->where('properties.type', 'technical')
-            ->get();
-
-        $application_properties = DB::table('item_properties')
-            ->leftJoin('properties', 'item_properties.p_id', '=', 'properties.p_id')
-            ->select('item_properties.*', 'properties.name as property_name', 'properties.type')
-            ->where('m_id', $m_id)
-            ->where('properties.type', 'application')
+            ->where('type', '=', "application")
             ->get();
 
         // dd(compact('material', 'categories', 'images', 'soft_properties', 'technical_properties', 'application_properties'));
 
-        return view('materials.show', compact('material', 'categories', 'images', 'soft_properties', 'technical_properties', 'application_properties'));
+        return view('materials.show', compact('material', 'categories', 'images', 'properties', 'techProperties', 'susProperties', 'selectedCategories'));
     }
 
     public function destroy(string $id)
@@ -173,22 +177,32 @@ class MaterialController extends Controller
     {
         $validator = $this->validateMaterialRequest($request, $materialId);
         if ($validator->fails()) {
+            
             return response()->json([
                 'success' => false,
                 'errors' => $validator->getMessageBag()->toArray(),
             ], 400);
         }
-        
+
         $storedImagePaths = [];
         try {
             DB::beginTransaction();
 
-            $mainImagePath = $request->file('mainImage')->store('material_images', 'public');
-            $storedImagePaths[] = $mainImagePath;
+            $mainImagePath = null;
+            if ($request->has('mainImage')) {
+                if ($materialId) {
+                    $oldMainImage = DB::table('materials')->where('m_id', $materialId)->value('image_file');
+                    if ($oldMainImage) {
+                        \Storage::disk('public')->delete($oldMainImage);
+                    }
+                }
+                $mainImagePath = $request->file('mainImage')->store('material_images', 'public');
+                $storedImagePaths[] = $mainImagePath;
+            }
             $materialId = $this->createOrUpdateMaterial($request, $mainImagePath, $materialId);
-            
+
             $this->syncCategories($materialId, $request->input('categories'));
-            if($request->input('properties')){
+            if ($request->input('properties')) {
                 $this->syncProperties($materialId, $request->input('properties'));
             }
 
@@ -200,6 +214,31 @@ class MaterialController extends Controller
             }
 
             DB::commit();
+
+            if ($request->has('deleteOldSubImageIds')) {
+                DB::table('material_images')
+                    ->whereIn('mi_id', $request->input('deleteOldSubImageIds'))
+                    ->delete();
+            }
+
+            if ($request->has('deleteOldProps')) {
+                DB::table('properties')
+                    ->whereIn('p_id', $request->input('deleteOldProps'))
+                    ->delete();
+            }
+            if ($request->has('deleteOldTechProps')) {
+                DB::table('properties')
+                    ->whereIn('p_id', $request->input('deleteOldTechProps'))
+                    ->delete();
+            }
+            if ($request->has('deleteOldAppProps')) {
+                DB::table('properties')
+                    ->whereIn('p_id', $request->input('deleteOldAppProps'))
+                    ->delete();
+            }
+
+            session()->flash('success', "Material created successfully!");
+
             return response()->json([
                 'success' => true,
                 'message' => 'Material ' . ($materialId ? 'updated' : 'created') . ' successfully',
@@ -208,7 +247,7 @@ class MaterialController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             $this->deleteUploadedImages($storedImagePaths);
-
+            
             return response()->json([
                 'success' => false,
                 'message' => 'Error processing material: ' . $e->getMessage(),
@@ -219,25 +258,41 @@ class MaterialController extends Controller
     protected function validateMaterialRequest(Request $request, $materialId = null)
     {
         $uniqueCodeRule = 'unique:materials,material_code' . ($materialId ? ",{$materialId},m_id" : '');
+        if (! preg_match('/>(\s*[^<\s].*?)</', $request->description)) {
+            $request->merge(['description' => strip_tags($request->description)]);
+        }
+        if ($request->description == strip_tags($request->description)) {
+            $request->merge(['description' => trim(str_replace('&nbsp;', '', $request->description))]);
+        }
+        // <p>&nbsp;</p><p><br></p> not handled yet
 
         return Validator::make($request->all(), [
             'code' => 'required|' . $uniqueCodeRule,
             'name' => 'required',
-            'categories' => 'sometimes|array',
+            'categories' => 'required|array',
             'categories.*' => 'exists:categories,c_id',
             'properties' => 'sometimes|array',
             'properties.*.name' => 'required',
             'properties.*.value' => 'required',
             'properties.*.type' => 'required|in:soft,technical,application',
-            'mainImage' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:102400',
+            'mainImage' => ($materialId ? 'sometimes' : 'required').'|image|mimes:jpeg,png,jpg,gif,svg|max:102400',
             'imageFiles' => 'sometimes|array',
             'imageFiles.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:102400',
             'year' => 'required|digits:4',
             'description' => 'required',
+            'deleteOldSubImageIds' => 'sometimes|array',
+            'deleteOldSubImageIds.*' => 'exists:material_images,mi_id',
+            'deleteOldProps' => 'sometimes|array',
+            'deleteOldProps.*' => 'exists:properties,p_id',
+            'deleteOldTechProps' => 'sometimes|array',
+            'deleteOldTechProps.*' => 'exists:properties,p_id',
+            'deleteOldAppProps' => 'sometimes|array',
+            'deleteOldAppProps.*' => 'exists:properties,p_id',
         ], messages: [
             'code.required' => 'The material code is required.',
             'code.unique' => 'The material code must be unique.',
             'name.required' => 'The material name is required.',
+            'categories.required' => 'At least one category is required.',
             'categories.*.exists' => 'A selected category is invalid.',
             'properties.*.name.required' => 'The property name is required.',
             'properties.*.value.required' => 'The property value is required.',
@@ -260,11 +315,14 @@ class MaterialController extends Controller
             'material_code' => $request->input('code'),
             'name' => $request->input('name'),
             'description' => $request->input('description'),
-            'image_file' => $imageFilePath,
             'year' => $request->input('year'),
             'updated_by' => auth()->id(),
             'updated_at' => now(),
         ];
+
+        if ($request->has('mainImage')) {
+            $materialData['image_file'] = $imageFilePath;
+        }
 
         if ($materialId) {
             DB::table('materials')
@@ -297,21 +355,16 @@ class MaterialController extends Controller
         DB::table('item_categories')->insert($categoryData);
     }
 
-    // item_properties table
+    // properties table
     protected function syncProperties($materialId, $properties)
     {
-        DB::table('item_properties')->where('m_id', $materialId)->delete();
-
+        DB::table('properties')->where('m_id', $materialId)->delete();
         $propertyData = [];
         foreach ($properties as $property) {
-            $propertyId = $this->getOrCreatePropertyId(
-                $property['name'],
-                $property['type']
-            );
-
             $propertyData[] = [
                 'm_id' => $materialId,
-                'p_id' => $propertyId,
+                'name' => $property['name'],
+                'type' => $property['type'],
                 'value' => $property['value'],
                 'created_by' => auth()->id(),
                 'updated_by' => auth()->id(),
@@ -319,39 +372,15 @@ class MaterialController extends Controller
                 'updated_at' => now(),
             ];
         }
-        DB::table('item_properties')->insert($propertyData);
-    }
-
-    // properties table
-    protected function getOrCreatePropertyId($name, $type)
-    {
-        $propertyId = DB::table('properties')
-            ->where('name', $name)
-            ->where('type', $type)
-            ->value('p_id');
-
-        if (!$propertyId) {
-            $propertyId = DB::table('properties')->insertGetId([
-                'name' => $name,
-                'type' => $type,
-                'created_by' => auth()->id(),
-                'updated_by' => auth()->id(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
-
-        return $propertyId;
+        DB::table('properties')->insert($propertyData);
     }
 
     // material_images table
     protected function uploadAndStoreImages($materialId, $imageFiles)
     {
-        DB::table('material_images')->where('m_id', $materialId)->delete();
-        
         $storedPaths = [];
         $imageData = [];
-        
+
         foreach ($imageFiles as $file) {
             $path = $file->store('material_images', 'public');
             $storedPaths[] = $path;

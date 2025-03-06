@@ -56,6 +56,15 @@
                             </div>
                         </div>
 
+                        <div class="col-lg-2 col-md-2">
+                            <label class="form-label">Status</label>
+                            <select class="select2 form-control" id="status" name="status">
+                                <option value="" {{ $status === '' ? 'selected' : '' }}>All</option>
+                                <option value="1" {{ $status === '1' ? 'selected' : '' }}>Enabled</option>
+                                <option value="0" {{ $status === '0' ? 'selected' : '' }}>Disabled</option>
+                            </select>
+                        </div>
+
                         <div class="col-lg-4 col-md-4">
                             <label class="form-label">Date Range</label>
                             <div class="input-group input-daterange">
@@ -85,6 +94,7 @@
                                 <th>Title</th>
                                 <th>Video URL</th>
                                 <th>Date</th>
+                                <th style="text-align: center; width: 10%;">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -99,6 +109,13 @@
                                         {{ $video->video_url }}
                                     </td>
                                     <td>{{ date('F d, Y', strtotime($video->date)) }}</td>
+                                    <td style="text-align: center;">
+                                        @if($video->status == 1)
+                                            <i class="fa-solid fa-check text-success"></i>
+                                        @else
+                                            <i class="fa-solid fa-xmark text-danger"></i>
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -124,6 +141,10 @@
 
     <script>
         $('#videos').addClass('active');
+
+        $(document).ready(function () {
+            $('#status').select2();
+        });
 
         var userTarget = "";
         var exit = false;
@@ -164,9 +185,8 @@
             $('#title').val('');
             $('#date_from').val('');
             $('#date_to').val('');
+            $('#status').val('');
         }
-
-
     </script>
 
 @endsection

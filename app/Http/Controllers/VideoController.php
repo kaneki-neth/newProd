@@ -19,6 +19,7 @@ class VideoController extends Controller
         $title = '';
         $date_from = '';
         $date_to = '';
+        $status = '';
 
         $query = DB::table('videos')
             ->select('videos.*')
@@ -27,6 +28,12 @@ class VideoController extends Controller
         if ($request->has('title')) {
             $title = $request->title;
             $query->where('title', 'like', "%$title%");
+        }
+
+        $status = $request->input('status');
+
+        if ($status !== null && $status !== '') {
+            $query->where('status', $status);
         }
 
         if ($request->has('date_from') && $request->input('date_from')) {
@@ -41,7 +48,8 @@ class VideoController extends Controller
             $query->where('date', '<=', $dateTo);
         }
 
-        $videos = $query->orderBy('date', 'desc')->paginate(5);
+        // dd($status);
+        $videos = $query->orderBy('date', 'desc')->paginate(20);
 
 
         // $videos = $videos->map(function ($video) {
@@ -52,7 +60,7 @@ class VideoController extends Controller
         // $date_from = Carbon::parse($request->date_from)->format('F j, Y');
         // $date_to = Carbon::parse($request->date_to)->format('F j, Y');
 
-        return view('videos.index', compact('videos', 'title', 'date_from', 'date_to'));
+        return view('videos.index', compact('videos', 'title', 'date_from', 'date_to', 'status'));
     }
 
     /**
@@ -78,14 +86,16 @@ class VideoController extends Controller
 
         $validator = Validator::make($request->all(), [
             'title' => 'required',
-            'video_url' => 'required',
             'date' => 'required',
+            'video_url' => 'required',
+            'status' => 'required',
             'description' => 'required',
         ], messages: [
             'title.required' => 'The title is required.',
             'video_url.required' => 'The video URL is required.',
             'date.required' => 'The date is required.',
             'description.required' => 'The description is required.',
+            'status.required' => 'The status is required.',
         ]);
 
         if ($validator->fails()) {
@@ -100,7 +110,7 @@ class VideoController extends Controller
             'description' => $request->input('description'),
             'date' => $request->input('date'),
             'video_url' => $request->input('video_url'),
-            'status' => 1,
+            'status' => $request->input('status'),
             'created_by' => auth()->id(),
             'created_at' => now(),
             'updated_by' => auth()->id(),

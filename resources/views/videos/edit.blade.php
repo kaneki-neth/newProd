@@ -65,59 +65,53 @@
                 <div class="col-8">
                     <!-- initial text inputs: name, code, category, year -->
                     <div class="row">
+                        <!-- Title -->
                         <div class="col-md-6">
                             <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
                             <input type="text" class="form-control form-control-xs" name="title" placeholder="..."
                                 value="{{ $video->title }}">
                             <span class="error-message" style="color: red;"></span>
                         </div>
+
+                        <!-- Date -->
                         <div class="col-md-6">
                             <label for="date" class="form-label">Date <span class="text-danger">*</span></label>
-                            <input class="form-control" id="datepicker-autoClose" name="date" {{--
-                                value="{{ date('F d, Y', strtotime($video->date)) }}"> --}}
-                            value="{{ $video->date }}">
+                            <input class="form-control" id="datepicker-autoClose" name="date" value="{{ $video->date }}">
                             <span class="error-message" style="color: red;"></span>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="video_url" class="form-label">Video URL <span
-                                        class="text-danger">*</span></label>
-                                <input class="form-control" name="video_url" id="urlInput"
-                                    placeholder="Paste video URL here" value="{{ $video->video_url }}"
-                                    onchange="fetchThumbnail()">
-                                <span class="error-message" style="color: red;"></span>
-                            </div>
-                            <div class="col-6 mt-3">
-                                <div class="d-flex justify-content-end">
-                                    <label for="status" class=" form-label">Enabled </label>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="status" name="status" value="1"
-                                            @if($video->status == 1) checked @endif>
-                                    </div>
-                                </div>
+
+                        <!-- Video URL -->
+                        <div class="col-md-6 mt-3">
+                            <label for="video_url" class="form-label">Video URL <span class="text-danger">*</span></label>
+                            <input class="form-control" name="video_url" id="urlInput" placeholder="Paste video URL here"
+                                value="{{ $video->video_url }}" onchange="fetchThumbnail()">
+                            <span class="error-message" style="color: red;"></span>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="col-md-6 mt-3 d-flex align-items-center justify-content-end">
+                            <label for="status" class="form-label me-2">Enabled</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="status" name="status" value="1" @if($video->status == 1)
+                                checked @endif>
                             </div>
                         </div>
-                        <!-- description module here -->
-                        <div class="col-mt-6">
-                            <label for="description" class="form-label">Description <span
-                                    class="text-danger">*</span></label>
+
+                        <!-- Description -->
+                        <div class="col-12 mt-3">
+                            <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
                             <span id="description-msg" class="error-msg text-danger"></span>
-                            <div id="description-container" class="border" style="border-radius: 4px">
-                                <textarea class="textarea form-control" name="description" id="summernote"
-                                    placeholder="Enter text ..."
+                            <div id="description-container" class="border p-2 rounded">
+                                <textarea class="textarea form-control" name="description" id="summernote" placeholder="Enter text ..."
                                     rows="12">{!! strip_tags($video->description, '<p><a><b><i><u><strong><em><ul><ol><li><img>') !!}</textarea>
                             </div>
                         </div>
-                        <!-- other details -->
-                        <div class="row">
-                            <div class="col-6 mt-3">
-                                <div class="d-flex justify-content-start">
-                                    <button class="btn btn-primary btn-xs" style="margin: 10px;" onclick="submitData()">
-                                        Update
-                                    </button>
-                                </div>
-                            </div>
 
+                        <!-- Button -->
+                        <div class="col-6 mt-3">
+                            <button class="btn btn-primary btn-xs" onclick="submitData()">
+                                Update
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -251,13 +245,7 @@
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    // swal.fire({
-                    //     title: 'Success',
-                    //     text: response.message,
-                    //     icon: 'success'
-                    // }).then(() => {
                     location.reload();
-                    // });
                 },
                 error: function (xhr) {
                     console.log(xhr);

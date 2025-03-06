@@ -37,14 +37,13 @@
             <div class="row" style="margin-bottom: 10px;">
                 <div class="col-md-6 d-flex justify-content-start gap-2">
                     <a href="/videos" class="btn btn-primary btn-xs"><i class="fa fa-arrow-left"></i> Back</a>
-
+                    @if (Auth::user()->hasPermissionTo('video_full'))
+                        <div class="col-md-6 d-flex justify-content-start gap-2">
+                            <button class="btn btn-primary btn-xs" onclick="location.href='/videos/edit/{{ $video->v_id }}'">
+                                Edit</button>
+                        </div>
+                    @endif
                 </div>
-                @if (Auth::user()->hasPermissionTo('video_full'))
-                    <div class="col-md-6 d-flex justify-content-end gap-2">
-                        <button class="btn btn-primary btn-xs" onclick="location.href='/videos/edit/{{ $video->v_id }}'">
-                            Edit</button>
-                    </div>
-                @endif
             </div>
             <div class="row mt-3 g-0" style="margin: 0px;">
 
@@ -53,39 +52,51 @@
                     <form action="/videos/update/{{ $video->v_id }}" method="post">
                         @csrf
                         <div class="row">
+                            <!-- Title -->
                             <div class="col-md-6">
                                 <label for="title" class="form-label">Title</label>
                                 <input type="text" class="form-control form-control-xs" name="title" placeholder="..."
                                     value="{{ $video->title }}" readonly>
                                 <span class="error-message" style="color: red;"></span>
                             </div>
+
+                            <!-- Date -->
                             <div class="col-md-6">
                                 <label for="date" class="form-label">Date</label>
                                 <input class="form-control" id="datepicker-autoClose" name="date"
                                     value="{{ date('F d, Y', strtotime($video->date)) }}" readonly>
                                 <span class="error-message" style="color: red;"></span>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label for="video_url" class="form-label">Video URL</label>
-                                    <input class="form-control" name="video_url" id="urlInput"
-                                        placeholder="Paste video URL here" value="{{ $video->video_url }}"
-                                        onchange="fetchThumbnail()" readonly>
-                                    <span class="error-message" style="color: red;"></span>
+
+                            <!-- Video URL -->
+                            <div class="col-md-6 mt-3">
+                                <label for="video_url" class="form-label">Video URL</label>
+                                <input class="form-control" name="video_url" id="urlInput"
+                                    placeholder="Paste video URL here" value="{{ $video->video_url }}"
+                                    onchange="fetchThumbnail()" readonly>
+                                <span class="error-message" style="color: red;"></span>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="col-md-6 mt-3 d-flex align-items-center justify-content-end">
+                                <div class="form-check form-switch">
+                                    @if($video->status == 1)
+                                        <span class="badge bg-primary rounded-pill">Enabled</span>
+                                    @else
+                                        <span class="badge bg-warning rounded-pill">Disabled</span>
+                                    @endif
                                 </div>
                             </div>
-                            <!-- description module here -->
-                            <div class="col-mt-6">
+
+                            <!-- Description -->
+                            <div class="col-12 mt-3">
                                 <label for="description" class="form-label">Description</label>
-                                <div class="border" style="border-radius: 4px">
+                                <div class="border p-2 rounded">
                                     <textarea class="textarea form-control" name="description" id="summernote"
                                         placeholder="Enter text ..." rows="12"
                                         readonly>{!! strip_tags($video->description, '<p><a><b><i><u><strong><em><ul><ol><li><img>') !!}</textarea>
                                     <span class="error-message" id="descriptionError" style="color: red;"></span>
                                 </div>
-                            </div>
-                            <!-- other details -->
-                            <div class="row">
                             </div>
                         </div>
                     </form>

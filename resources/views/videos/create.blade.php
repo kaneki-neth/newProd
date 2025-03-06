@@ -13,6 +13,10 @@
             height: 30px;
         }
 
+        .form-control {
+            height: 30px;
+        }
+
         .input-daterange>input {
             height: 30px;
         }
@@ -65,30 +69,39 @@
                 <!-- diri content sa left -->
                 <div class="col-8">
                     <div class="row">
+                        <!-- Title -->
                         <div class="col-md-6">
                             <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control form-control-xs" name="title" placeholder="...">
+                            <input type="text" class="form-control" name="title" placeholder="...">
                             <span class="error-message" style="color: red;"></span>
                         </div>
+
+                        <!-- Date -->
                         <div class="col-md-6">
                             <label for="date" class="form-label">Date <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="datepicker-autoClose" name="date"
                                 value="{{ now()->format('Y-m-d') }}" readonly>
                             <span class="error-message" style="color: red;"></span>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="video_url" class="form-label">Video URL <span
-                                        class="text-danger">*</span></label>
-                                <input class="form-control" name="video_url" id="urlInput"
-                                    placeholder="Paste video URL here" {{--
-                                    placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ" --}}
-                                    onchange="fetchThumbnail()">
-                                <span class="error-message" style="color: red;"></span>
+
+                        <!-- Video URL -->
+                        <div class="col-md-6 mt-3">
+                            <label for="video_url" class="form-label">Video URL <span class="text-danger">*</span></label>
+                            <input class="form-control" name="video_url" id="urlInput" placeholder="Paste video URL here"
+                                onchange="fetchThumbnail()">
+                            <span class="error-message" style="color: red;"></span>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="col-md-6 mt-3 d-flex align-items-center justify-content-end">
+                            <label for="status" class="form-label me-2">Status: </label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="status" name="status" value="1" checked>
                             </div>
                         </div>
-                        <!-- description module here -->
-                        <div class="col-12 mt-6">
+
+                        <!-- Description -->
+                        <div class="col-12 mt-3">
                             <label for="description" class="form-label">Description <span
                                     class="text-danger">*</span></label>
                             <span id="description-msg" class="error-msg text-danger"></span>
@@ -97,11 +110,13 @@
                                     placeholder="Enter text ..." rows="12"></textarea>
                             </div>
                         </div>
-                    </div>
-                    <div class="d-flex justify-content-start">
-                        <button class="btn btn-primary btn-xs" style="margin: 10px;" onclick="submitData()">
-                            <i class=" fa fa-plus"></i> Submit
-                        </button>
+
+                        <!-- Submit Button -->
+                        <div class="col-12 d-flex justify-content-start mt-3">
+                            <button class="btn btn-primary btn-xs" onclick="submitData()">
+                                <i class="fa fa-plus"></i> Submit
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="col-4 d-flex align-items-end flex-column">
@@ -237,6 +252,7 @@
             formData.append('date', document.querySelector('input[name="date"]').value);
             formData.append('video_url', document.querySelector('input[name="video_url"]').value);
             formData.append('description', document.querySelector('textarea[name="description"]').value);
+            formData.append('status', $('#status').is(':checked') ? 1 : 0);
             formData.append('_token', "{{ csrf_token() }}");
 
             if ($("#summernote").val()) {

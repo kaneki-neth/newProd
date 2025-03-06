@@ -2,21 +2,51 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use Illuminate\Http\JsonResponse;
 
 class VideoController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $videos = DB::table('videos')->get();
-        return view('videos.index', compact('videos'));
+        $title = '';
+        $date_from = '';
+        $date_to = '';
+
+        $query = DB::table('videos')
+            ->select('videos.*')
+            ->orderBy('date', 'desc');
+
+        if ($request->has('title')) {
+            $title = $request->title;
+            $query->where('title', 'like', "%$title%");
+        }
+
+        if ($request->has('date_from') && $request->input('date_from')) {
+            $dateFrom = date('Y-m-d 00:00:00', strtotime($request->date_from));
+            $query->where('date', '>=', $dateFrom);
+        }
+
+        if ($request->has('date_to') && $request->input('date_to')) {
+            $dateTo = date('Y-m-d 23:59:59', strtotime($request->date_to));
+            $query->where('date', '<=', $dateTo);
+        }
+
+        $videos = $query->orderBy('date', 'desc')->get();
+
+        $videos = $videos->map(function ($video) {
+            $video->date = Carbon::parse($video->date)->format('F j, Y');
+            return $video;
+        });
+
+        return view('videos.index', compact('videos', 'title', 'date_from', 'date_to'));
     }
 
     /**
@@ -31,17 +61,21 @@ class VideoController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
+
+        if (!preg_match('/>(\s*[^<\s].*?)</', $request->description)) {
+            $request->merge(['description' => strip_tags($request->description)]);
+        }
+        if ($request->description == strip_tags($request->description)) {
+            $request->merge(['description' => trim(str_replace('&nbsp;', '', $request->description))]);
+        }
+        // <p>&nbsp;</p><p><br></p> not handled yet
+
         $validator = Validator::make($request->all(), [
             'title' => 'required',
-            // 'video' => 'mimetypes:video/mp4,video/avi,video/mpeg,video/quicktime|max:102400', // 100MB max
             'video_url' => 'required',
             'date' => 'required',
             'description' => 'required',
         ], messages: [
-            // 'video.required' => 'The video is required.',
-            // 'video.mimetypes' => 'The video must be a video file.',
-            // 'video.max' => 'The video may not be greater than 100MB.',
             'title.required' => 'The title is required.',
             'video_url.required' => 'The video URL is required.',
             'date.required' => 'The date is required.',
@@ -49,26 +83,11 @@ class VideoController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->getMessageBag()->toArray(),
+            ], 400);
         }
-
-        // if ($request->hasFile('video')) {
-        //     $videoPath = $request->file('video')->store('videos', 'public'); // Store in "storage/app/public/videos"
-
-        //     $videoData = [
-        //         'title' => $request->input('title'),
-        //         'description' => $request->input('description'),
-        //         'date' => $request->input('date'),
-        //         'video_url' => $request->input('video_url'),
-        //         'video_file' => $videoPath,
-        //         'updated_by' => auth()->id(),
-        //         'updated_at' => now(),
-        //     ];
-
-        //     $videoId = DB::table('videos')->insertGetId($videoData);
-
-        //     return response()->json(['success' => 'Video uploaded successfully!', 'videoId' => $videoId]);
-        // }
 
         $videoData = [
             'title' => $request->input('title'),
@@ -82,12 +101,22 @@ class VideoController extends Controller
             'updated_at' => now(),
         ];
 
-        DB::table('videos')->insert($videoData);
+        try {
+            DB::table('videos')->insert($videoData);
 
-        session()->flash('success', 'Video created successfully.');
+            $message = 'Video created successfully.';
+            session()->flash('success', $message);
 
-        return response()->json(['success' => 'Video created successfully!']);
-
+            return response()->json([
+                'success' => true,
+                'message' => $message
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create video'
+            ], 500);
+        }
     }
 
     /**
@@ -115,6 +144,14 @@ class VideoController extends Controller
      */
     public function update(Request $request, string $videoId)
     {
+        if (!preg_match('/>(\s*[^<\s].*?)</', $request->description)) {
+            $request->merge(['description' => strip_tags($request->description)]);
+        }
+        if ($request->description == strip_tags($request->description)) {
+            $request->merge(['description' => trim(str_replace('&nbsp;', '', $request->description))]);
+        }
+        // <p>&nbsp;</p><p><br></p> not handled yet
+
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'video_url' => 'required',
@@ -128,48 +165,101 @@ class VideoController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->getMessageBag()->toArray(),
+            ], 400);
         }
 
-        $videoData = [
-            'title' => $request->input('title'),
-            'date' => $request->input('date'),
-            'video_url' => $request->input('video_url'),
-            'description' => $request->input('description'),
-            'status' => 1,
-            'updated_by' => auth()->id(),
-            'updated_at' => now(),
-        ];
-
         try {
+            DB::beginTransaction();
+
+            $videoData = [
+                'title' => $request->input('title'),
+                'date' => $request->input('date'),
+                'video_url' => $request->input('video_url'),
+                'description' => $request->input('description'),
+                'status' => $request->input('status'),
+                'updated_by' => auth()->id(),
+                'updated_at' => now(),
+            ];
+
             DB::table('videos')
                 ->where('v_id', $videoId)
                 ->update($videoData);
 
+            DB::commit();
+
             $video = DB::table('videos')->where('v_id', $videoId)->first();
 
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Video updated successfully!',
-                    'video' => $video
-                ]);
-            }
+            session()->flash('success', 'Video updated successfully!');
 
-            return redirect()
-                ->route('videos.edit', $videoId)
-                ->with('success', 'Video updated successfully');
+            return response()->json(['success' => true], 200);
 
         } catch (\Exception $e) {
-            if ($request->wantsJson()) {
-                return response()->json(['error' => 'Failed to update video'], 500);
-            }
+            DB::rollBack();
 
-            return redirect()
-                ->back()
-                ->with('error', 'Failed to update video');
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while updating the video.',
+            ], 500);
         }
     }
+
+    // public function update(Request $request)
+    // {
+
+    //     $request->merge(['description' => strip_tags($request->description)]);
+
+    //     $validator = Validator::make($request->all(), [
+    //         'title' => 'required',
+    //         'video_url' => 'required',
+    //         'date' => 'required',
+    //         'description' => 'required',
+    //     ], messages: [
+    //         'title.required' => 'The title is required.',
+    //         'video_url.required' => 'The video URL is required.',
+    //         'date.required' => 'The date is required.',
+    //         'description.required' => 'The description is required.',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'errors' => $validator->getMessageBag()->toArray(),
+    //         ], 400);
+    //     }
+
+    //     $videoData = [
+    //         'title' => $request->input('title'),
+    //         'description' => $request->input('description'),
+    //         'date' => $request->input('date'),
+    //         'video_url' => $request->input('video_url'),
+    //         'status' => $request->input('status'),
+    //         'updated_by' => auth()->id(),
+    //         'updated_at' => now(),
+    //     ];
+
+    //     try {
+    //         DB::table('videos')
+    //             ->where('v_id', $request->video_id)
+    //             ->update($videoData);
+
+    //         $message = 'Video updated successfully.';
+    //         session()->flash('success', $message);
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => $message
+    //         ], 200);
+
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Failed to update video'
+    //         ], 500);
+    //     }
+    // }
 
     /**
      * Remove the specified resource from storage.
@@ -219,7 +309,8 @@ class VideoController extends Controller
             '/youtube\.com\/watch\?v=([^\&\?\/]+)/', // Regular youtube URL
             '/youtube\.com\/embed\/([^\&\?\/]+)/',    // Embed URL
             '/youtu\.be\/([^\&\?\/]+)/',             // Shortened URL
-            '/youtube\.com\/v\/([^\&\?\/]+)/'        // Alternative embed URL
+            '/youtube\.com\/v\/([^\&\?\/]+)/',        // Alternative embed URL
+            '/youtube\.com\/shorts\/([^\&\?\/]+)/',   // Shorts URL
         ];
 
         foreach ($patterns as $pattern) {

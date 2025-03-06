@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Video')
+@section('title', 'Add Video')
 
 @section('content')
     <style>
@@ -9,80 +9,80 @@
             overflow-x: hidden;
         }
     </style>
+    <link href="/assets/plugins/summernote/dist/summernote-lite.css" rel="stylesheet" />
+    <link href="/assets/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
 
     <ol class="breadcrumb float-xl-end">
         <li class="breadcrumb-item"><a href="{{ route('videos.index') }}">Videos</a></li>
-        <li class="breadcrumb-item"><a href="javascript:;">Edit Video</a></li>
+        <li class="breadcrumb-item"><a href="javascript:;">Add Video</a></li>
     </ol>
-    <h1 class="page-header">Edit Video</h1>
+    <h1 class="page-header">Add Video</h1>
 
     <!-- make new -->
 
     <div class="panel panel-inverse">
         <div class="panel-body" id="pannel-body" style="padding: 65px !important;">
-            <div class="row">
-                <div class="col-md-12 d-flex justify-content-start gap-2">
-                    <a href="/videos/show/{{ $video->v_id }}" class="btn btn-primary btn-sm"><i
-                            class="fa fa-arrow-left"></i> Back</a>
-                </div>
-            </div>
-            <div class="row mt-3 g-0" style="margin: 0px;">
+            <div class="row mb-3 g-0" style="margin: 0px;">
                 <!-- diri content sa left -->
                 <div class="col-8">
                     <!-- initial text inputs: name, code, category, year -->
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control form-control-xs" name="title" placeholder="..."
-                                value="{{ $video->title }}">
-                            <span class="error-message" style="color: red;"></span>
-                        </div>
+                    <form action="/videos/update/{{ $video->v_id }}" method="post">
+                        @csrf
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="date" class="form-label">Date <span class="text-danger">*</span></label>
-                                <input class="form-control" id="datepicker-autoClose" name="date" value="{{ $video->date}}">
+                                <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-xs" name="title" placeholder="..."
+                                    value="{{ $video->title }}">
                                 <span class="error-message" style="color: red;"></span>
                             </div>
-                            <div class="col-md-6">
-                                <label for="video_url" class="form-label">Video URL <span
-                                        class="text-danger">*</span></label>
-                                <input class="form-control" name="video_url" id="urlInput"
-                                    placeholder="Paste video URL here" value="{{ $video->video_url }}"
-                                    onchange="fetchThumbnail()">
-                                <span class="error-message" style="color: red;"></span>
-                            </div>
-                        </div>
-                        <!-- description module here -->
-                        <div class="col-mt-6">
-                            <label for="description" class="form-label">Description <span
-                                    class="text-danger">*</span></label>
-                            <div class="border" style="border-radius: 4px">
-                                <textarea class="textarea form-control" name="description" id="summernote"
-                                    placeholder="Enter text ..."
-                                    rows="12">{!! strip_tags($video->description, '<p><a><b><i><u><strong><em><ul><ol><li><img>') !!}</textarea>
-                                <span class="error-message" id="descriptionError" style="color: red;"></span>
-                            </div>
-                        </div>
-                        <!-- other details -->
-                        <div class="row">
-                            <div class="col-6 mt-3">
-                                <div class="d-flex justify-content-start">
-                                    <button class="btn btn-primary btn-md" style="margin: 10px;" onclick="submitData()">
-                                        Update
-                                    </button>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="date" class="form-label">Date <span class="text-danger">*</span></label>
+                                    <input class="form-control" id="datepicker-autoClose" name="date"
+                                        value="{{ $video->date}}">
+                                    <span class="error-message" style="color: red;"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="video_url" class="form-label">Video URL <span
+                                            class="text-danger">*</span></label>
+                                    <input class="form-control" name="video_url" id="urlInput"
+                                        placeholder="Paste video URL here" value="{{ $video->video_url }}"
+                                        onchange="fetchThumbnail()">
+                                    <span class="error-message" style="color: red;"></span>
                                 </div>
                             </div>
-                            <div class="col-6 mt-3">
-                                <div class="d-flex justify-content-end">
-                                    <label for="status" class=" form-label">Enabled </label>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="status" name="status" value="1"
-                                            @if($video->status == 1) checked @endif>
+                            <!-- description module here -->
+                            <div class="col-mt-6">
+                                <label for="description" class="form-label">Description <span
+                                        class="text-danger">*</span></label>
+                                <div class="border" style="border-radius: 4px">
+                                    <textarea class="textarea form-control" name="description" id="summernote"
+                                        placeholder="Enter text ..."
+                                        rows="12">{!! strip_tags($video->description, '<p><a><b><i><u><strong><em><ul><ol><li><img>') !!}</textarea>
+                                    <span class="error-message" id="descriptionError" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <!-- other details -->
+                            <div class="row">
+                                <div class="col-6 mt-3">
+                                    <div class="d-flex justify-content-start">
+                                        <button class="btn btn-primary btn-md" style="margin: 10px;" onclick="submitData()">
+                                            Update
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-6 mt-3">
+                                    <div class="d-flex justify-content-end">
+                                        <label for="status" class=" form-label">Enabled </label>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="status" name="status"
+                                                value="1" @checked($video->status == 1)>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
                 <div class="col-4 d-flex align-items-end flex-column">
                     <!-- show image content -->
@@ -107,15 +107,10 @@
         </div>
     </div>
     <script src="/assets/js/jquery-3.6.4.min.js"></script>
-
-    <link href="/assets/plugins/summernote/dist/summernote-lite.css" rel="stylesheet" />
+    <script src="/assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
     <script src="/assets/plugins/summernote/dist/summernote-lite.min.js"></script>
 
-    <link href="/assets/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
-    <script src="/assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
-
     <script>
-        // $("#pannel-body").attr("style", 'height: 78vh;');
         // Initialize datepicker
         $("#datepicker-autoClose").datepicker({
             format: 'yyyy-mm-dd',
@@ -126,7 +121,6 @@
             // Ensure the datepicker opens when clicking the input
             showOnFocus: true
         });
-
         $(document).ready(function () {
 
             // Clear error message and remove is-invalid class when input changes
@@ -139,8 +133,6 @@
                 $(this).next(".error-message").text("");
                 $(this).removeClass("is-invalid");
             });
-
-            fetchThumbnail();
         });
 
         function fetchThumbnail() {
@@ -198,63 +190,60 @@
         function submitData() {
             let formData = new FormData();
 
-            formData.append("_token", "{{ csrf_token() }}");
             formData.append('title', document.querySelector('input[name="title"]').value);
             formData.append('date', document.querySelector('input[name="date"]').value);
             formData.append('video_url', document.querySelector('input[name="video_url"]').value);
             formData.append('description', document.querySelector('textarea[name="description"]').value);
             formData.append('status', $('#status').is(':checked') ? 1 : 0);
+            formData.append('_token', "{{ csrf_token() }}");
 
-            let url = "/videos/update/" + {{ $video->v_id }};
             $.ajax({
-                url: url,
+                url: "{{ route('videos.update', $video->v_id) }}",
                 type: "POST",
                 data: formData,
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    // swal.fire({
-                    //     title: 'Success',
-                    //     text: response.message,
-                    //     icon: 'success'
-                    // }).then(() => {
-                    location.reload();
-                    // });
+                    // showLoading();
+                    // location.reload();
+                    console.log(response);
+                    // // Handle success - maybe redirect or show success message
+                    // showLoading();
+                    // setTimeout(() => {
+                    //     showSuccessMessage("Video created successfully!", "{{ route('videos.index') }}");
+                    // }, 2000);
                 },
                 error: function (xhr) {
                     if (xhr.status === 400) {
                         const errors = xhr.responseJSON.errors;
                         console.log(errors);
-
-                        // Clear previous error messages
-                        $('.error-message').text('');
-                        $('.is-invalid').removeClass('is-invalid');
-
-                        // Display each error message below its corresponding field
                         Object.keys(errors).forEach(field => {
                             const errorMessage = errors[field][0];
                             const inputField = $(`[name="${field}"]`);
 
-                            // Add error class to the input
-                            inputField.addClass('is-invalid');
+                            if (inputField.hasClass('select2')) {
+                                // Handle Select2 fields
+                                inputField.next('.select2-container')
+                                    .find('.select2-selection--multiple')
+                                    .addClass('is-invalid');
+                            } else {
+                                // Handle regular inputs
+                                inputField.addClass('is-invalid');
+                            }
 
-                            // Find the error message span and update its text
+                            // Display error message
                             const errorSpan = inputField.siblings('.error-message');
                             if (errorSpan.length) {
-                                errorSpan.text(errorMessage).css('color', 'red');
+                                errorSpan.text(errorMessage);
                             } else {
-                                // If no error span exists, create one
-                                inputField.after(`<span class="error-message" style="color: red">${errorMessage}</span>`);
-                            }
-
-                            // Special handling for summernote editor if it's the description field
-                            if (field === 'description') {
-                                $('.note-editor').addClass('is-invalid');
+                                // For select2, add error message after the select2 container
+                                if (inputField.hasClass('select2')) {
+                                    inputField.next('.select2-container').after(`<span class="error-message">${errorMessage}</span>`);
+                                } else {
+                                    inputField.after(`<span class="error-message">${errorMessage}</span>`);
+                                }
                             }
                         });
-                    } else {
-                        // Handle other types of errors
-                        alert('An error occurred while updating the video. Please try again.');
                     }
                 }
             });
@@ -265,7 +254,6 @@
             height: "300",
             maximumImageFileSize: 102400, // 100MB
             toolbar: [
-                // [groupName, [list of button]]
                 ['style', ['bold', 'italic', 'underline', 'clear']],
                 ['font', ['strikethrough', 'superscript', 'subscript']],
                 ['fontsize', ['fontsize']],

@@ -4,10 +4,11 @@
 
 @section('content')
     <style>
-        html, body {
+        html,
+        body {
             overflow-x: hidden;
         }
-        
+
         .error-message {
             color: red;
             font-size: 12px;
@@ -88,7 +89,7 @@
     <h1 class="page-header">Add Material</h1>
 
     <!-- make new -->
-    
+
     <div class="panel panel-inverse">
         <div class="panel-body" id="pannel-body" style="padding: 65px !important;">
             <div class="row mb-3 g-0" style="margin: 0px;">
@@ -112,12 +113,12 @@
                     <div class="row">
                         <div class="col">
                             <label for="categories" class="form-label">Category <span class="text-danger">*</span></label>
-                                <select class="form-control select2 validate" id="multiple-select-field"
-                                    name="categories" type="text" onkeyup="remove_error(this)" multiple>
-                                    @foreach ($categories as $category)
-                                        <option value="{{ $category->c_id }}">{{ $category->name }}</option>
-                                    @endforeach
-                                </select>
+                            <select class="form-control select2 validate" id="multiple-select-field" name="categories"
+                                type="text" onkeyup="remove_error(this)" multiple>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->c_id }}">{{ $category->name }}</option>
+                                @endforeach
+                            </select>
                             <span class="error-message"></span>
                         </div>
                         <div class="col-md-2">
@@ -135,7 +136,8 @@
                     </div>
                     <!-- description module here -->
                     <div class="row mt-3 g-0">
-                        <label for="material_description" class="form-label" >Description <span class="text-danger">*</span></label>
+                        <label for="material_description" class="form-label">Description <span
+                                class="text-danger">*</span></label>
                         <div class="border" style="border-radius: 4px">
                             <textarea class="textarea form-control" name="material_description" id="summernote"
                                 placeholder="Enter text ..." rows="12"></textarea>
@@ -145,15 +147,15 @@
                     <div class="row">
                         <div class="col-12 mt-3">
                             <div style="border-radius: 4px;">
-                                <table class="properties_table table table-responsive" id="properties_table" style="border-radius: 4px;">
+                                <table class="properties_table table table-responsive" id="properties_table"
+                                    style="border-radius: 4px;">
                                     <thead class="table-light">
                                         <tr>
                                             <th>Properties</th>
                                             <th></th>
-                                            <th class="col-span-2" style="text-align: right;"><button
-                                                    style="width: 50px" type="button" id="addRowBtnRoles"
-                                                    onclick="addPropertyRow()" class="btn btn-primary btn-xs"><i
-                                                        class="fa fa-add"></i>
+                                            <th class="col-span-2" style="text-align: right;"><button style="width: 50px"
+                                                    type="button" id="addRowBtnRoles" onclick="addPropertyRow()"
+                                                    class="btn btn-primary btn-xs"><i class="fa fa-add"></i>
                                                 </button></th>
                                         </tr>
                                     </thead>
@@ -164,8 +166,7 @@
                                                     <label class="form-label" for="property">Name <span
                                                             class="text-danger">*</span></label>
                                                     <input class="property-name form-control form-control-xs validate"
-                                                        name="property_name" id="property-name-field"
-                                                        style=" width:100%">
+                                                        name="property_name" id="property-name-field" style=" width:100%">
                                                     <span class="error-message-sub"></span>
                                                 </div>
                                             </td>
@@ -189,9 +190,8 @@
                                         <tr>
                                             <th>Technical Properties</th>
                                             <th></th>
-                                            <th class="col-span-2" style="text-align: right;"><button
-                                                    style="width: 50px" type="button" id="addRowBtnRoles"
-                                                    onclick="addTechnicalPropertyRow()"
+                                            <th class="col-span-2" style="text-align: right;"><button style="width: 50px"
+                                                    type="button" id="addRowBtnRoles" onclick="addTechnicalPropertyRow()"
                                                     class="btn btn-primary btn-xs"><i class="fa fa-add"></i>
                                                 </button></th>
                                         </tr>
@@ -224,10 +224,9 @@
                                         <tr>
                                             <th>Sustainability and Application</th>
                                             <th></th>
-                                            <th class="col-span-2" style="text-align: right;"><button
-                                                    style="width: 50px" type="button" id="addRowBtnRoles"
-                                                    onclick="addSustainabilityRow()" class="btn btn-primary btn-xs"><i
-                                                        class="fa fa-add"></i>
+                                            <th class="col-span-2" style="text-align: right;"><button style="width: 50px"
+                                                    type="button" id="addRowBtnRoles" onclick="addSustainabilityRow()"
+                                                    class="btn btn-primary btn-xs"><i class="fa fa-add"></i>
                                                 </button></th>
                                         </tr>
                                     </thead>
@@ -264,7 +263,7 @@
                 <div class="col-4 d-flex align-items-end flex-column" style="height: 100%">
                     <!-- show image content -->
                     <div class="row g-0">
-                        
+
                         <div class="col-9" style="margin-left: auto">
                             <label class="form-label">Upload Image</label>
                             <!-- main/big image -->
@@ -287,18 +286,18 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
                 <!-- end of content on the right -->
                 <div class="d-flex justify-content-start">
-                        <button class="btn btn-primary btn-md" style="margin: 10px;" onclick="submitData()">
-                            <i class="fa fa-plus"></i> Submit
-                        </button>
-                    </div>
+                    <button class="btn btn-primary btn-md" style="margin: 10px;" onclick="submitData()">
+                        <i class="fa fa-plus"></i> Submit
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-    
+
 
     <script src="/assets/js/jquery-3.6.4.min.js"></script>
 
@@ -318,6 +317,15 @@
         let imageFiles = [];
         const MAX_FILE_SIZE = 100 * 1024 * 1024;
 
+        function rm_error(element) {
+            $(element).removeClass('error-input');
+            let msg_id = element.id;
+            if (msg_id == "description-container") {
+                msg_id = "description";
+            }
+            $('#' + msg_id + '-msg').text('');
+        }
+
         $(document).ready(function () {
             // Add input handler for all input fields
             $(document).on('input', '.validate', function () {
@@ -329,6 +337,12 @@
                 $field.siblings('.error-message-sub').text('');
                 // Reset border color
                 $field.css('border-color', '#ced4da');
+            });
+
+            // Add Summernote change handler to remove error state
+            $('#summernote').on('summernote.change', function () {
+                $('.note-editor').css('border', '');
+                $(this).siblings('.error-message').text('');
             });
 
             // Select2 initialization with validation clear
@@ -500,12 +514,10 @@
                 contentType: false,
                 success: function (response) {
                     console.log(response);
-                    // Handle success - maybe redirect or show success message
                     showLoading();
                     setTimeout(() => {
                         showSuccessMessage("Material created successfully!", "{{ route('materials.index') }}");
                     }, 2000);
-
                 },
                 error: function (xhr) {
                     if (xhr.status === 400) {
@@ -516,7 +528,10 @@
                             const errorMessage = errors[field][0];
                             const inputField = $(`[name="${field}"]`);
 
-                            if (inputField.hasClass('select2')) {
+                            if (field === 'material_description') {
+                                // Add red border to Summernote editor
+                                $('.note-editor').css('border', '1px solid red');
+                            } else if (inputField.hasClass('select2')) {
                                 // Handle Select2 fields
                                 inputField.next('.select2-container')
                                     .find('.select2-selection--multiple')
@@ -531,7 +546,6 @@
                             if (errorSpan.length) {
                                 errorSpan.text(errorMessage);
                             } else {
-                                // For select2, add error message after the select2 container
                                 if (inputField.hasClass('select2')) {
                                     inputField.next('.select2-container').after(`<span class="error-message">${errorMessage}</span>`);
                                 } else {
@@ -569,28 +583,28 @@
 
             let newRow = document.createElement('tr');
             newRow.innerHTML = `
-                            <td style="width:50%">
-                                <div>
-                                    <label for="property">Name <span class="text-danger">*</span></label>
-                                    <input class="property-name form-control form-control-xs validate" name="property_name"
-                                        style=" width:100%">
-                                    <span class="error-message-sub"></span>
-                                </div>
-                            </td>
-                            <td style="width:50%">
-                                <div>
-                                    <label for="property">Value <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control form-control-xs validate" name="property_value"
-                                        style=" width:100%">
-                                    <span class="error-message-sub"></span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="mt-1 text-center text-danger">
-                                    <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeRow(this)"></i>
-                                </div>
-                            </td>
-                            `;
+                                    <td style="width:50%">
+                                        <div>
+                                            <label for="property">Name <span class="text-danger">*</span></label>
+                                            <input class="property-name form-control form-control-xs validate" name="property_name"
+                                                style=" width:100%">
+                                            <span class="error-message-sub"></span>
+                                        </div>
+                                    </td>
+                                    <td style="width:50%">
+                                        <div>
+                                            <label for="property">Value <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control form-control-xs validate" name="property_value"
+                                                style=" width:100%">
+                                            <span class="error-message-sub"></span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="mt-1 text-center text-danger">
+                                            <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeRow(this)"></i>
+                                        </div>
+                                    </td>
+                                    `;
             tableBody.appendChild(newRow);
         }
         function removeRow(button) {
@@ -608,28 +622,28 @@
 
             let newRow = document.createElement('tr');
             newRow.innerHTML = `
-                <td style="width:50%">
-                    <div>
-                        <label for="property">Name <span class="text-danger">*</span></label>
-                        <input class="form-control form-control-xs validate" name="technical_property_name"
-                            style="width:100%">
-                        <span class="error-message-sub"></span>
-                    </div>
-                </td>
-                <td style="width:50%">
-                    <div>
-                        <label for="property">Value <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control form-control-xs validate" name="technical_property_value"
-                            style=" width:100%">
-                        <span class="error-message-sub"></span>
-                    </div>
-                </td>
-                <td>
-                    <div class="mt-1 text-center text-danger">
-                        <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeTechRow(this)"></i>
-                    </div>
-                </td>
-                `;
+                        <td style="width:50%">
+                            <div>
+                                <label for="property">Name <span class="text-danger">*</span></label>
+                                <input class="form-control form-control-xs validate" name="technical_property_name"
+                                    style="width:100%">
+                                <span class="error-message-sub"></span>
+                            </div>
+                        </td>
+                        <td style="width:50%">
+                            <div>
+                                <label for="property">Value <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-xs validate" name="technical_property_value"
+                                    style=" width:100%">
+                                <span class="error-message-sub"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="mt-1 text-center text-danger">
+                                <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeTechRow(this)"></i>
+                            </div>
+                        </td>
+                        `;
             tableBody.appendChild(newRow);
         }
 
@@ -647,28 +661,28 @@
 
             let newRow = document.createElement('tr');
             newRow.innerHTML = `
-                    <td style="width:50%">
-                    <div>
-                        <label for="property">Name <span class="text-danger">*</span></label>
-                        <input class="form-control form-control-xs validate" name="sustainability_property_name"
-                            style="width:100%">
-                        <span class="error-message-sub"></span>
-                    </div>
-                    </td>
-                    <td style="width:50%">
-                    <div>
-                        <label for="property">Value <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control form-control-xs validate" name="sustainability_property_value"
-                            style=" width:100%">
-                        <span class="error-message-sub"></span>
-                    </div>
-                    </td>
-                    <td>
-                    <div class="mt-1 text-center text-danger">
-                        <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeSusRow(this)"></i>
-                    </div>
-                    </td>
-                    `;
+                            <td style="width:50%">
+                            <div>
+                                <label for="property">Name <span class="text-danger">*</span></label>
+                                <input class="form-control form-control-xs validate" name="sustainability_property_name"
+                                    style="width:100%">
+                                <span class="error-message-sub"></span>
+                            </div>
+                            </td>
+                            <td style="width:50%">
+                            <div>
+                                <label for="property">Value <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-xs validate" name="sustainability_property_value"
+                                    style=" width:100%">
+                                <span class="error-message-sub"></span>
+                            </div>
+                            </td>
+                            <td>
+                            <div class="mt-1 text-center text-danger">
+                                <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeSusRow(this)"></i>
+                            </div>
+                            </td>
+                            `;
             tableBody.appendChild(newRow);
         }
 

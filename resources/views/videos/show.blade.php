@@ -22,29 +22,40 @@
 
     <div class="panel panel-inverse">
         <div class="panel-body" id="pannel-body" style="padding: 65px !important;">
-            <div class="row mb-3 g-0" style="margin: 0px;">
-                <!-- diri content sa left -->
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="col-md-6 d-flex justify-content-start gap-2">
+                    <a href="/videos" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left"></i> Back</a>
+
+                </div>
+                @if (Auth::user()->hasPermissionTo('video_full'))
+                    <div class="col-md-6 d-flex justify-content-end gap-2">
+                        <button class="btn btn-primary btn-sm" onclick="location.href='/videos/edit/{{ $video->v_id }}'">
+                            Edit</button>
+                    </div>
+                @endif
+            </div>
+            <div class="row mt-3 g-0" style="margin: 0px;">
+
                 <div class="col-8">
                     <!-- initial text inputs: name, code, category, year -->
                     <form action="/videos/update/{{ $video->v_id }}" method="post">
                         @csrf
                         <div class="row">
                             <div class="col-md-6">
-                                <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
+                                <label for="title" class="form-label">Title</label>
                                 <input type="text" class="form-control form-control-xs" name="title" placeholder="..."
                                     value="{{ $video->title }}" readonly>
                                 <span class="error-message" style="color: red;"></span>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label for="date" class="form-label">Date <span class="text-danger">*</span></label>
+                                    <label for="date" class="form-label">Date</label>
                                     <input class="form-control" id="datepicker-autoClose" name="date"
                                         value="{{ $video->date }}" readonly>
                                     <span class="error-message" style="color: red;"></span>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="video_url" class="form-label">Video URL <span
-                                            class="text-danger">*</span></label>
+                                    <label for="video_url" class="form-label">Video URL</label>
                                     <input class="form-control" name="video_url" id="urlInput"
                                         placeholder="Paste video URL here" value="{{ $video->video_url }}"
                                         onchange="fetchThumbnail()" readonly>
@@ -53,8 +64,7 @@
                             </div>
                             <!-- description module here -->
                             <div class="col-mt-6">
-                                <label for="description" class="form-label">Description <span
-                                        class="text-danger">*</span></label>
+                                <label for="description" class="form-label">Description</label>
                                 <div class="border" style="border-radius: 4px">
                                     <textarea class="textarea form-control" name="description" id="summernote"
                                         placeholder="Enter text ..." rows="12"
@@ -76,8 +86,7 @@
                             <div id="thumbnail" class="d-flex justify-content-center align-items-center border rounded"
                                 style="height: 100%;">
                                 <img id="thumbnailPreview" src=""
-                                    style="max-width: 100%; max-height: 100%; object-fit: cover; display: none; cursor: pointer;"
-                                    onclick="openVideoUrl()" />
+                                    style="max-width: 100%; max-height: 100%; object-fit: cover; display: none; cursor: pointer;" />
                                 <div id="thumbnailPlaceholder" class="text-center text-muted">
                                     <i class="fa fa-image fa-3x mb-2"></i>
                                     <p>Video thumbnail will appear here</p>
@@ -94,6 +103,7 @@
     <script src="/assets/plugins/summernote/dist/summernote-lite.min.js"></script>
 
     <script>
+        // $("#pannel-body").attr("style", 'height: 78vh;');
         $(document).ready(function () {
             fetchThumbnail();
         });
@@ -134,80 +144,6 @@
                 });
         }
 
-        // Add event listener for input changes
-        document.getElementById("urlInput").addEventListener('input', debounce(fetchThumbnail, 500));
-
-        // Debounce function to prevent too many API calls
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-
-        function submitData() {
-            let formData = new FormData();
-
-            formData.append('title', document.querySelector('input[name="title"]').value);
-            formData.append('date', document.querySelector('input[name="date"]').value);
-            formData.append('video_url', document.querySelector('input[name="video_url"]').value);
-            formData.append('description', document.querySelector('textarea[name="description"]').value);
-            formData.append('status', $('#enabled').is(':checked') ? 1 : 0);
-            formData.append("_METHOD", "PUT");
-            formData.append("_token", "{{ csrf_token() }}");
-
-            $.ajax({
-                url: "{{ route('videos.update', $video->v_id) }}",
-                type: "POST",
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    // Redirect to the videos index page on success
-                    window.location.href = "{{ route('videos.edit', $video->v_id) }}";
-                    // window.location.reload();
-                },
-                error: function (xhr) {
-                    if (xhr.status === 400) {
-                        const errors = xhr.responseJSON.errors;
-                        console.log(errors);
-                        Object.keys(errors).forEach(field => {
-                            const errorMessage = errors[field][0];
-                            const inputField = $(`[name="${field}"]`);
-
-                            if (inputField.hasClass('select2')) {
-                                // Handle Select2 fields
-                                inputField.next('.select2-container')
-                                    .find('.select2-selection--multiple')
-                                    .addClass('is-invalid');
-                            } else {
-                                // Handle regular inputs
-                                inputField.addClass('is-invalid');
-                            }
-
-                            // Display error message
-                            const errorSpan = inputField.siblings('.error-message');
-                            if (errorSpan.length) {
-                                errorSpan.text(errorMessage);
-                            } else {
-                                // For select2, add error message after the select2 container
-                                if (inputField.hasClass('select2')) {
-                                    inputField.next('.select2-container').after(`<span class="error-message">${errorMessage}</span>`);
-                                } else {
-                                    inputField.after(`<span class="error-message">${errorMessage}</span>`);
-                                }
-                            }
-                        });
-                    }
-                }
-            });
-        }
-
         $('#summernote').summernote({
             placeholder: 'Enter description',
             height: "300",
@@ -227,12 +163,5 @@
                 }
             }
         });
-
-        function openVideoUrl() {
-            const url = document.getElementById('urlInput').value.trim();
-            if (url) {
-                window.open(url, '_blank');
-            }
-        }
     </script>
 @endsection

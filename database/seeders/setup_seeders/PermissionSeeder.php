@@ -75,10 +75,24 @@ class PermissionSeeder extends Seeder
             'updated_by' => 1,
         ]);
 
+        Permission::create([
+            'name' => 'video_full',
+            'display_name' => 'Video Access (Full)',
+            'created_by' => 1,
+            'updated_by' => 1,
+        ]);
+
+        Permission::create([
+            'name' => 'video_view',
+            'display_name' => 'Video Access (View)',
+            'created_by' => 1,
+            'updated_by' => 1,
+        ]);
+
         $admin = Role::where('name', 'admin')->first();
         $admin->givePermissionTo(Permission::all());
 
         $user = Role::where('name', 'user')->first();
-        $user->givePermissionTo('user-view', 'role-view');
+        $user->givePermissionTo('user-view', 'role-view', 'video_view');
     }
 }

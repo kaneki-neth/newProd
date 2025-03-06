@@ -4,8 +4,12 @@ function showLoading() {
         title: "Processing...",
         text: "Please wait...",
         allowOutsideClick: false,
+        timer: 3000,
         didOpen: () => {
             Swal.showLoading();
+            setTimeout(() => {
+                Swal.close();
+            }, 3000);
         }
     });
 }
@@ -16,7 +20,8 @@ function showSuccessMessage(message, redirectUrl = null) {
         title: "Success!",
         text: message,
         icon: "success",
-        confirmButtonText: "OK"
+        confirmButtonText: "OK",
+        timer: 3000
     }).then(() => {
         if (redirectUrl) {
             window.location.href = redirectUrl; // Redirect after confirmation

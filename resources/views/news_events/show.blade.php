@@ -92,7 +92,7 @@
 <script src="/assets/js/jquery-3.6.4.min.js"></script>
 <script>
     $('#news_events').addClass('active');
-    $("#pannel-body").attr("style", 'height: 78vh;');
+    $("#pannel-body").attr("style", 'min-height: 78vh;');
 </script>
 
 @endsection('content')

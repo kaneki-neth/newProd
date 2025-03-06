@@ -15,9 +15,10 @@ class NewsEventsController extends Controller
         $category = '';
         $date_from = '';
         $date_to = '';
+        $enabled = '';
 
         $query = DB::table('news_events')
-            ->select('ne_id', 'category', 'title', 'date')
+            ->select('ne_id', 'category', 'title', 'date', 'enabled')
             ->orderBy('date', 'desc');
 
         if ($request->has('title')) {
@@ -28,6 +29,11 @@ class NewsEventsController extends Controller
         if ($request->has('category') && in_array($request->category, ['news', 'event'])) {
             $category = $request->category;
             $query->where('category', $category);
+        }
+
+        if ($request->has('enabled') && in_array($request->input('enabled'), ['0', '1'])) {
+            $enabled = $request->input('enabled');
+            $query->where('enabled', $enabled);
         }
 
         if ($request->has('date_from') && $request->input('date_from')) {
@@ -44,7 +50,7 @@ class NewsEventsController extends Controller
 
         $news_events = $query->orderBy('date', 'desc')->paginate(20);
 
-        return view('news_events.index', compact('news_events', 'title', 'category', 'date_from', 'date_to'));
+        return view('news_events.index', compact('news_events', 'title', 'category', 'date_from', 'date_to', 'enabled'));
     }
 
     public function show($ne_id)
@@ -71,7 +77,7 @@ class NewsEventsController extends Controller
     public function edit($ne_id)
     {
         $news_event = DB::table('news_events')
-            ->select('ne_id', 'category', 'title', 'date', 'description', 'image_file')
+            ->select('ne_id', 'category', 'title', 'date', 'description', 'image_file', 'enabled')
             ->where('ne_id', $ne_id)
             ->first();
 
@@ -129,6 +135,7 @@ class NewsEventsController extends Controller
                 'description' => $request->description,
                 'updated_by' => auth()->id(),
                 'updated_at' => now(),
+                'enabled' => $request->enabled,
             ];
 
             if ($request->has('mainImage')) {
@@ -197,6 +204,7 @@ class NewsEventsController extends Controller
             'sub_images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:102400',
             'subImagesToDelete' => 'sometimes|array',
             'subImagesToDelete.*' => 'integer',
+            'enabled' => 'required|in:0,1',
         ], messages: [
             'category.required' => 'The category is required.',
             'title.required' => 'The title field is required.',

@@ -1,126 +1,207 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('web.layout.default')
 
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>MATIX UP CEBU</title>
-  <meta name="description" content="">
-  <meta name="keywords" content="">
+@section('content')
+<main class="main main-about">
 
-  <link href="assets/img/matix_logo_white.png" rel="icon">
-  <link href="assets/img/matix_logo_white.png" rel="apple-touch-icon">
-
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-
-  <link href="assets/css/main.css" rel="stylesheet">
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-
-</head>
-
-<body class="index-page">
-
-  <header id="header" class="header d-flex align-items-center sticky-top">
-    <div class="container-fluid container-xl position-relative d-flex align-items-center">
-      <a href="index.html" class="logo d-flex align-items-center me-auto">
-        <img src="assets/img/mainlogo.png" data-aos="fade-in">
-      </a>
-      <nav id="navmenu" class="navmenu">
-        <ul class="nav-items">
-          <li><a href="about.html" class="active">About MATIX<br></a></li>
-          <li><a href="digital_archive.html" class="">Digital Archive</a></li>
-          <li><a href="events.html">News & Event+</a></li>
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
-
-        <div class="search-bar">
-          <input type="text" name="email" placeholder="Search">
+  <section class="1st-about">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h1 class="about-title">About Matix UP Cebu</h1>
         </div>
-
-        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-      </nav>
-    </div>
-  </header>
-
-  <main class="main">
-
-  </main>
-
-  <footer id="footer" class="footer position-relative">
-    <div class="container footer-top">
-      <div class="row gy-4">
-        <div class="col-lg-3 col-md-6 footer-about">
-          <a href="index.html" class="logo d-flex align-items-center">
-            <img src="assets/img/matix/logo-white.png" data-aos="fade-in">
-          </a>
+        <div class="col-md-6">
+          <p class="about-description">
+            Tatak Pinoy - MATIX UP Cebu is designed to be a multi-faceted
+            innovation hub that supports material exploration, product
+            development, industry collaboration, and knowledge
+            dissemination. Through its Materials Research and Development,
+            Business Incubation, Physical Materials Library, and Digital
+            Archiving System, the center bridges the gap between research,
+            design, and commercialization, making a meaningful impact on
+            sustainability and material innovation in the Philippines.
+          </p>
         </div>
+      </div>
 
-        <div class="col-lg-3 col-md-3 footer-links">
-         
-          <ul>
-            <li class="mb-0"><a href="#" class="dmsans-semi-bold c-white">About MATIX</a></li>
-            <li class="mb-0"><a href="#" class="dmsans-semi-bold c-white">Digital Archive</a></li>
-            <li class="mb-0"><a href="#" class="dmsans-semi-bold c-white">Services</a></li>
-            <li class="mb-0"><a href="#" class="dmsans-semi-bold c-white">News & Events</a></li>
-            <li class="mb-0"php><a href="#" class="dmsans-semi-bold c-white">Contact</a></li>
-          </ul>
-
-          <h5 class="dmsans-semi-bold c-white mt-4 mb-4">Links</h5>
-
-          <ul>
-            <li class="mb-0"><a href="#" class="dmsans-regular c-white">FabLab UP Cebu</a></li>
-            <li class="mb-0"><a href="#" class="dmsans-regular c-white">CCAD</a></li>
-            <li class="mb-0"><a href="#" class="dmsans-regular c-white">University of the Philippines Cebu</a></li>
-          </ul>
-
+      <div class="row mt-4">
+        <div class="col-12">
+          <div class="video-container">
+            <img
+              src="{{url('web/assets/img/matix/about-img-0.png')}}"
+              class="materials-image img-fluid"
+              style="object-fit: cover" />
+            <div class="play-button">
+              <i class="bi bi-play-fill"></i>
+            </div>
+          </div>
         </div>
-
-        <div class="col-lg-2 col-md-3 footer-links">
-          <h5 class="dmsans-semi-bold c-white mb-4">Connect with us</h5>
-          <ul>
-            <li><a href="#" class="dmsans-regular c-white">Facebook</a></li>
-            <li><a href="#" class="dmsans-regular c-white">Instagram</a></li>
-            <li><a href="#" class="dmsans-regular c-white">YouTube</a></li>
-            <li><a href="#" class="dmsans-regular c-white">TikTok</a></li>
-          </ul>
-        </div>
-
-        <div class="col-lg-4 col-md-12">
-            <img src="assets/img/matix/footerlogo1.png" data-aos="fade-in" style="width: 139px;">
-            <img src="assets/img/matix/dti.png" data-aos="fade-in" style="width: 77px;">
-            <img src="assets/img/matix/tatapinoy.png" data-aos="fade-in" style="width: 117px; margin-top: 34px; ">
-        </div>
-
       </div>
     </div>
+  </section>
 
-  </footer>
+  <div class="2nd-about research-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h1>Materials Research and Development</h1>
+          <h2>For the Academe: Faculty and Students</h2>
 
-  <!-- Scroll Top -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+          <p class="research-description">
+            MATIX UP Cebu serves as a hub for research and development (R&D)
+            in materials science, engineering, and sustainable design.
+            Through interdisciplinary collaboration, faculty members and
+            students engage in exploring new and existing materials,
+            including indigenous, bio-based, recycled, and advanced
+            composites. They conduct experiments to assess the mechanical,
+            thermal and environmental properties of materials, evaluating
+            their viability for various applications. A key focus of their
+            research is sustainability, with an emphasis on evaluating the
+            life-cycle impact of materials and promoting circular economy
+            principles and waste reduction. The center also encourages
+            collaborative research projects by fostering partnerships with
+            other universities, industry leaders, and government agencies to
+            develop cutting-edge materials.
+          </p>
 
-  <!-- Preloader -->
-  <div id="preloader"></div>
+          <p class="research-description">
+            Through these initiatives, MATIX UP Cebu empowers students and
+            faculty to innovate, prototype, and publish research that
+            contributes to the global discourse on materials sustainability
+            and innovation.
+          </p>
+        </div>
+        <div class="col-md-6">
+          <div class="research-image">
+            <img
+              src="{{url('web/assets/img/matix/about-img-01.png')}}"
+              class="img-fluid" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <!-- Vendor JS Files -->
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
-  <script src="assets/vendor/aos/aos.js"></script>
-  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
-  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <section class="3rd-about product-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="product-images">
+            <img
+              src="{{url('web/assets/img/matix/about-img-02.png')}}"
+              alt="Workshop with international experts"
+              class="img-fluid mb-4" />
+            <img
+              src="{{url('web/assets/img/matix/about-img-03.png')}}"
+              alt="Team of entrepreneurs and visiting professors"
+              class="img-fluid" />
+          </div>
+        </div>
 
-  <!-- Main JS File -->
-  <script src="assets/js/main.js"></script>
-</body>
+        <div class="col-md-6">
+          <h1>Product Development and Business Incubation</h1>
+          <h2>Bringing in International Experts and Visiting Professors</h2>
 
-</html>
+          <p class="product-description">
+            Beyond materials research, MATIX UP Cebu plays a pivotal role in
+            bridging innovation and commercialization by providing product
+            development and business incubation services. The center hosts
+            expert-led workshops and training, where international experts,
+            visiting professors, and industry leaders share best practices
+            in product design, materials engineering, and sustainable
+            manufacturing. It also offers prototyping support, assisting
+            startups, designers, and entrepreneurs in developing and testing
+            material-based products using the resources available in the
+            lab.
+          </p>
+
+          <p class="product-description">
+            In addition, MATIX UP Cebu provides business mentorship and
+            incubation, connecting innovators with experienced mentors who
+            guide them in refining product concepts, securing funding, and
+            entering the market. The center also facilitates
+            industry-academia collaboration, fostering partnerships between
+            businesses and the university to drive R&D in new product lines
+            and material applications.
+          </p>
+
+          <p class="product-description">
+            By nurturing material-driven enterprises, MATIX UP Cebu helps
+            transform research and ideas into viable, market-ready products
+            that contribute to both local and global industries.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="fourth-about library-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h1>Materials Library</h1>
+          <h2>Swatches and Resources</h2>
+
+          <p class="library-description">
+            The Materials Library at MATIX UP Cebu serves as an interactive
+            repository of physical material samples, swatches, and technical
+            data, providing a valuable resource for a wide range of users.
+            Designers, architects, and engineers have hands-on access to a
+            diverse array of materials, offering inspiration and helping
+            with project specifications.
+          </p>
+
+          <p class="library-description">
+            For academics and researchers, the library supports comparative
+            analysis and material selection for research and prototyping.
+            Entrepreneurs and manufacturers can explore innovative and
+            sustainable materials for potential use in commercial products.
+            The library includes bio-based materials, composites, polymers,
+            textiles, recycled materials, and advanced smart materials, all
+            carefully cataloged with their specifications and potential
+            applications.
+          </p>
+
+          <h1 class="mt-5">Digital Archiving and Cataloging System</h1>
+
+          <p class="library-description mt-5">
+            To enhance accessibility and documentation, MATIX UP Cebu
+            integrates a comprehensive Digital Archiving and Cataloging
+            System. This system includes an online database of materials,
+            providing a user-friendly platform that houses detailed records
+            of all materials in the library, including descriptions,
+            properties, and high-resolution images. It also contains
+            extensive metadata about material sources, applications, case
+            studies, and technical reports, ensuring long-term
+            accessibility. The system's automated tagging and search
+            functions allow for quick retrieval of material information
+            based on categories such as sustainability impact, application
+            area, and technical performance. Additionally, it offers
+            seamless integration with design and research tools, including
+            CAD software and Adobe Creative Suite, to streamline material
+            research.
+          </p>
+
+          <p class="library-description">
+            This digital repository serves as a knowledge hub for students,
+            faculty, industry professionals, and researchers, making
+            material data and insights more accessible and widely
+            disseminated.
+          </p>
+        </div>
+
+        <div class="col-md-6">
+          <div class="materials-grid">
+            <img
+              src="{{url('web/assets/img/matix/about-img-04.png')}}"
+              class="img-fluid" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  $("#nav-about").addClass("active");
+</script>
+@endsection

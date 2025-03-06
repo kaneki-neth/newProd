@@ -4,7 +4,7 @@
 
 @section('content')
 
-<!-- <link href="/assets/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" /> -->
+<link href="/assets/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
 
     <style>
         #name:hover {
@@ -60,7 +60,7 @@
                             </select>
                         </div>
 
-                        <div class="col-lg-3 col-md-3">
+                        <div class="col-lg-4 col-md-4">
                             <label class="form-label">Date Range</label>
                             <div class="input-group input-daterange">
                                 <input type="text" class="form-control" id="date_from" name="date_from" value="{{ $date_from }}" placeholder="Start Date">
@@ -84,28 +84,31 @@
                         class="table table-striped table-bordered align-middle table-responsive table-sm">
                         <thead>
                             <tr>
-                                <th class="text-center" width="10%">Category</th>
+                                <th class="text-center" width="15%">Date</th>
                                 <th class="text-center">Title</th>
-                                <th class="text-center" width="10%">Date</th>
+                                <th class="text-center" width="15%">Category</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($news_events as $ne)
                                 <tr>
-                                    <td class="text-center" width="10%">
+                                    <td class="text-center" width="15%">{{ date('F d, Y', strtotime($ne->date)) }}</td>
+                                    <td class="" id="name" style="cursor: pointer"
+                                        onclick="location.href='/news_events/{{ $ne->ne_id }}'">{{ $ne->title }}</td>
+                                    <td class="text-center" width="15%">
                                         @if($ne->category == 'event')
                                             <span class="badge" style="background-color: orange;">Event</span>
                                         @else
                                             <span class="badge bg-info">News</span>
                                         @endif
                                     </td>
-                                    <td class="text-center" id="name" style="cursor: pointer"
-                                        onclick="location.href='/news_events/edit/{{ $ne->ne_id }}'">{{ $ne->title }}</td>
-                                    <td class="text-center" width="10%">{{ date('d-m-Y', strtotime($ne->date)) }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-end mt-1">
+                        {{ $news_events->links('pagination::bootstrap-4') }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -123,12 +126,12 @@
     <script src="/assets/plugins/moment/min/moment.min.js"></script>
 
     <script>
+        $("#pannel-body").attr("style", 'min-height: 78vh;');
         $('#news_events').addClass('active');
 
         var tblrows = 0;
         var height = screen.height;
-        $("#pannel-body").attr("style", 'height: 78vh;');
-        tblrows = parseInt(height * 0.45) - 30;
+        tblrows = parseInt(height * 0.8) - 30;
 
         $('#data-table-scroller').DataTable({
             deferRender: true,
@@ -137,11 +140,12 @@
             scrollCollapse: true,
             scroller: true,
             paging: true,
+            order: [[0, 'desc']],
         });
 
         function clearsearchfield() {
             $('#title').val('');
-            $('#category').val('');
+            $('select[name="category"]').val('').trigger('change');
             $('#date_from').val('');
             $('#date_to').val('');
         }
@@ -149,8 +153,7 @@
         var userTarget = "";
         var exit = false;
         $('.input-daterange').datepicker({
-            format: "mm/dd/yyyy",
-            endDate: new Date(),
+            format: 'M d, yyyy',
         });
         $('.input-daterange').focusin(function(e) {
             userTarget = e.target.name;

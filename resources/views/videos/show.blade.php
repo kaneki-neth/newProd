@@ -8,6 +8,18 @@
         body {
             overflow-x: hidden;
         }
+
+        .custom-input {
+            height: 30px;
+        }
+
+        .input-daterange>input {
+            height: 30px;
+        }
+
+        .input-daterange>span {
+            height: 30px;
+        }
     </style>
 
     <link href="/assets/plugins/summernote/dist/summernote-lite.css" rel="stylesheet" />
@@ -21,15 +33,15 @@
     <!-- make new -->
 
     <div class="panel panel-inverse">
-        <div class="panel-body" id="pannel-body" style="padding: 65px !important;">
+        <div class="panel-body" id="pannel-body">
             <div class="row" style="margin-bottom: 10px;">
                 <div class="col-md-6 d-flex justify-content-start gap-2">
-                    <a href="/videos" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left"></i> Back</a>
+                    <a href="/videos" class="btn btn-primary btn-xs"><i class="fa fa-arrow-left"></i> Back</a>
 
                 </div>
                 @if (Auth::user()->hasPermissionTo('video_full'))
                     <div class="col-md-6 d-flex justify-content-end gap-2">
-                        <button class="btn btn-primary btn-sm" onclick="location.href='/videos/edit/{{ $video->v_id }}'">
+                        <button class="btn btn-primary btn-xs" onclick="location.href='/videos/edit/{{ $video->v_id }}'">
                             Edit</button>
                     </div>
                 @endif
@@ -47,13 +59,13 @@
                                     value="{{ $video->title }}" readonly>
                                 <span class="error-message" style="color: red;"></span>
                             </div>
+                            <div class="col-md-6">
+                                <label for="date" class="form-label">Date</label>
+                                <input class="form-control" id="datepicker-autoClose" name="date"
+                                    value="{{ date('F d, Y', strtotime($video->date)) }}" readonly>
+                                <span class="error-message" style="color: red;"></span>
+                            </div>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <label for="date" class="form-label">Date</label>
-                                    <input class="form-control" id="datepicker-autoClose" name="date"
-                                        value="{{ $video->date }}" readonly>
-                                    <span class="error-message" style="color: red;"></span>
-                                </div>
                                 <div class="col-md-6">
                                     <label for="video_url" class="form-label">Video URL</label>
                                     <input class="form-control" name="video_url" id="urlInput"
@@ -103,6 +115,7 @@
     <script src="/assets/plugins/summernote/dist/summernote-lite.min.js"></script>
 
     <script>
+        $('#videos').addClass('active');
         // $("#pannel-body").attr("style", 'height: 78vh;');
         $(document).ready(function () {
             fetchThumbnail();

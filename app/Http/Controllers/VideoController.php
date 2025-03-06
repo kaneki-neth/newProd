@@ -31,20 +31,26 @@ class VideoController extends Controller
 
         if ($request->has('date_from') && $request->input('date_from')) {
             $dateFrom = date('Y-m-d 00:00:00', strtotime($request->date_from));
+            $date_from = $request->date_from;
             $query->where('date', '>=', $dateFrom);
         }
 
         if ($request->has('date_to') && $request->input('date_to')) {
             $dateTo = date('Y-m-d 23:59:59', strtotime($request->date_to));
+            $date_to = $request->date_to;
             $query->where('date', '<=', $dateTo);
         }
 
-        $videos = $query->orderBy('date', 'desc')->get();
+        $videos = $query->orderBy('date', 'desc')->paginate(5);
 
-        $videos = $videos->map(function ($video) {
-            $video->date = Carbon::parse($video->date)->format('F j, Y');
-            return $video;
-        });
+
+        // $videos = $videos->map(function ($video) {
+        //     $video->date = Carbon::parse($video->date)->format('F j, Y');
+        //     return $video;
+        // });
+
+        // $date_from = Carbon::parse($request->date_from)->format('F j, Y');
+        // $date_to = Carbon::parse($request->date_to)->format('F j, Y');
 
         return view('videos.index', compact('videos', 'title', 'date_from', 'date_to'));
     }
@@ -125,6 +131,7 @@ class VideoController extends Controller
     public function edit(string $id)
     {
         $video = DB::table('videos')->where('v_id', $id)->first();
+        // $video->date = Carbon::parse($video->date)->format('F j, Y');
 
         return view('videos.edit', compact('video'));
     }
@@ -135,6 +142,7 @@ class VideoController extends Controller
     public function show(string $id)
     {
         $video = DB::table('videos')->where('v_id', $id)->first();
+        // $video->date = Carbon::parse($video->date)->format('F j, Y');
 
         return view('videos.show', compact('video'));
     }

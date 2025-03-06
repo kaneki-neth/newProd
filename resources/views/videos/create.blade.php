@@ -8,6 +8,40 @@
         body {
             overflow-x: hidden;
         }
+
+        .custom-input {
+            height: 30px;
+        }
+
+        .input-daterange>input {
+            height: 30px;
+        }
+
+        .input-daterange>span {
+            height: 30px;
+        }
+
+        .error-msg {
+            position: relative;
+            top: -5px;
+            background-color: white;
+        }
+
+        .error-msg#description-msg {
+            position: relative;
+            background-color: white;
+            top: 0px;
+        }
+
+        .error-msg#mainImagePreview {
+            position: relative;
+            background-color: white;
+            top: 0px !important;
+        }
+
+        .error-input {
+            border: 1px solid red !important;
+        }
     </style>
     <link href="/assets/plugins/summernote/dist/summernote-lite.css" rel="stylesheet" />
     <link href="/assets/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
@@ -24,7 +58,7 @@
         <div class="panel-body" id="pannel-body">
             <div class="row">
                 <div class="col-md-12 d-flex justify-content-start gap-2">
-                    <a href="/videos" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left"></i> Back</a>
+                    <a href="/videos" class="btn btn-primary btn-xs"><i class="fa fa-arrow-left"></i> Back</a>
                 </div>
             </div>
             <div class="row mt-3 g-0" style="margin: 0px;">
@@ -36,13 +70,13 @@
                             <input type="text" class="form-control form-control-xs" name="title" placeholder="...">
                             <span class="error-message" style="color: red;"></span>
                         </div>
+                        <div class="col-md-6">
+                            <label for="date" class="form-label">Date <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="datepicker-autoClose" name="date"
+                                value="{{ now()->format('Y-m-d') }}" readonly>
+                            <span class="error-message" style="color: red;"></span>
+                        </div>
                         <div class="row">
-                            <div class="col-md-6">
-                                <label for="date" class="form-label">Date <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="datepicker-autoClose" name="date"
-                                    value="{{ now()->format('Y-m-d') }}" readonly>
-                                <span class="error-message" style="color: red;"></span>
-                            </div>
                             <div class="col-md-6">
                                 <label for="video_url" class="form-label">Video URL <span
                                         class="text-danger">*</span></label>
@@ -55,18 +89,17 @@
                         </div>
                         <!-- description module here -->
                         <div class="col-12 mt-6">
-                            <div class="alert alert-yellow fade" style="display: none;" id="descriptionError"></div>
                             <label for="description" class="form-label">Description <span
                                     class="text-danger">*</span></label>
-                            <div class="border" style="border-radius: 4px">
+                            <span id="description-msg" class="error-msg text-danger"></span>
+                            <div id="description-container" class="border" style="border-radius: 4px">
                                 <textarea class="textarea form-control" name="description" id="summernote"
                                     placeholder="Enter text ..." rows="12"></textarea>
-                                {{-- <span class="error-message" id="descriptionError" style="color: red;"></span> --}}
                             </div>
                         </div>
                     </div>
                     <div class="d-flex justify-content-start">
-                        <button class="btn btn-primary btn-md" style="margin: 10px;" onclick="submitData()">
+                        <button class="btn btn-primary btn-xs" style="margin: 10px;" onclick="submitData()">
                             <i class=" fa fa-plus"></i> Submit
                         </button>
                     </div>
@@ -98,6 +131,7 @@
     <script src="/assets/plugins/summernote/dist/summernote-lite.min.js"></script>
 
     <script>
+        $('#videos').addClass('active');
         // $("#pannel-body").attr("style", 'height: 78vh;');
         // Initialize datepicker
         $("#datepicker-autoClose").datepicker({
@@ -228,10 +262,28 @@
                             const errorMessage = errors[field][0];
                             const inputField = $(`[name="${field}"]`);
 
-                            if (field === "description") {
-                                $('#descriptionError').addClass("show");
-                                $('#descriptionError').show();
-                                $('#descriptionError').text(errorMessage);
+                            // if (field === "description") {
+                            //     $('#descriptionError').addClass("show");
+                            //     $('#descriptionError').show();
+                            //     $('#descriptionError').text(errorMessage);
+                            // }
+
+                            for (const key in errors) {
+                                if (Object.hasOwnProperty.call(errors, key)) {
+                                    const element = errors[key];
+                                    let $input_id = key;
+                                    if (key == 'description') {
+                                        $input_id = 'description-container';
+                                    }
+
+                                    $("#" + $input_id).addClass('error-input')
+                                        .on('keyup change', function () {
+                                            rm_error(this);
+                                        });
+                                    $('#' + key + '-msg').text(element[0]);
+
+                                    Swal.close()
+                                }
                             }
 
                             if (inputField.hasClass('select2')) {
@@ -268,6 +320,15 @@
             if (url) {
                 window.open(url, '_blank');
             }
+        }
+
+        function rm_error(element) {
+            $(element).removeClass('error-input');
+            let msg_id = element.id;
+            if (msg_id == "description-container") {
+                msg_id = "description";
+            }
+            $('#' + msg_id + '-msg').text('');
         }
     </script>
 @endsection

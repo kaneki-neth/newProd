@@ -8,6 +8,40 @@
         body {
             overflow-x: hidden;
         }
+
+        .custom-input {
+            height: 30px;
+        }
+
+        .input-daterange>input {
+            height: 30px;
+        }
+
+        .input-daterange>span {
+            height: 30px;
+        }
+
+        .error-msg {
+            position: relative;
+            top: -5px;
+            background-color: white;
+        }
+
+        .error-msg#description-msg {
+            position: relative;
+            background-color: white;
+            top: 0px;
+        }
+
+        .error-msg#mainImagePreview {
+            position: relative;
+            background-color: white;
+            top: 0px !important;
+        }
+
+        .error-input {
+            border: 1px solid red !important;
+        }
     </style>
 
     <ol class="breadcrumb float-xl-end">
@@ -19,10 +53,10 @@
     <!-- make new -->
 
     <div class="panel panel-inverse">
-        <div class="panel-body" id="pannel-body" style="padding: 65px !important;">
+        <div class="panel-body" id="pannel-body">
             <div class="row">
                 <div class="col-md-12 d-flex justify-content-start gap-2">
-                    <a href="/videos/show/{{ $video->v_id }}" class="btn btn-primary btn-sm"><i
+                    <a href="/videos/show/{{ $video->v_id }}" class="btn btn-primary btn-xs"><i
                             class="fa fa-arrow-left"></i> Back</a>
                 </div>
             </div>
@@ -37,12 +71,14 @@
                                 value="{{ $video->title }}">
                             <span class="error-message" style="color: red;"></span>
                         </div>
+                        <div class="col-md-6">
+                            <label for="date" class="form-label">Date <span class="text-danger">*</span></label>
+                            <input class="form-control" id="datepicker-autoClose" name="date" {{--
+                                value="{{ date('F d, Y', strtotime($video->date)) }}"> --}}
+                            value="{{ $video->date }}">
+                            <span class="error-message" style="color: red;"></span>
+                        </div>
                         <div class="row">
-                            <div class="col-md-6">
-                                <label for="date" class="form-label">Date <span class="text-danger">*</span></label>
-                                <input class="form-control" id="datepicker-autoClose" name="date" value="{{ $video->date}}">
-                                <span class="error-message" style="color: red;"></span>
-                            </div>
                             <div class="col-md-6">
                                 <label for="video_url" class="form-label">Video URL <span
                                         class="text-danger">*</span></label>
@@ -50,27 +86,6 @@
                                     placeholder="Paste video URL here" value="{{ $video->video_url }}"
                                     onchange="fetchThumbnail()">
                                 <span class="error-message" style="color: red;"></span>
-                            </div>
-                        </div>
-                        <!-- description module here -->
-                        <div class="col-mt-6">
-                            <div class="alert alert-yellow fade" style="display: none;" id="descriptionError"></div>
-                            <label for="description" class="form-label">Description <span
-                                    class="text-danger">*</span></label>
-                            <div class="border" style="border-radius: 4px">
-                                <textarea class="textarea form-control" name="description" id="summernote"
-                                    placeholder="Enter text ..."
-                                    rows="12">{!! strip_tags($video->description, '<p><a><b><i><u><strong><em><ul><ol><li><img>') !!}</textarea>
-                            </div>
-                        </div>
-                        <!-- other details -->
-                        <div class="row">
-                            <div class="col-6 mt-3">
-                                <div class="d-flex justify-content-start">
-                                    <button class="btn btn-primary btn-md" style="margin: 10px;" onclick="submitData()">
-                                        Update
-                                    </button>
-                                </div>
                             </div>
                             <div class="col-6 mt-3">
                                 <div class="d-flex justify-content-end">
@@ -81,6 +96,28 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <!-- description module here -->
+                        <div class="col-mt-6">
+                            <label for="description" class="form-label">Description <span
+                                    class="text-danger">*</span></label>
+                            <span id="description-msg" class="error-msg text-danger"></span>
+                            <div id="description-container" class="border" style="border-radius: 4px">
+                                <textarea class="textarea form-control" name="description" id="summernote"
+                                    placeholder="Enter text ..."
+                                    rows="12">{!! strip_tags($video->description, '<p><a><b><i><u><strong><em><ul><ol><li><img>') !!}</textarea>
+                            </div>
+                        </div>
+                        <!-- other details -->
+                        <div class="row">
+                            <div class="col-6 mt-3">
+                                <div class="d-flex justify-content-start">
+                                    <button class="btn btn-primary btn-xs" style="margin: 10px;" onclick="submitData()">
+                                        Update
+                                    </button>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -115,6 +152,7 @@
     <script src="/assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
 
     <script>
+        $('#videos').addClass('active');
         // $("#pannel-body").attr("style", 'height: 78vh;');
         // Initialize datepicker
         $("#datepicker-autoClose").datepicker({
@@ -205,12 +243,6 @@
             formData.append('description', document.querySelector('textarea[name="description"]').value);
             formData.append('status', $('#status').is(':checked') ? 1 : 0);
 
-            if ($("#summernote").val()) {
-                $('#descriptionError').removeClass("show");
-                $('#descriptionError').hide();
-                $('#descriptionError').empty();
-            }
-
             let url = "/videos/update/" + {{ $video->v_id }};
             $.ajax({
                 url: url,
@@ -228,6 +260,7 @@
                     // });
                 },
                 error: function (xhr) {
+                    console.log(xhr);
                     if (xhr.status === 400) {
                         const errors = xhr.responseJSON.errors;
                         console.log(errors);
@@ -244,11 +277,29 @@
                             // Add error class to the input
                             inputField.addClass('is-invalid');
 
-                            if (field === "description") {
-                                $('#descriptionError').addClass("show");
-                                $('#descriptionError').show();
-                                $('#descriptionError').text(errorMessage);
+                            for (const key in errors) {
+                                if (Object.hasOwnProperty.call(errors, key)) {
+                                    const element = errors[key];
+                                    let $input_id = key;
+                                    if (key == 'description') {
+                                        $input_id = 'description-container';
+                                    }
+
+                                    $("#" + $input_id).addClass('error-input')
+                                        .on('keyup change', function () {
+                                            rm_error(this);
+                                        });
+                                    $('#' + key + '-msg').text(element[0]);
+
+                                    Swal.close()
+                                }
                             }
+
+                            // if (field === "description") {
+                            //     $('#descriptionError').addClass("show");
+                            //     $('#descriptionError').show();
+                            //     $('#descriptionError').text(errorMessage);
+                            // }
 
                             // Find the error message span and update its text
                             const errorSpan = inputField.siblings('.error-message');
@@ -259,16 +310,6 @@
                                 // inputField.after(`<span class="error-message">${errorMessage}</span>`);
                             }
 
-                        });
-                    } else {
-                        // Handle other types of errors
-                        swal.fire({
-                            title: 'Error',
-                            text: 'An error occurred while updating the video. Please try again.',
-                            icon: 'error',
-                            confirmButtonText: 'OK',
-                            confirmButtonColor: '#007bff',
-                            timer: 3000
                         });
                     }
                 }
@@ -301,6 +342,15 @@
             if (url) {
                 window.open(url, '_blank');
             }
+        }
+
+        function rm_error(element) {
+            $(element).removeClass('error-input');
+            let msg_id = element.id;
+            if (msg_id == "description-container") {
+                msg_id = "description";
+            }
+            $('#' + msg_id + '-msg').text('');
         }
     </script>
 @endsection

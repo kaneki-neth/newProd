@@ -214,6 +214,7 @@
 <script src="../assets/plugins/summernote/dist/summernote-lite.min.js"></script>
 <script src="../assets/plugins/select2/dist/js/select2.min.js"></script>
 <script>
+    $('#news_events').addClass('active');
     $('#date').datepicker({
         format: 'M d, yyyy',
         autoclose: true,

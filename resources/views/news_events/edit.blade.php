@@ -212,7 +212,8 @@
 <script src="/assets/js/jquery-3.6.4.min.js"></script>
 <script src="/assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
 <script src="/assets/plugins/select2/dist/js/select2.min.js"></script>
-<script>
+<script> 
+    $('#news_events').addClass('active');
     var deleteOldSubImageIds = [];
     $(document).ready(function() {
         let subImages = @json($subImages);

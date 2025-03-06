@@ -56,8 +56,8 @@
         <div class="panel-body" id="pannel-body">
             <div class="row">
                 <div class="col-md-12 d-flex justify-content-start gap-2">
-                    <a href="/videos/show/{{ $video->v_id }}" class="btn btn-primary btn-xs"><i
-                            class="fa fa-arrow-left"></i> Back</a>
+                    <a href="/videos/show/{{ $video->v_id }}" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i>
+                        View</a>
                 </div>
             </div>
             <div class="row mt-3 g-0" style="margin: 0px;">
@@ -92,17 +92,19 @@
                         <div class="col-md-6 mt-3 d-flex align-items-center justify-content-end">
                             <label for="status" class="form-label me-2">Enabled</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="status" name="status" value="1" @if($video->status == 1)
-                                checked @endif>
+                                <input class="form-check-input" type="checkbox" id="status" name="status" value="1"
+                                    @if($video->status == 1) checked @endif>
                             </div>
                         </div>
 
                         <!-- Description -->
                         <div class="col-12 mt-3">
-                            <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
+                            <label for="description" class="form-label">Description <span
+                                    class="text-danger">*</span></label>
                             <span id="description-msg" class="error-msg text-danger"></span>
                             <div id="description-container" class="border p-2 rounded">
-                                <textarea class="textarea form-control" name="description" id="summernote" placeholder="Enter text ..."
+                                <textarea class="textarea form-control" name="description" id="summernote"
+                                    placeholder="Enter text ..."
                                     rows="12">{!! strip_tags($video->description, '<p><a><b><i><u><strong><em><ul><ol><li><img>') !!}</textarea>
                             </div>
                         </div>

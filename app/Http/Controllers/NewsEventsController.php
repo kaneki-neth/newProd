@@ -42,7 +42,7 @@ class NewsEventsController extends Controller
             $query->where('date', '<=', $dateTo);
         }
 
-        $news_events = $query->orderBy('date', 'desc')->get();
+        $news_events = $query->orderBy('date', 'desc')->paginate(20);
 
         return view('news_events.index', compact('news_events', 'title', 'category', 'date_from', 'date_to'));
     }

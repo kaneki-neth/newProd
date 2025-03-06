@@ -32,7 +32,7 @@
     <h1 class="page-header">News and Events List</h1>
 
     <div class="panel panel-inverse">
-        <div class="panel-body" id="pannel-body">
+        <div class="panel-body">
             <div class="table-responsive" style="overflow-x: hidden">
                 <div class="d-flex justify-content-end">
                     <button class="btn btn-primary btn-xs" onclick="location.href='/news_events/create'">
@@ -106,6 +106,9 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-end mt-1">
+                        {{ $news_events->links('pagination::bootstrap-4') }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -127,8 +130,7 @@
 
         var tblrows = 0;
         var height = screen.height;
-        $("#pannel-body").attr("style", 'height: 78vh;');
-        tblrows = parseInt(height * 0.45) - 30;
+        tblrows = parseInt(height * 0.8) - 30;
 
         $('#data-table-scroller').DataTable({
             deferRender: true,
@@ -137,6 +139,7 @@
             scrollCollapse: true,
             scroller: true,
             paging: true,
+            order: [[0, 'desc']],
         });
 
         function clearsearchfield() {

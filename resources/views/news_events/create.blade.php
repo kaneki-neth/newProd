@@ -10,6 +10,9 @@
 
 <style>
     .select2-search { display: none; }
+    span.select2-selection.select2-selection--single {
+        height: 30px !important;
+    }
 
     .error-msg {
         position: relative;
@@ -142,7 +145,7 @@
     <div class="panel-body" id="pannel-body">
         <div class="row">
             <div class="col-md-12 d-flex justify-content-start gap-2">
-                <a href="/news_events" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left"></i> Back</a>
+                <a href="/news_events" class="btn btn-primary btn-xs"><i class="fa fa-arrow-left"></i> Back</a>
             </div>
         </div>
         <div class="row mt-3">
@@ -201,7 +204,7 @@
             </div>
         </div>
         <div class="d-flex justify-content-start">
-            <button class="btn btn-primary" onclick="submitData()">Submit</button>
+            <button class="btn btn-primary btn-xs" onclick="submitData()">Submit</button>
         </div>
     </div>
 </div>

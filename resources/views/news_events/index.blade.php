@@ -84,18 +84,18 @@
                         class="table table-striped table-bordered align-middle table-responsive table-sm">
                         <thead>
                             <tr>
-                                <th class="text-center" width="10%">Date</th>
+                                <th class="text-center" width="15%">Date</th>
                                 <th class="text-center">Title</th>
-                                <th class="text-center" width="10%">Category</th>
+                                <th class="text-center" width="15%">Category</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($news_events as $ne)
                                 <tr>
-                                    <td class="text-center" width="10%">{{ date('M d, Y', strtotime($ne->date)) }}</td>
-                                    <td class="text-center" id="name" style="cursor: pointer"
+                                    <td class="text-center" width="15%">{{ date('F d, Y', strtotime($ne->date)) }}</td>
+                                    <td class="" id="name" style="cursor: pointer"
                                         onclick="location.href='/news_events/{{ $ne->ne_id }}'">{{ $ne->title }}</td>
-                                    <td class="text-center" width="10%">
+                                    <td class="text-center" width="15%">
                                         @if($ne->category == 'event')
                                             <span class="badge" style="background-color: orange;">Event</span>
                                         @else
@@ -141,7 +141,7 @@
 
         function clearsearchfield() {
             $('#title').val('');
-            $('#category').val('');
+            $('select[name="category"]').val('').trigger('change');
             $('#date_from').val('');
             $('#date_to').val('');
         }

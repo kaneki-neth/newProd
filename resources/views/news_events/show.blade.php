@@ -53,14 +53,14 @@
     <div class="panel-body" id="pannel-body">
         <div class="row">
             <div class="col-md-12 d-flex justify-content-start gap-2">
-                <a href="/news_events" class="btn btn-primary btn-sm"><i class="fa fa-arrow-left"></i> Back</a>
-                <a href="/news_events/{{ $news_event->ne_id }}/edit" class="btn btn-primary btn-sm"><i class="fa fa-edit"></i> Edit</a>
+                <a href="/news_events" class="btn btn-primary btn-xs"><i class="fa fa-arrow-left"></i> Back</a>
+                <a href="/news_events/{{ $news_event->ne_id }}/edit" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Edit</a>
             </div>
         </div>
         <div class="row mt-3">
             <div class="col-md-7">
                 <h2>{{ $news_event->title }}</h2>
-                <p><i class="fa fa-calendar"></i> {{ date('M d, Y', strtotime($news_event->date)) }}</p>
+                <p><i class="fa fa-calendar"></i> {{ date('F d, Y', strtotime($news_event->date)) }}</p>
                 <p><?php echo $news_event->description ?></p>
             </div>
             <div class="col-md-5">

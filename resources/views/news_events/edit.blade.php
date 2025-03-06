@@ -378,7 +378,7 @@
             processData: false,
             contentType: false,
             success: function (response) {
-                location.reload();
+                window.location.href = '/news_events/' + {{ $news_event->ne_id }};
             },
             error: function (xhr, status, error) {
                 if (xhr.status === 413) {

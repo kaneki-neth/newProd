@@ -41,6 +41,12 @@
         border: 1px solid var(--bs-component-border-color);
         border-radius: 4px;
     }
+
+    #main-img-container {
+        aspect-ratio: 1 / 1;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
 </style>
 
 <ol class="breadcrumb float-xl-end">
@@ -64,9 +70,9 @@
                 <p><?php echo $news_event->description ?></p>
             </div>
             <div class="col-md-5">
-                <div class="d-flex flex-column mx-auto" style="max-width: 60%">
-                    <div>
-                        <img src="{{ asset('storage/'.$news_event->image_file) }}" class="img-thumbnail" alt="Image">
+                <div class="d-flex flex-column mx-auto" style="max-width: 80%">
+                    <div id="main-img-container" class="img-thumbnail d-flex justify-content-center align-items-center">
+                        <img src="{{ asset('storage/'.$news_event->image_file) }}" alt="Image" style="width: 100%;">
                     </div>
                     @if(count($subImages) > 0)
                         <div id="imageGallery" style="display: flex; gap: 10px; overflow-x: auto; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-top: 8px">

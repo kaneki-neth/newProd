@@ -22,5 +22,6 @@ Route::group(['middleware' => ['auth']], function () {
     include __DIR__ . '/category.php';
     include __DIR__ . '/material.php';
     include __DIR__.'/news_events.php';
-    include __DIR__ . '/web/webroutes.php';
 });
+
+include __DIR__ . '/web/webroutes.php';

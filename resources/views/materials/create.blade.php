@@ -12,15 +12,29 @@
             border: none;
         }
 
+        .custom-input {
+            height: 30px;
+        }
+
+        .select2.select2-container .selection .select2-selection.select2-selection--multiple {
+            height: 30px !important;
+            min-height: 30px !important;
+        }
+
+        .select2.select2-container .selection .select2-selection.select2-selection--single {
+            height: 30px !important;
+            min-height: 30px !important;
+        }
+
         .col-4 > .row {
             width: 100%; 
             min-width: 100%; 
         }
 
-        div img#mainImage {
+        div img#mainImagePreview {
             width: 100%;
             height: auto;     
-            object-fit: cover;        
+            object-fit: contain;        
         }
         
         .image-container {
@@ -176,26 +190,31 @@
     <div class="panel panel-inverse">
         <div class="panel-body" id="pannel-body" style="padding: 45px !important;">
             <div class="row mb-3 g-0" style="margin: 0px;">
-                <div class="col-8">
+                <div class="d-flex justify-content-start">
+                    <button class="btn btn-primary btn-xs" onclick="location.href='/material'">
+                        <i class="fa fa-arrow-left"></i> Back
+                    </button>
+                </div>
+                <div class="col-8 mt-3">
                     <div class="row">
                         <div class="col">
                             <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control form-control-xs validate" name="name" placeholder="..." id="name">
+                            <input type="text" class="form-control form-control-xs validate custom-input" name="name" placeholder="..." id="name">
                             <span id="name-msg" class="error-message"></span>
                         </div>
                         <div class="col-md-4">
                             <label for="code" class="form-label">Code <span class="text-danger">*</span></label>
                             <input type="text"
-                                class="form-control form-control-xs validate @error('code') is-invalid @enderror" id="code"
+                                class="form-control form-control-xs validate @error('code') is-invalid @enderror custom-input" id="code"
                                 name="code" value="{{ old('code') }}" placeholder="...">
                                 <span id="code-msg" class="error-message"></span>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mt-3">
                         <div class="col">
                             <label for="categories" class="form-label">Category <span class="text-danger">*</span></label>
-                                <select class="form-control select2 validate" id="multiple-select-field"
-                                    name="categories" type="text" onkeyup="remove_error(this)" multiple>
+                                <select class="form-control select2 validate" id="categories"
+                                    name="categories[]" type="text" multiple>
                                     @foreach ($categories as $category)
                                         <option value="{{ $category->c_id }}">{{ $category->name }}</option>
                                     @endforeach
@@ -337,13 +356,14 @@
                 <div class="col-4 d-flex align-items-end flex-column" style="height: 100%">
                     <div class="row g-0">
                         <div class="col-9" style="margin-left: auto">
-                            <div class="alert alert-yellow fade" id="imageError"></div>
                             <label class="form-label">Upload Image</label>
+                            <span id="mainImage-msg" class="error-message"></span>
+                            
                             <div style="border:1px solid var(--bs-component-border-color); border-radius:4px; aspect-ratio: 1 / 1; margin-left: 0 !important; margin-right: 0 !important; cursor: pointer;"
-                                class="row g-0" onclick="document.getElementById('main_material_image').click();">
-                                <input type="file" accept="image/*" id="main_material_image" style="display: none;"
+                                class="row g-0" onclick="document.getElementById('mainImage').click();">
+                                <input type="file" accept="image/*" id="mainImage" style="display: none;"
                                         onchange="displayMainImage(this)">
-                                <img src='/assets/userProfile/no-image-avail.jpg' id="mainImage">
+                                <img src='/assets/userProfile/no-image-avail.jpg' id="mainImagePreview">
                             </div>
                             <div id="imageGallery"
                                 style="display: flex; gap: 10px; overflow-x: auto; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-top: 8px">
@@ -360,10 +380,10 @@
                     
                 </div>
                 <div class="d-flex justify-content-start">
-                        <button class="btn btn-primary btn-md" style="margin: 10px;" onclick="submitData()">
+                        <button class="btn btn-primary btn-xs" style="margin: 10px;" onclick="submitData()">
                             <i class="fa fa-plus"></i> Submit
                         </button>
-                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -383,6 +403,7 @@
     <script src="../assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
 
     <script>
+        $('#material').addClass('active');
         let imageCount = 0;
         let imageFiles = [];
         let mainImage;
@@ -405,19 +426,19 @@
             $('#descriptionError').removeClass("show");
             $('#descriptionError').hide();
             $('#descriptionError').empty();
-            $(document).on('input', '.validate', function () {
-                let $field = $(this);
-                $field.removeClass('is-invalid');
-                $field.siblings('.error-message').text('');
-                $field.siblings('.error-message-sub').text('');
-                $field.css('border-color', '#ced4da');
-            });
+            // $(document).on('input', '.validate', function () {
+            //     let $field = $(this);
+            //     $field.removeClass('is-invalid');
+            //     $field.siblings('.error-message').text('');
+            //     $field.siblings('.error-message-sub').text('');
+            //     $field.css('border-color', '#ced4da');
+            // });
 
-            $('#multiple-select-field').select2({ placeholder: "Select Categories", width: "100%" })
+            $('#categories').select2({ placeholder: "Select Categories", width: "100%" })
                 .on('change', function () {
                     $(this).next('.select2-container')
                         .find('.select2-selection--multiple')
-                        .removeClass('is-invalid');
+                        .removeClass('error-input');
                     $(this).siblings('.error-message').text('');
                     $(this).siblings('.error-message-sub').text('');
                 });
@@ -476,7 +497,11 @@
             imageFiles[count] = "";
         }
 
-        function displayMainImage(input) {            
+        function displayMainImage(input) {  
+            $('#mainImagePreview').removeClass('error-input');
+            $('#mainImage-msg').text('');
+            console.log("input", input);
+            
             if(input) {
                 let file = input.files[0];
                 
@@ -488,6 +513,9 @@
                 let reader = new FileReader();
                 reader.onload = function (e) {
                     mainImage = file;
+                    console.log("main image is currently ", mainImage);
+                    console.log(e.target.result);
+                    
                     updateMainImageItself(e.target.result);
                 };
                 reader.readAsDataURL(file); 
@@ -495,7 +523,7 @@
         }
         
         function updateMainImageItself(mainImgSrc) {            
-            let img = document.getElementById('mainImage');
+            let img = document.getElementById('mainImagePreview');
             img.src = mainImgSrc;
             img.style.width = '100%';
             img.style.height = '100%';
@@ -515,6 +543,7 @@
         }
 
         function submitData() {
+            showLoading();
             let formData = new FormData();
             formData.append('code', document.querySelector('input[name="code"]').value);
             formData.append('name', document.querySelector('input[name="name"]').value);
@@ -522,19 +551,13 @@
             formData.append('year', document.querySelector('select[name="year"]').value);
             formData.append('description', document.querySelector('textarea[name="material_description"]').value);
 
-            if ($("#main_material_image").val()) {
-                $('#imageError').removeClass("show");
-                $('#imageError').hide();    
-                $('#imageError').empty(); 
-            }
-
             if ($("#summernote").val()) {
                 $('#descriptionError').removeClass("show");
                 $('#descriptionError').hide();    
                 $('#descriptionError').empty(); 
             }
 
-            let categories = $('#multiple-select-field').val();
+            let categories = $('#categories').val();
             categories.forEach((c_id, index) => {
                 formData.append(`categories[${index}]`, c_id);
             });
@@ -588,11 +611,7 @@
                 contentType: false,
                 success: function (response) {
                     console.log(response);
-                    showLoading();
-                    setTimeout(() => {
-                        showSuccessMessage("Material created successfully!", "{{ route('materials.index') }}");
-                    }, 2000);
-
+                    window.location.href='/material';
                 },
                 error: function (xhr) {
                     if (xhr.status === 400) {
@@ -603,10 +622,17 @@
                             if (Object.hasOwnProperty.call(errors, key)) {
                                 const element = errors[key];
                                 let $input_id = key;
+                                console.log("this the key", key);
+                                
                                 if(key == 'categories') {
                                     $('.select2-container .selection .select2-selection--multiple').addClass('error-input');
                                     $('#' + key + '-msg').text(element[0]);
                                 } else {
+                                    
+                                    if (key == 'mainImage'){
+                                        $input_id = 'mainImagePreview';
+                                    }
+
                                     $("#" + $input_id).addClass('error-input')
                                         .on('keyup change', function() {
                                             rm_error(this);

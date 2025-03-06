@@ -28,7 +28,7 @@ class MaterialController extends Controller
 
         $query = $query->orderBy('name', 'asc');
 
-        $materials = $query->get();
+        $materials = $query->paginate(20);
 
         return view('materials.index', compact('materials', 'name', 'material_code'));
     }
@@ -221,6 +221,22 @@ class MaterialController extends Controller
                     ->delete();
             }
 
+            if ($request->has('deleteOldProps')) {
+                DB::table('properties')
+                    ->whereIn('p_id', $request->input('deleteOldProps'))
+                    ->delete();
+            }
+            if ($request->has('deleteOldTechProps')) {
+                DB::table('properties')
+                    ->whereIn('p_id', $request->input('deleteOldTechProps'))
+                    ->delete();
+            }
+            if ($request->has('deleteOldAppProps')) {
+                DB::table('properties')
+                    ->whereIn('p_id', $request->input('deleteOldAppProps'))
+                    ->delete();
+            }
+
             session()->flash('success', "Material created successfully!");
 
             return response()->json([
@@ -266,6 +282,12 @@ class MaterialController extends Controller
             'description' => 'required',
             'deleteOldSubImageIds' => 'sometimes|array',
             'deleteOldSubImageIds.*' => 'exists:material_images,mi_id',
+            'deleteOldProps' => 'sometimes|array',
+            'deleteOldProps.*' => 'exists:properties,p_id',
+            'deleteOldTechProps' => 'sometimes|array',
+            'deleteOldTechProps.*' => 'exists:properties,p_id',
+            'deleteOldAppProps' => 'sometimes|array',
+            'deleteOldAppProps.*' => 'exists:properties,p_id',
         ], messages: [
             'code.required' => 'The material code is required.',
             'code.unique' => 'The material code must be unique.',

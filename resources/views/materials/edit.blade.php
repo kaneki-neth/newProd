@@ -14,6 +14,20 @@
             border: none;
         }
 
+        .custom-input {
+            height: 30px;
+        }
+
+        .select2.select2-container .selection .select2-selection.select2-selection--multiple {
+            height: 30px !important;
+            min-height: 30px !important;
+        }
+
+        .select2.select2-container .selection .select2-selection.select2-selection--single {
+            height: 30px !important;
+            min-height: 30px !important;
+        }
+
         .col-4 > .row {
             width: 100%;
             min-width: 100%; 
@@ -22,7 +36,6 @@
         div img#mainImage {
             width: 100%;
             height: 100%;
-            object-fit: cover;        
             object-fit: contain;
         }
         
@@ -42,7 +55,7 @@
         .preview-image {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             border: 1px solid #d1c3c0;
         }
 
@@ -184,17 +197,22 @@
             <form method="POST" id="form-update-materials">
                 @csrf
                 <div class="row mb-3 g-0" style="margin: 0px;">
-                    <div class="col-8">
+                    <div class="d-flex justify-content-start">
+                        <button class="btn btn-primary btn-xs" onclick="location.href=`/material/show/{{$material->m_id}}`">
+                            <i class="fa fa-arrow-left"></i> Back
+                        </button>
+                    </div>
+                    <div class="col-8 mt-3">
                         <div class="row">
                             <div class="col">
                                 <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control form-control-xs validate" name="name" id="name"
+                                <input type="text" class="form-control form-control-xs validate custom-input" name="name" id="name"
                                     value="{{ old('name', $material->name) }}" placeholder="...">
                                 <span id="name-msg" class="error-message"></span>
                             </div>
                             <div class="col-md-4">
                                 <label for="code" class="form-label">Code <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control form-control-xs validate" name="code" 
+                                <input type="text" class="form-control form-control-xs validate custom-input" name="code" 
                                     value="{{ old('material_code', $material->material_code) }}" placeholder="..." id="code">
                                 <span id="code-msg" class="error-message"></span>
                             </div>
@@ -276,7 +294,7 @@
                                                     </td>
                                                     <td class="d-flex justify-content-center align-items-center" style="height:100%">
                                                         <div class="d-flex flex-column justify-content-end align-items-center text-danger mt-3" style="height: 23px">
-                                                            <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeRow(this)"></i>
+                                                            <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="oldRemoveRow(this, {{ $prop->p_id }})"></i>
                                                         </div>
                                                     </td>  
                                                 </tr>
@@ -324,7 +342,7 @@
                                                     <td class="d-flex justify-content-center align-items-center" style="height:100%">
                                                         <div class="d-flex flex-column justify-content-end align-items-center text-danger mt-3" style="height: 23px">
 
-                                                            <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeTechRow(this)"></i>
+                                                            <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="oldRemoveTechRow(this, {{ $techprop->p_id }})"></i>
                                                         </div>
                                                     </td>  
                                                 </tr>
@@ -369,7 +387,7 @@
                                                     </td>
                                                     <td class="d-flex justify-content-center align-items-center" style="height:100%">
                                                         <div class="d-flex flex-column justify-content-end align-items-center text-danger mt-3" style="height: 23px">
-                                                            <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeTechRow(this)"></i>
+                                                            <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="oldRemoveSusRow(this, {{ $appprop->p_id }})"></i>
                                                         </div>
                                                     </td>   
                                                 </tr>
@@ -380,11 +398,9 @@
                             </div>
                         </div>
                 </div>
-               
                 <div class="col-4 d-flex align-items-end flex-column" style="height: 100%">
                     <div class="row g-0">
                         <div class="col-9" style="margin-left: auto">
-                            <div class="alert alert-yellow fade" id="imageError"></div>
                             <label class="form-label">Upload Image</label>
                             <div style="border:1px solid var(--bs-component-border-color); border-radius:4px; aspect-ratio: 1 / 1; margin-left: 0 !important; margin-right: 0 !important; cursor: pointer;"
                                 class="row g-0" onclick="document.getElementById('main_material_image').click();">
@@ -408,7 +424,7 @@
                 </div>
             
                 <div class="d-flex justify-content-start">
-                    <button class="btn btn-primary btn-md" type="submit" style="margin: 10px;" >
+                    <button class="btn btn-primary btn-xs" type="submit" style="margin: 10px;" >
                         <i class="fa fa-plus"></i> 
                         Submit
                     </button>
@@ -428,6 +444,7 @@
     <script src="/assets/plugins/blueimp-file-upload/js/jquery.fileupload-validate.js"></script>
     <script src="/assets/plugins/sweetalert/dist/sweetalert.min.js"></script>
     <script>
+        $('#material').addClass('active');
         let imageCount = 0;
         let imageFiles = [];
         let mainImage;
@@ -557,6 +574,13 @@
             tableBody.appendChild(newRow);
         }
 
+        function oldRemoveRow(button, id) {
+            deleteOldProps.push(id);
+            let tableBody = document.getElementById('properties_tableBody');
+            let currentRows = document.querySelectorAll('#properties_tableBody tr').length;
+            let row = button.closest('tr');
+            row.remove();
+        }
         function removeRow(button) {
             let tableBody = document.getElementById('properties_tableBody');
             let currentRows = document.querySelectorAll('#properties_tableBody tr').length;
@@ -601,6 +625,12 @@
             tableBody.appendChild(newRow);
         }
 
+        function oldRemoveTechRow(button, id) {
+            deleteOldTechProps.push(id);
+            let currentRows = document.querySelectorAll('#technical_properties_tableBody tr').length;
+            let row = button.closest('tr');
+            row.remove();
+        }
         function removeTechRow(button) {
             let currentRows = document.querySelectorAll('#technical_properties_tableBody tr').length;
             let row = button.closest('tr');
@@ -642,14 +672,22 @@
             tableBody.appendChild(newRow);
         }
 
+        function oldRemoveSusRow(button, id) {
+            deleteOldAppProps.push(id);
+            let currentRows = document.querySelectorAll('#sustainability_tableBody tr').length;
+            let row = button.closest('tr');
+            row.remove();
+        }
+
         function removeSusRow(button) {
             let currentRows = document.querySelectorAll('#sustainability_tableBody tr').length;
             let row = button.closest('tr');
             row.remove();
         }
 
-        
-        
+        var deleteOldProps = [];
+        var deleteOldTechProps = [];
+        var deleteOldAppProps = [];
         var deleteOldSubImageIds = [];
         $(document).ready(function () {
             $('#imageError').removeClass("show");
@@ -658,13 +696,13 @@
             $('#descriptionError').removeClass("show");
             $('#descriptionError').hide();
             $('#descriptionError').empty();
-            $(document).on('input', '.validate', function () {
-                let $field = $(this);
-                $field.removeClass('is-invalid');
-                $field.siblings('.error-message').text('');
-                $field.siblings('.error-message-sub').text('');
-                $field.css('border-color', '#ced4da');
-            });
+            // $(document).on('input', '.validate', function () {
+            //     let $field = $(this);
+            //     $field.removeClass('is-invalid');
+            //     $field.siblings('.error-message').text('');
+            //     $field.siblings('.error-message-sub').text('');
+            //     $field.css('border-color', '#ced4da');
+            // });
 
             $('#categories').select2({ placeholder: "Select Categories", width: "100%" })
                 .on('change keyup', function () {
@@ -724,6 +762,7 @@
             deleteOldSubImageIds.push(id);
             element.remove();
         }
+        
 
         $( "#form-update-materials" ).on( "submit", function( event ) {
             showLoading();
@@ -734,6 +773,8 @@
             //---------------------------------------------------------------
             let properties = [];
             let propertyNames = document.getElementsByName('property_name[]');
+
+
             let techPropertyNames = document.getElementsByName('tech_property_name[]');
             let appPropertyNames = document.getElementsByName('app_property_name[]');
             let propertyValues = document.getElementsByName('property_value[]');
@@ -783,7 +824,21 @@
                 formData.append('deleteOldSubImageIds[]', id);
             });
 
+            deleteOldProps.forEach(element => {
+                formData.append('deleteOldProps[]', element);
+            });
+            deleteOldTechProps.forEach(element => {
+                formData.append('deleteOldTechProps[]', element);
+            });
+            deleteOldAppProps.forEach(element => {
+                formData.append('deleteOldAppProps[]', element);
+            });
+
             formData.append('_token', '{{ csrf_token() }}');
+            for(var pair of formData.entries()){
+                console.log(pair[0], pair[1]);
+            }
+
             $.ajax({
                 url: "{{ route('materials.update', $material->m_id) }}",
                 type: "POST",
@@ -793,7 +848,7 @@
                 success: function (response) {
                     console.log(response);
                     setTimeout(() => {
-                        location.reload();
+                        window.location.href=`/material/show/{{$material->m_id}}`;
                     }, 2000);
 
                 },
@@ -808,6 +863,7 @@
                                 
                                 if(key == 'categories') {
                                     $('.select2-container .selection .select2-selection--multiple').addClass('error-input');
+                                    
                                     $('#' + key + '-msg').text(element[0]);
                                 } else {
                                     $("#" + $input_id).addClass('error-input')

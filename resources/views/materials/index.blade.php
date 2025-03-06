@@ -75,7 +75,11 @@
                             @endforeach
                         </tbody>
                     </table>
+                    
                 </div>
+            </div>
+            <div class="d-flex justify-content-end align-items-bottom mt-1">
+                {{ $materials->links('pagination::bootstrap-4') }}
             </div>
         </div>
     </div>
@@ -94,7 +98,7 @@
 
         var tblrows = 0;
         var height = screen.height;
-        $("#pannel-body").attr("style", 'height: 78vh;');
+        $("#pannel-body").attr("style", 'min-height: 78vh;');
         tblrows = parseInt(height * 0.45) - 30;
 
         $('#data-table-scroller').DataTable({

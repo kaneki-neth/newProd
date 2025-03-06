@@ -160,16 +160,20 @@
 
     <div class="panel panel-inverse">
         <div class="panel-body" id="pannel-body" style="padding: 45px !important;">
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-primary btn-md" type="submit" style="margin: 10px;" onclick="location.href=`/material/{{$material->m_id}}/edit`">
-                    <i class="fa fa-pen"></i> 
+            <div class="d-flex justify-content-start gap-2">
+                <button class="btn btn-primary btn-xs" type="submit" style="" onclick="location.href='/material'">
+                    <i class="fa fa-arrow-left"></i> 
+                    Back
+                </button>
+                <button class="btn btn-primary btn-xs" type="submit" style="" onclick="location.href=`/material/{{$material->m_id}}/edit`">
+                    <i class="fa fa-edit"></i> 
                     Edit
                 </button>
             </div>
             <form method="POST" id="form-update-materials">
                 @csrf
                 <div class="row mb-3 g-0" style="margin: 0px;">
-                    <div class="col-8">
+                    <div class="col-8 mt-3">
                     <div class="row">
                         <div class="col">
                             <label for="name" class="form-label">Name </label>
@@ -208,7 +212,7 @@
                     <div class="row mt-3 g-0">
                         <div class="alert alert-yellow fade" style="display: none;" id="descriptionError"></div>
                         <label for="description" class="form-label">Description </label>
-                        <div class="border form-control" style="border-radius: 4px; height: 300px">
+                        <div class="border form-control" style="border-radius: 4px; height: 350px; overflow: auto;">
                             @php
                                 echo $material->description;
                             @endphp
@@ -375,6 +379,7 @@
     <script src="/assets/plugins/select2/dist/js/select2.min.js"></script>
 
     <script>
+        $('#material').addClass('active');
         $(document).ready(function () {
             $('#imageError').removeClass("show");
             $('#imageError').hide();

@@ -13,6 +13,18 @@
         td, th {
             border: none;
         }
+
+        .col-4 > .row {
+            width: 100%;
+            min-width: 100%; 
+        }
+
+        div img#mainImage {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;        
+            object-fit: contain;
+        }
         
         .image-container {
             position: relative;
@@ -27,7 +39,6 @@
             border-radius: 4px;
         }
 
-        /* Image Styles */
         .preview-image {
             width: 100%;
             height: 100%;
@@ -35,31 +46,29 @@
             border: 1px solid #d1c3c0;
         }
 
-        /* Grayed-Out Hover Overlay */
         .hover-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0); /* Fully transparent by default */
+            background: rgba(0, 0, 0, 0); 
             transition: background 0.3s ease;
         }
 
-        /* Small Tool Overlay (Trash Icon) */
         .tool-overlay {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 50%; /* Adjust percentage as needed */
-            height: 50%; /* Adjust percentage as needed */
+            width: 50%;
+            height: 50%;
             background: var(--bs-component-border-color);
             border-radius: 10%;
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0; /* Initially hidden */
+            opacity: 0; 
             transition: opacity 0.3s ease;
         }
 
@@ -69,21 +78,38 @@
             left: 50%;
         }
 
-        /* Trash Icon inside Tool Overlay */
         .tool-overlay i {
             font-size: 24px;
-            color: white; /* Adjust color if needed */
+            color: white; 
         }
 
-        /* Hover Effects (CSS-Only) */
+        
         .image-container:hover .hover-overlay {
-            background: rgba(0, 0, 0, 0.3); /* Grayed out on hover */
+            background: rgba(0, 0, 0, 0.3); 
         }
 
         .image-container:hover .tool-overlay {
-            opacity: 1; /* Tool overlay appears fully */
+            opacity: 1; 
         }
 
+        .error-msg {
+            position: relative;
+            top: -5px;
+            background-color: white;
+        }
+        .error-msg#description-msg {
+            position: relative;
+            background-color: white;
+            top: 0px;
+        }
+        .error-msg#mainImage {
+            position: relative;
+            background-color: white;
+            top: 0px !important;
+        }
+        .error-input {
+            border: 1px solid red !important;
+        }
 
         .error-message {
             color: red;
@@ -125,33 +151,26 @@
 
         #imageGallery::-webkit-scrollbar {
             width: 8px;
-            /* Makes the scrollbar thinner */
             height: 8px;
-            /* Adjusts horizontal scrollbar thickness */
         }
 
         #imageGallery::-webkit-scrollbar-track {
             background: #f1f1f1;
-            /* Light gray background */
             border-radius: 10px;
         }
 
         #imageGallery::-webkit-scrollbar-thumb {
             background: #888;
-            /* Darker gray for the scrollbar handle */
             border-radius: 10px;
         }
 
         #imageGallery::-webkit-scrollbar-thumb:hover {
             background: #555;
-            /* Darker on hover */
         }
 
         #imageGallery {
             scrollbar-width: thin;
-            /* Makes the scrollbar thinner */
             scrollbar-color: #888 #f1f1f1;
-            /* Thumb color and track color */
         }
     </style>
     <link href="/assets/plugins/summernote/dist/summernote-lite.css" rel="stylesheet" />
@@ -160,70 +179,61 @@
         <li class="breadcrumb-item"><a href="javascript:;">Edit Material</a></li>
     </ol>
     <h1 class="page-header">Edit Material</h1>
-
-    <!-- make new -->
-    
     <div class="panel panel-inverse">
-        <div class="panel-body" id="pannel-body" style="padding: 65px !important;">
+        <div class="panel-body" id="pannel-body" style="padding: 45px !important;">
             <form method="POST" id="form-update-materials">
                 @csrf
                 <div class="row mb-3 g-0" style="margin: 0px;">
-                    <!-- diri content sa left -->
                     <div class="col-8">
-                    <!-- Initial text inputs: name, code, category, year -->
-                    <div class="row">
-                        <div class="col">
-                            <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control form-control-xs validate" name="name" 
-                                value="{{ old('name', $material->name) }}" placeholder="...">
-                            <span class="error-message"></span>
+                        <div class="row">
+                            <div class="col">
+                                <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-xs validate" name="name" id="name"
+                                    value="{{ old('name', $material->name) }}" placeholder="...">
+                                <span id="name-msg" class="error-message"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="code" class="form-label">Code <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-xs validate" name="code" 
+                                    value="{{ old('material_code', $material->material_code) }}" placeholder="..." id="code">
+                                <span id="code-msg" class="error-message"></span>
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="code" class="form-label">Code <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control form-control-xs validate" name="code" 
-                                value="{{ old('material_code', $material->material_code) }}" placeholder="...">
-                            <span class="error-message"></span>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <label for="categories" class="form-label">Category <span class="text-danger">*</span></label>
+                                <select class="form-control select2 validate" id="categories"
+                                    name="categories[]" type="text" multiple>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->c_id }}" 
+                                            {{ in_array($category->c_id, $selectedCategories) ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <span id="categories-msg" class="error-message"></span>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="year" class="form-label">Year <span class="text-danger">*</span></label>
+                                <select class="form-control select2-container select2" id="year" name="year">
+                                    @for ($i = 1984; $i <= (date('Y') + 5); $i++)
+                                        <option value="{{ $i }}" {{ $i == old('year', $material->year) ? 'selected' : '' }}>
+                                            {{ $i }}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </div>
                         </div>
-                    </div>
-    
-                    <div class="row">
-                        <div class="col">
-                            <label for="categories" class="form-label">Category <span class="text-danger">*</span></label>
-                            <select class="form-control select2 validate" id="multiple-select-field"
-                                name="categories[]" type="text" multiple>
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->c_id }}" 
-                                        {{ in_array($category->c_id, $selectedCategories) ? 'selected' : '' }}>
-                                        {{ $category->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <span class="error-message"></span>
+                        <div class="row mt-3 g-0">
+                            <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
+                            <span id="description-msg" class="error-msg text-danger" ></span>
+                            <div id="description" class="border form-control" style="border-radius: 4px; padding: 0px;">
+                                <textarea class="textarea form-control" name="description" id="summernote"
+                                    placeholder="Enter text ..." rows="12">
+                                </textarea>
+                            </div>
                         </div>
-                        <div class="col-md-2">
-                            <label for="year" class="form-label">Year <span class="text-danger">*</span></label>
-                            <select class="form-control select2-container select2" id="year" name="year">
-                                @for ($i = 1984; $i <= (date('Y') + 5); $i++)
-                                    <option value="{{ $i }}" {{ $i == old('year', $material->year) ? 'selected' : '' }}>
-                                        {{ $i }}
-                                    </option>
-                                @endfor
-                            </select>
-                        </div>
-                    </div>
-    
-                    <!-- Description module -->
-                    <div class="row mt-3 g-0">
-                        <div class="alert alert-yellow fade" style="display: none;" id="descriptionError"></div>
-                        <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
-                        <div class="border" style="border-radius: 4px">
-                            <textarea class="textarea form-control" name="description" id="summernote"
-                                placeholder="Enter text ..." rows="12">
-                            </textarea>
-                        </div>
-                    </div>
-                    <!-- properties module -->
-                    <div class="row">
+                        <div class="row">
                             <div class="col-12 mt-3">
                                 <div style="border-radius: 4px;">
                                     <table class="properties_table table table-responsive" id="properties_table" style="border-radius: 4px;">
@@ -242,7 +252,7 @@
                                         </thead>
                                         <tbody id="properties_tableBody" style="border-radius: 4px;">
                                             @if(count($properties) < 1)
-                                                <tr>
+                                                <tr id="no-data-row">
                                                     <td colspan="3">
                                                         <span>No Data available..</span>
                                                     </td>
@@ -252,20 +262,20 @@
                                                 <tr>
                                                     <td style="width:50%">
                                                         <div>
-                                                            <label for="property">Name <span class="text-danger">*</span></label>
+                                                            <label class="form-label" for="property">Name </label>
                                                             <input class="property-name form-control form-control-xs" name="property_name[]" value="{{$prop->name}}" style=" width:100%">
                                                             
                                                         </div>
                                                     </td>
                                                     <td style="width:50%">
                                                         <div>
-                                                            <label for="property">Value <span class="text-danger">*</span></label>
+                                                            <label class="form-label" for="property">Value </label>
                                                             <input type="text" class="form-control form-control-xs" name="property_value[]" value="{{$prop->value}}" style=" width:100%">
                                                             
                                                         </div>
                                                     </td>
-                                                    <td>
-                                                        <div class="mt-1 text-center text-danger">
+                                                    <td class="d-flex justify-content-center align-items-center" style="height:100%">
+                                                        <div class="d-flex flex-column justify-content-end align-items-center text-danger mt-3" style="height: 23px">
                                                             <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeRow(this)"></i>
                                                         </div>
                                                     </td>  
@@ -289,7 +299,7 @@
                                         </thead>
                                         <tbody id="technical_properties_tableBody">
                                             @if(count($techProperties) < 1)
-                                                <tr>
+                                                <tr id="no-techData-row">
                                                     <td colspan="3">
                                                         <span>No Data available..</span>
                                                     </td>
@@ -299,20 +309,21 @@
                                                 <tr>
                                                     <td style="width:50%">
                                                         <div>
-                                                            <label for="property">Name <span class="text-danger">*</span></label>
+                                                            <label class="form-label" for="property">Name </label>
                                                             <input class="property-name form-control form-control-xs" name="tech_property_name[]" value="{{$techprop->name}}" style=" width:100%">
                                                             
                                                         </div>
                                                     </td>
                                                     <td style="width:50%">
                                                         <div>
-                                                            <label for="property">Value <span class="text-danger">*</span></label>
+                                                            <label class="form-label" for="property">Value </label>
                                                             <input type="text" class="form-control form-control-xs" name="tech_property_value[]" value="{{$techprop->value}}" style=" width:100%">
                                                             
                                                         </div>
                                                     </td>
-                                                    <td></td>
-                                                        <div class="mt-1 text-center text-danger">
+                                                    <td class="d-flex justify-content-center align-items-center" style="height:100%">
+                                                        <div class="d-flex flex-column justify-content-end align-items-center text-danger mt-3" style="height: 23px">
+
                                                             <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeTechRow(this)"></i>
                                                         </div>
                                                     </td>  
@@ -334,7 +345,7 @@
                                         </thead>
                                         <tbody id="sustainability_tableBody">
                                             @if(count($susProperties) < 1)
-                                                <tr>
+                                                <tr id="no-appData-row">
                                                     <td colspan="3">
                                                         <span>No Data available..</span>
                                                     </td>
@@ -344,23 +355,23 @@
                                                 <tr>
                                                     <td style="width:50%">
                                                         <div>
-                                                            <label for="property">Name <span class="text-danger">*</span></label>
+                                                            <label class="form-label" for="property">Name </label>
                                                             <input class="property-name form-control form-control-xs" name="app_property_name[]" value="{{$appprop->name}}" style=" width:100%">
                                                             
                                                         </div>
                                                     </td>
                                                     <td style="width:50%">
                                                         <div>
-                                                            <label for="property">Value <span class="text-danger">*</span></label>
+                                                            <label class="form-label" for="property">Value </label>
                                                             <input type="text" class="form-control form-control-xs" name="app_property_value[]" value="{{$techprop->value}}" style=" width:100%">
                                                             
                                                         </div>
                                                     </td>
-                                                    <td>
-                                                        <div class="mt-1 text-center text-danger">
-                                                            <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeSusRow(this)"></i>
+                                                    <td class="d-flex justify-content-center align-items-center" style="height:100%">
+                                                        <div class="d-flex flex-column justify-content-end align-items-center text-danger mt-3" style="height: 23px">
+                                                            <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeTechRow(this)"></i>
                                                         </div>
-                                                    </td>  
+                                                    </td>   
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -368,34 +379,28 @@
                                 </div>
                             </div>
                         </div>
-    
                 </div>
                
                 <div class="col-4 d-flex align-items-end flex-column" style="height: 100%">
-                    <!-- show image content -->
                     <div class="row g-0">
                         <div class="col-9" style="margin-left: auto">
                             <div class="alert alert-yellow fade" id="imageError"></div>
                             <label class="form-label">Upload Image</label>
-                            <!-- main/big image -->
                             <div style="border:1px solid var(--bs-component-border-color); border-radius:4px; aspect-ratio: 1 / 1; margin-left: 0 !important; margin-right: 0 !important; cursor: pointer;"
                                 class="row g-0" onclick="document.getElementById('main_material_image').click();">
                                 <input type="file" accept="image/*" id="main_material_image" style="display: none;"
                                         onchange="displayMainImage(this)">
                                 <img src='/assets/userProfile/no-image-avail.jpg' id="mainImage">
                             </div>
-                            <!-- container for the stuff to append -->
                             <div id="imageGallery"
                                 style="display: flex; gap: 10px; overflow-x: auto; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-top: 8px">
-                                <!-- Add Button Square -->
                                 <div id="createButton"
                                     style="border-radius: 4px; flex: 0 0 auto; width: 25%; aspect-ratio: 1/1; background: var(--bs-component-border-color); display: flex; align-items: center; justify-content: center; cursor: pointer;"
                                     onclick="document.getElementById('material_image').click();">
                                     <input type="file" accept="image/*" id="material_image" style="display: none;"
-                                        onchange="displayImage(this)">
+                                        onchange="displayImage(this)" multiple>
                                     <i class="fa fa-plus fa-2x text-white"></i>
                                 </div>
-                                <!-- Dynamically added squares will be appended here -->
                             </div>
                         </div>
                     </div>
@@ -429,12 +434,11 @@
         const MAX_FILE_SIZE = 100 * 1024 * 1024;
 
         function displayImage(input) {
-            console.log("test display image");
-            if (input.files.length > 0) {
-                let file = input.files[0];
-                if (file.size > MAX_FILE_SIZE) {
+            for (let i = 0; i < input.files.length; i++) {
+                let file = input.files[i];
+                if (file.size > 102400000) {
                     swal("File is too large! Please select an image that is 100MB or under.");
-                    return;
+                    continue;
                 }
 
                 let reader = new FileReader();
@@ -444,7 +448,6 @@
 
                     let img = document.createElement('img');
                     img.src = e.target.result;
-                    // console.log("cursed e target result sent", img.src);
                     img.classList.add('preview-image'); 
                     img.id = `preview-image-${imageCount}`;
 
@@ -455,9 +458,7 @@
                     toolOverlay.classList.add('tool-overlay');
                     toolOverlay.innerHTML = '<i class="fa fa-trash"></i>'; 
 
-                    var currentCount = imageCount;
-                    console.log(`this the count of ${img.id} right now: `, currentCount);
-                    
+                    var currentCount = imageCount;                    
                     toolOverlay.addEventListener('click', function() {
                         deleteSubImage(newDiv, currentCount); 
                     });
@@ -465,7 +466,6 @@
                     newDiv.appendChild(img);
                     newDiv.appendChild(hoverOverlay);
                     newDiv.appendChild(toolOverlay);
-
                     document.getElementById('imageGallery').appendChild(newDiv);
                     imageFiles.push(file);
                     imageCount++;
@@ -474,46 +474,34 @@
 
                 reader.readAsDataURL(file);
             }
-            console.log("this the current imageFiles list", imageFiles);
         }
 
         function deleteSubImage(element, count) { 
             if (element) {
-                element.remove(); // Remove from DOM
+                element.remove();
             }
             imageFiles[count] = "";
-            console.log(`hello image removed at ${count}: `, imageFiles);
         }
 
-        function displayMainImage(input) {
-            console.log("hello wawahahiawjhoaihahaoj");
-            
+        function displayMainImage(input) {            
             if(input) {
                 let file = input.files[0];
-                console.log(typeof file);
-                console.log("file object from input or file list", file);
                 
                 if (file.size > MAX_FILE_SIZE) {
-                        //dapat swal ni
                         swal("File is too large! Please select an image that is 100MB or under.");
                         return;
                     }
 
                 let reader = new FileReader();
                 reader.onload = function (e) {
-                    console.log("this is the file object inside readeronload", file);
                     mainImage = file;
-                    console.log("this is after setting mainImage to file", mainImage);
                     updateMainImageItself(e.target.result);
                 };
                 reader.readAsDataURL(file); 
             }
-            console.log("u inputted in mainImage and set as file object now", mainImage);
         }
         
         function updateMainImageItself(mainImgSrc) {
-            console.log("reached update updateMainImageItself fcn");
-            
             let img = document.getElementById('mainImage');
             img.src = mainImgSrc;
             img.style.width = '100%';
@@ -521,12 +509,9 @@
             img.style.objectFit = 'cover';
         }
 
-        // update main image sa taas
         function updateMainImage(imageId) {
 
             let clickedImage = document.getElementById(imageId);
-            console.log("this the imageId for clickedImage", clickedImage.id);
-            
             if (!clickedImage) return;
 
             let img = document.getElementById('mainImage');
@@ -540,27 +525,31 @@
         function addPropertyRow() {
             let tableBody = document.getElementById('properties_tableBody');
             let currentRows = document.querySelectorAll('#properties_tableBody tr').length;
-            
+            let noDataRow = document.getElementById('no-data-row');
+
+            if (noDataRow) {
+                noDataRow.remove();
+            }
             let newRow = document.createElement('tr');
             newRow.innerHTML = `
                             <td style="width:50%">
                                 <div>
-                                    <label for="property">Name <span class="text-danger">*</span></label>
-                                    <input class="property-name form-control form-control-xs" name="property_name"
+                                    <label class="form-label" for="property">Name </label>
+                                    <input class="property-name form-control form-control-xs" name="property_name[]"
                                         style=" width:100%">
                                     
                                 </div>
                             </td>
                             <td style="width:50%">
                                 <div>
-                                    <label for="property">Value <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control form-control-xs" name="property_value"
+                                    <label class="form-label" for="property">Value </label>
+                                    <input type="text" class="form-control form-control-xs" name="property_value[]"
                                         style=" width:100%">
                                     
                                 </div>
                             </td>
-                            <td>
-                                <div class="mt-1 text-center text-danger">
+                            <td class="d-flex justify-content-center align-items-center" style="height:100%">
+                                <div class="d-flex flex-column justify-content-end align-items-center text-danger mt-3" style="height: 23px">
                                     <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeRow(this)"></i>
                                 </div>
                             </td>
@@ -568,30 +557,42 @@
             tableBody.appendChild(newRow);
         }
 
+        function removeRow(button) {
+            let tableBody = document.getElementById('properties_tableBody');
+            let currentRows = document.querySelectorAll('#properties_tableBody tr').length;
+            let row = button.closest('tr');
+            row.remove();
+        }
+
         function addTechnicalPropertyRow() {
             let tableBody = document.getElementById('technical_properties_tableBody');
             let currentRows = document.querySelectorAll('#technical_properties_tableBody tr').length;
+            let noDataRow = document.getElementById('no-techData-row');
+
+            if (noDataRow) {
+                noDataRow.remove();
+            }
 
             let newRow = document.createElement('tr');
             newRow.innerHTML = `
                 <td style="width:50%">
                     <div>
-                        <label for="property">Name <span class="text-danger">*</span></label>
-                        <input class="form-control form-control-xs validate" name="technical_property_name"
+                        <label class="form-label" for="property">Name </label>
+                        <input class="form-control form-control-xs validate" name="tech_property_name[]"
                             style="width:100%">
                         
                     </div>
                 </td>
                 <td style="width:50%">
                     <div>
-                        <label for="property">Value <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control form-control-xs validate" name="technical_property_value"
+                        <label class="form-label" for="property">Value </label>
+                        <input type="text" class="form-control form-control-xs validate" name="tech_property_value[]"
                             style=" width:100%">
                         
                     </div>
                 </td>
-                <td>
-                    <div class="mt-1 text-center text-danger">
+                <td class="d-flex justify-content-center align-items-center" style="height:100%">
+                    <div class="d-flex flex-column justify-content-end align-items-center text-danger mt-3" style="height: 23px">
                         <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeTechRow(this)"></i>
                     </div>
                 </td>
@@ -600,30 +601,40 @@
             tableBody.appendChild(newRow);
         }
 
+        function removeTechRow(button) {
+            let currentRows = document.querySelectorAll('#technical_properties_tableBody tr').length;
+            let row = button.closest('tr');
+            row.remove();
+        }
+
         function addSustainabilityRow(properties, first) {
             let tableBody = document.getElementById('sustainability_tableBody');
             let currentRows = document.querySelectorAll('#sustainability_tableBody tr').length;
+            let noDataRow = document.getElementById('no-appData-row');
 
+            if (noDataRow) {
+                noDataRow.remove(); 
+            }
             let newRow = document.createElement('tr');
             newRow.innerHTML = `
                     <td style="width:50%">
                     <div>
-                        <label for="property">Name <span class="text-danger">*</span></label>
-                        <input class="form-control form-control-xs validate" name="sustainability_property_name"
+                        <label class="form-label" for="property">Name </label>
+                        <input class="form-control form-control-xs validate" name="app_property_name[]"
                             style="width:100%">
                         
                     </div>
                     </td>
                     <td style="width:50%">
                     <div>
-                        <label for="property">Value <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control form-control-xs validate" name="sustainability_property_value"
+                        <label class="form-label" for="property">Value </label>
+                        <input type="text" class="form-control form-control-xs validate" name="app_property_value[]"
                             style=" width:100%">
                         
                     </div>
                     </td>
-                    <td>
-                        <div class="mt-1 text-center text-danger">
+                    <td class="d-flex justify-content-center align-items-center" style="height:100%">
+                        <div class="d-flex flex-column justify-content-end align-items-center text-danger mt-3" style="height: 23px">
                             <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeSusRow(this)"></i>
                         </div>
                     </td>
@@ -634,30 +645,13 @@
         function removeSusRow(button) {
             let currentRows = document.querySelectorAll('#sustainability_tableBody tr').length;
             let row = button.closest('tr');
-            if (currentRows > 1) {
-                row.remove();
-            }
+            row.remove();
         }
 
-        function removeTechRow(button) {
-            let currentRows = document.querySelectorAll('#technical_properties_tableBody tr').length;
-            let row = button.closest('tr');
-            if (currentRows > 1) {
-                row.remove();
-            }
-        }
         
-        function removeRow(button) {
-            let currentRows = document.querySelectorAll('#properties_tableBody tr').length;
-            let row = button.closest('tr');
-            if (currentRows > 1) {
-                row.remove();
-            }
-        }
         
         var deleteOldSubImageIds = [];
         $(document).ready(function () {
-            // Add input handler for all input fields
             $('#imageError').removeClass("show");
             $('#imageError').hide();
             $('#imageError').empty();
@@ -666,25 +660,16 @@
             $('#descriptionError').empty();
             $(document).on('input', '.validate', function () {
                 let $field = $(this);
-                // Remove invalid class
                 $field.removeClass('is-invalid');
-                // Remove error messages (both types)
                 $field.siblings('.error-message').text('');
                 $field.siblings('.error-message-sub').text('');
-                // Reset border color
                 $field.css('border-color', '#ced4da');
-                console.log("docu input .validate");
             });
 
-            // Select2 initialization with validation clear
-            $('#multiple-select-field').select2({ placeholder: "Select Categories", width: "100%" })
-                .on('change', function () {
-                    // Clear validation styling when user makes a selection
-                    $(this).next('.select2-container')
-                        .find('.select2-selection--multiple')
-                        .removeClass('is-invalid');
-                    $(this).siblings('.error-message').text('');
-                    $(this).siblings('.error-message-sub').text('');
+            $('#categories').select2({ placeholder: "Select Categories", width: "100%" })
+                .on('change keyup', function () {
+                    $(".select2-container .selection .select2-selection--multiple").removeClass('error-input');
+                    $('categories-msg').text('');
                 });
 
             let material = @json($material);
@@ -693,10 +678,9 @@
                 $('#summernote').summernote({
                     placeholder: 'Enter description',
                     height: "300",
-                    maximumImageFileSize: 102400000, // 100MB
+                    maximumImageFileSize: 102400000, 
                     callbacks: {
                         onImageUploadError: function (msg) {
-                            // console.log(msg + ' (1 MB)');
                         }
                     }
                 });
@@ -742,6 +726,7 @@
         }
 
         $( "#form-update-materials" ).on( "submit", function( event ) {
+            showLoading();
             event.preventDefault();
 
             let formData = new FormData(this);
@@ -799,10 +784,6 @@
             });
 
             formData.append('_token', '{{ csrf_token() }}');
-            for(var pair of formData.entries()){
-                console.log(pair[0], pair[1]);
-            }
-
             $.ajax({
                 url: "{{ route('materials.update', $material->m_id) }}",
                 type: "POST",
@@ -810,66 +791,52 @@
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    console.log("work??????????");
-                    
                     console.log(response);
-                    // Handle success - maybe redirect or show success message
-                    showLoading();
                     setTimeout(() => {
-                        showSuccessMessage("Material created successfully!", "{{ route('materials.index') }}");
+                        location.reload();
                     }, 2000);
 
                 },
                 error: function (xhr) {
                     if (xhr.status === 400) {
                         const errors = xhr.responseJSON.errors;
-                        console.log("these the errors: ", errors);
-                        // Display each error message
-                        Object.keys(errors).forEach(field => {
-                            console.log("the field currently is: ", field);
-                            const errorMessage = errors[field][0];
-                            const inputField = $(`[name="${field}"]`);
-                            
-                            if (field === "mainImage") {
-                                console.log("wow mainimage field error");
-                                $('#imageError').addClass("show");
-                                $('#imageError').show();
-                                $('#imageError').text(errorMessage);
-                            }
-                            if (field === "description"){
-                                $('#descriptionError').addClass("show");
-                                $('#descriptionError').show();
-                                $('#descriptionError').text(errorMessage);
-                            }
 
-                            if (inputField.hasClass('select2')) {
-                                // Handle Select2 fields
-                                inputField.next('.select2-container')
-                                    .find('.select2-selection--multiple')
-                                    .addClass('is-invalid');
-                            } else {
-                                // Handle regular inputs
-                                inputField.addClass('is-invalid');
-                            }
-
-                            // Display error message
-                            const errorSpan = inputField.siblings('.error-message');
-                            if (errorSpan.length) {
-                                errorSpan.text(errorMessage);
-                            } else {
-                                // For select2, add error message after the select2 container
-                                if (inputField.hasClass('select2')) {
-                                    inputField.next('.select2-container').after(`<span class="error-message">${errorMessage}</span>`);
+                        for (const key in errors) {
+                            if (Object.hasOwnProperty.call(errors, key)) {
+                                const element = errors[key];
+                                let $input_id = key;
+                                
+                                if(key == 'categories') {
+                                    $('.select2-container .selection .select2-selection--multiple').addClass('error-input');
+                                    $('#' + key + '-msg').text(element[0]);
                                 } else {
-                                    inputField.after(`<span class="error-message">${errorMessage}</span>`);
+                                    $("#" + $input_id).addClass('error-input')
+                                        .on('keyup change', function() {
+                                            rm_error(this);
+                                        });
+                                    $('#' + key + '-msg').text(element[0]);
                                 }
                             }
+                        }
+
+                        Swal.close();
+                    }
+                    else if(xhr.status === 413) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Content Too Large',
+                            html: 'The contents are too large!<br>Please reduce the size of the contents.',
+                            confirmButtonText: 'OK'
                         });
+                        return;
                     }
                 }
             });
-        });
+        }); 
 
-
+        function rm_error(element) {
+            $(element).removeClass('error-input');
+            $('#' + element.id + '-msg').text('');
+        }
     </script>
 @endsection

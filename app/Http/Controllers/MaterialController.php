@@ -32,8 +32,8 @@ class MaterialController extends Controller
             $query->where('enabled', $enabled);
         }
         if ($request->has('year')) {
-            $material_code = $request->input('year');
-            $query->where('material_code', 'like', "%$material_code%");
+            $year = $request->input('year');
+            $query->where('year', 'like', "%$year%");
         }
 
         $query = $query->orderBy('name', 'asc');

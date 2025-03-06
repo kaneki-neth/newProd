@@ -36,19 +36,19 @@
                     <div class="row">
                         <div class="col-lg-2 col-md-3">
                             <div class="mb-3">
-                                <label class="form-label">Name</label>
-                                <input type="text" class="form-control form-control-sm custom-input" id="name" name="name"
-                                    value="{{ $name }}" placeholder="..." autocomplete="off">
-                            </div>
-                        </div>
-
-                        <div class="col-lg-2 col-md-3">
-                            <div class="mb-3">
                                 <label class="form-label">Material Code</label>
                                 <input type="text" class="form-control form-control-sm custom-input" id="material_code"
                                     name="material_code" value="{{ $material_code }}" placeholder="..." autocomplete="off">
                             </div>
                         </div>
+
+                        <div class="col-lg-2 col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">Name</label>
+                                <input type="text" class="form-control form-control-sm custom-input" id="name" name="name"
+                                    value="{{ $name }}" placeholder="..." autocomplete="off">
+                            </div>
+                        </div>                        
 
                         <div class="col-lg-2 col-md-2">
                             <label class="form-label">Status</label>
@@ -62,8 +62,8 @@
                         <div class="col-lg-2 col-md-3">
                             <div class="mb-3">
                                 <label class="form-label">Year</label>
-                                <input type="text" class="form-control form-control-sm custom-input" id="material_code"
-                                    name="material_code" value="{{ $material_code }}" placeholder="..." autocomplete="off">
+                                <input type="text" class="form-control form-control-sm custom-input" id="year"
+                                    name="year" value="{{ $year }}" placeholder="..." autocomplete="off">
                             </div>
                         </div>
 
@@ -84,10 +84,10 @@
                         class="table table-striped table-bordered align-middle table-responsive table-sm">
                         <thead>
                             <tr>
-                                <th class="text-center" width="30%">Material Code</th>
-                                <th width="60%">Material Name</th>
-                                <th class="text-center" width="10%">Status</th>
-                                <th class="text-center" width="10%">Year</th>
+                                <th class="text-center" width="20%">Material Code</th>
+                                <th class="text-center" width="50%">Material Name</th>
+                                <th class="text-center" width="15%">Status</th>
+                                <th class="text-center" width="15%">Year</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -98,7 +98,7 @@
                                         onclick="location.href='/material/show/{{ $material->m_id }}'">
                                         {{ $material->name }}
                                     </td>
-                                    <td class="text-center" width="10%">
+                                    <td class="text-center">
                                         @if($material->enabled)
                                             <i class="fa fa-check text-success"></i>
                                         @else

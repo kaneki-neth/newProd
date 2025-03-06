@@ -199,7 +199,7 @@
                 <div class="row mb-3 g-0" style="margin: 0px;">
                     <div class="d-flex justify-content-start">
                         <button class="btn btn-primary btn-xs" onclick="location.href=`/material/show/{{$material->m_id}}`">
-                            <i class="fa fa-arrow-left"></i> Back
+                            <i class="fa fa-eye"></i> View
                         </button>
                     </div>
                     <div class="col-8 mt-3">

@@ -95,46 +95,50 @@ class MaterialController extends Controller
     public function show(string $m_id)
     {
         $material = DB::table('materials')
-            ->select('materials.material_code', 'materials.name', 'materials.description', 'materials.year', 'm_id')
+            ->select('materials.material_code', 'materials.name', 'materials.description', 'materials.year', 'm_id', 'image_file')
             ->where('m_id', $m_id)
             ->first();
 
         $categories = DB::table('item_categories')
             ->leftJoin('categories', 'item_categories.c_id', '=', 'categories.c_id')
-            ->select('categories.name as category_name', 'categories.description as category_description')
+            ->select('categories.name', 'categories.description as category_description', 'categories.c_id')
             ->where('m_id', $m_id)
             ->orderBy('categories.name', 'asc')
             ->get();
 
+        $selectedCategories = DB::table('item_categories')
+            ->where('m_id', $m_id)
+            ->pluck('c_id')
+            ->toArray();
+
+
         $images = DB::table('material_images')
+            ->select('mi_id', 'image_file')
             ->where('m_id', $m_id)
-            ->pluck('image_file')
-            ->first();
+            ->get()
+            ->toArray();
 
-        $soft_properties = DB::table('item_properties')
-            ->leftJoin('properties', 'item_properties.p_id', '=', 'properties.p_id')
-            ->select('item_properties.*', 'properties.name as property_name', 'properties.type')
+        $properties = DB::table('properties')
+        ->select('*')
+        ->where('m_id', $m_id)
+        ->where('type', '=', "soft")
+        ->get();
+
+        $techProperties = DB::table('properties')
+            ->select('*')
             ->where('m_id', $m_id)
-            ->where('properties.type', 'soft')
+            ->where('type', '=', "technical")
             ->get();
 
-        $technical_properties = DB::table('item_properties')
-            ->leftJoin('properties', 'item_properties.p_id', '=', 'properties.p_id')
-            ->select('item_properties.*', 'properties.name as property_name', 'properties.type')
+        $susProperties = DB::table('properties')
+            ->select('*')
             ->where('m_id', $m_id)
-            ->where('properties.type', 'technical')
-            ->get();
-
-        $application_properties = DB::table('item_properties')
-            ->leftJoin('properties', 'item_properties.p_id', '=', 'properties.p_id')
-            ->select('item_properties.*', 'properties.name as property_name', 'properties.type')
-            ->where('m_id', $m_id)
-            ->where('properties.type', 'application')
+            ->where('type', '=', "application")
             ->get();
 
         // dd(compact('material', 'categories', 'images', 'soft_properties', 'technical_properties', 'application_properties'));
 
-        return view('materials.show', compact('material', 'categories', 'images', 'soft_properties', 'technical_properties', 'application_properties'));
+        return view('materials.show', compact('material', 'categories', 'images', 'properties', 'techProperties', 'susProperties', 'selectedCategories'));
     }
 
     public function destroy(string $id)
@@ -173,6 +177,7 @@ class MaterialController extends Controller
     {
         $validator = $this->validateMaterialRequest($request, $materialId);
         if ($validator->fails()) {
+            
             return response()->json([
                 'success' => false,
                 'errors' => $validator->getMessageBag()->toArray(),
@@ -185,9 +190,9 @@ class MaterialController extends Controller
 
             $mainImagePath = null;
             if ($request->has('mainImage')) {
-                if($materialId) {
+                if ($materialId) {
                     $oldMainImage = DB::table('materials')->where('m_id', $materialId)->value('image_file');
-                    if($oldMainImage) {
+                    if ($oldMainImage) {
                         \Storage::disk('public')->delete($oldMainImage);
                     }
                 }
@@ -216,6 +221,8 @@ class MaterialController extends Controller
                     ->delete();
             }
 
+            session()->flash('success', "Material created successfully!");
+
             return response()->json([
                 'success' => true,
                 'message' => 'Material ' . ($materialId ? 'updated' : 'created') . ' successfully',
@@ -224,7 +231,7 @@ class MaterialController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             $this->deleteUploadedImages($storedImagePaths);
-
+            
             return response()->json([
                 'success' => false,
                 'message' => 'Error processing material: ' . $e->getMessage(),
@@ -235,17 +242,24 @@ class MaterialController extends Controller
     protected function validateMaterialRequest(Request $request, $materialId = null)
     {
         $uniqueCodeRule = 'unique:materials,material_code' . ($materialId ? ",{$materialId},m_id" : '');
+        if (! preg_match('/>(\s*[^<\s].*?)</', $request->description)) {
+            $request->merge(['description' => strip_tags($request->description)]);
+        }
+        if ($request->description == strip_tags($request->description)) {
+            $request->merge(['description' => trim(str_replace('&nbsp;', '', $request->description))]);
+        }
+        // <p>&nbsp;</p><p><br></p> not handled yet
 
         return Validator::make($request->all(), [
             'code' => 'required|' . $uniqueCodeRule,
             'name' => 'required',
-            'categories' => 'sometimes|array',
+            'categories' => 'required|array',
             'categories.*' => 'exists:categories,c_id',
             'properties' => 'sometimes|array',
             'properties.*.name' => 'required',
             'properties.*.value' => 'required',
             'properties.*.type' => 'required|in:soft,technical,application',
-            'mainImage' => ($materialId?'sometimes':'required').'|image|mimes:jpeg,png,jpg,gif,svg|max:102400',
+            'mainImage' => ($materialId ? 'sometimes' : 'required').'|image|mimes:jpeg,png,jpg,gif,svg|max:102400',
             'imageFiles' => 'sometimes|array',
             'imageFiles.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:102400',
             'year' => 'required|digits:4',
@@ -256,6 +270,7 @@ class MaterialController extends Controller
             'code.required' => 'The material code is required.',
             'code.unique' => 'The material code must be unique.',
             'name.required' => 'The material name is required.',
+            'categories.required' => 'At least one category is required.',
             'categories.*.exists' => 'A selected category is invalid.',
             'properties.*.name.required' => 'The property name is required.',
             'properties.*.value.required' => 'The property value is required.',

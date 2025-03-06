@@ -234,6 +234,14 @@
                             </select>
                         </div>
                     </div>
+                    <div class="row g-0 mt-3">
+                        <div class="d-flex flex-row gap-2">
+                            <label class="form-label" for="enabled">Enabled <span class="text-danger">*</span></label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="enabled" name="enabled" checked>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row mt-3 g-0">
                         <label for="material_description" class="form-label" >Description <span class="text-danger">*</span></label>
                         <span id="description-msg" class="error-msg text-danger" ></span>
@@ -351,6 +359,7 @@
                             </div>
                         </div>
                     </div>
+                    
                 </div>
 
                 <div class="col-4 d-flex align-items-end flex-column" style="height: 100%">
@@ -380,7 +389,7 @@
                     
                 </div>
                 <div class="d-flex justify-content-start">
-                        <button class="btn btn-primary btn-xs" style="margin: 10px;" onclick="submitData()">
+                        <button class="btn btn-primary btn-xs" onclick="submitData()">
                             <i class="fa fa-plus"></i> Submit
                         </button>
                 </div>
@@ -550,6 +559,7 @@
             formData.append('year', document.querySelector('select[name="year"]').value);
             formData.append('year', document.querySelector('select[name="year"]').value);
             formData.append('description', document.querySelector('textarea[name="material_description"]').value);
+            formData.append('enabled', $('#enabled').is(':checked') ? 1 : 0);
 
             if ($("#summernote").val()) {
                 $('#descriptionError').removeClass("show");
@@ -599,8 +609,11 @@
                     formData.append('imageFiles[]', file);
                 }
             });
-            formData.append('mainImage', mainImage ?? "")
-
+            formData.append('mainImage', mainImage ?? "");
+            for(var pair of formData.entries()){
+                console.log(pair[0], pair[1]);
+            }
+            
             formData.append('_token', "{{ csrf_token() }}");
 
             $.ajax({

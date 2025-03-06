@@ -12,6 +12,8 @@ class MaterialController extends Controller
     {
         $name = '';
         $material_code = '';
+        $enabled = '';
+        $year = '';
 
         $query = DB::table('materials')
             ->select('materials.*');
@@ -25,12 +27,20 @@ class MaterialController extends Controller
             $material_code = $request->input('material_code');
             $query->where('material_code', 'like', "%$material_code%");
         }
+        if ($request->has('enabled') && in_array($request->input('enabled'), ['0', '1'])) {
+            $enabled = $request->input('enabled');
+            $query->where('enabled', $enabled);
+        }
+        if ($request->has('year')) {
+            $material_code = $request->input('year');
+            $query->where('material_code', 'like', "%$material_code%");
+        }
 
         $query = $query->orderBy('name', 'asc');
 
         $materials = $query->paginate(20);
 
-        return view('materials.index', compact('materials', 'name', 'material_code'));
+        return view('materials.index', compact('materials', 'name', 'material_code', 'enabled', 'year'));
     }
 
     public function create()
@@ -95,7 +105,7 @@ class MaterialController extends Controller
     public function show(string $m_id)
     {
         $material = DB::table('materials')
-            ->select('materials.material_code', 'materials.name', 'materials.description', 'materials.year', 'm_id', 'image_file')
+            ->select('materials.material_code', 'materials.name', 'materials.description', 'materials.year', 'm_id', 'image_file', 'enabled')
             ->where('m_id', $m_id)
             ->first();
 
@@ -183,7 +193,7 @@ class MaterialController extends Controller
                 'errors' => $validator->getMessageBag()->toArray(),
             ], 400);
         }
-
+        
         $storedImagePaths = [];
         try {
             DB::beginTransaction();
@@ -236,9 +246,8 @@ class MaterialController extends Controller
                     ->whereIn('p_id', $request->input('deleteOldAppProps'))
                     ->delete();
             }
-
-            session()->flash('success', "Material created successfully!");
-
+            session()->flash('success', "Material " . ($materialId ? 'updated' : 'created') . " successfully!");
+            
             return response()->json([
                 'success' => true,
                 'message' => 'Material ' . ($materialId ? 'updated' : 'created') . ' successfully',
@@ -288,6 +297,7 @@ class MaterialController extends Controller
             'deleteOldTechProps.*' => 'exists:properties,p_id',
             'deleteOldAppProps' => 'sometimes|array',
             'deleteOldAppProps.*' => 'exists:properties,p_id',
+            'enabled' => 'required|in:0,1',
         ], messages: [
             'code.required' => 'The material code is required.',
             'code.unique' => 'The material code must be unique.',
@@ -318,6 +328,7 @@ class MaterialController extends Controller
             'year' => $request->input('year'),
             'updated_by' => auth()->id(),
             'updated_at' => now(),
+            'enabled' => $request->input('enabled'),
         ];
 
         if ($request->has('mainImage')) {

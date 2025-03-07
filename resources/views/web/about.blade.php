@@ -3,13 +3,13 @@
 @section('content')
 <main class="main main-about">
 
-  <section class="1st-about">
-    <div class="container">
+  <section class="first-about">
+    <div class="about-wrapper container">
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-12 col-md-6">
           <h1 class="about-title">About Matix UP Cebu</h1>
         </div>
-        <div class="col-md-6">
+        <div class="col-12 col-md-6">
           <p class="about-description">
             Tatak Pinoy - MATIX UP Cebu is designed to be a multi-faceted
             innovation hub that supports material exploration, product
@@ -39,10 +39,10 @@
     </div>
   </section>
 
-  <div class="2nd-about research-section">
-    <div class="container">
+  <div class="second-about research-section">
+    <div class="about-wrapper container">
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-12 col-md-6">
           <h1>Materials Research and Development</h1>
           <h2>For the Academe: Faculty and Students</h2>
 
@@ -70,7 +70,7 @@
             and innovation.
           </p>
         </div>
-        <div class="col-md-6">
+        <div class="col-12 col-md-6">
           <div class="research-image">
             <img
               src="{{url('web/assets/img/matix/about-img-01.png')}}"
@@ -81,23 +81,21 @@
     </div>
   </div>
 
-  <section class="3rd-about product-section">
-    <div class="container">
+  <section class="third-about product-section">
+    <div class="about-wrapper container">
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 col-12 order-md-1 order-2">
           <div class="product-images">
             <img
               src="{{url('web/assets/img/matix/about-img-02.png')}}"
-              alt="Workshop with international experts"
               class="img-fluid mb-4" />
             <img
               src="{{url('web/assets/img/matix/about-img-03.png')}}"
-              alt="Team of entrepreneurs and visiting professors"
               class="img-fluid" />
           </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-6 col-12 order-md-2 order-1">
           <h1>Product Development and Business Incubation</h1>
           <h2>Bringing in International Experts and Visiting Professors</h2>
 
@@ -135,9 +133,9 @@
   </section>
 
   <div class="fourth-about library-section">
-    <div class="container">
+    <div class="about-wrapper container">
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-12 col-md-6">
           <h1>Materials Library</h1>
           <h2>Swatches and Resources</h2>
 
@@ -189,13 +187,13 @@
           </p>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-12 col-md-6">
           <div class="materials-grid">
             <img
               src="{{url('web/assets/img/matix/about-img-04.png')}}"
               class="img-fluid" />
           </div>
-        </div>
+
       </div>
     </div>
   </div>

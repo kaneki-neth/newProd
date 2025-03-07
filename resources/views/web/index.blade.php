@@ -300,13 +300,24 @@
     // Owl Carousel
     var owl = $(".materials");
     owl.owlCarousel({
-      items: 4,
       margin: 10,
       loop: true,
-      nav: true,
+      nav: false,
       autoplay: true,
       autoplayTimeout: 3000,
-      autoplayHoverPause: true
+      autoplayHoverPause: true,
+      responsive: {
+        0: {
+          items: 2, // Show 2 items on mobile (375px and below)
+          margin: 5 // Smaller margins for mobile
+        },
+        376: {
+          items: 3 // Show 3 items for medium screens
+        },
+        768: {
+          items: 4 // Default 4 items for larger screens
+        }
+      }
     });
   });
 </script>

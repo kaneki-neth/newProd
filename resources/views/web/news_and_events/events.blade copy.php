@@ -2,7 +2,7 @@
 
 @section('content')
 <main class="main-news">
-  <div class="news-wrapper container">
+  <div class="container">
     <h1 class="news-title">News & Events</h1>
 
     <div class="content-layout">

@@ -27,9 +27,9 @@ Route::get('/research/{r_id}/edit', [ResearchController::class, 'edit'])->name('
 Route::post('/research/{r_id}/edit', [ResearchController::class, 'update'])->name('research.update');
 Route::get('/research/{r_id}', [ResearchController::class, 'show'])->name('research.show');
 
-Route::get('/events', [EventController::class, 'index'])->name('events.index');
-Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
-Route::post('/events/create', [EventController::class, 'store'])->name('events.store');
-Route::get('/events/{ne_id}/edit', [EventController::class, 'edit'])->name('events.edit');
-Route::post('/events/{ne_id}/edit', [EventController::class, 'update'])->name('events.update');
-Route::get('/events/{ne_id}', [EventController::class, 'show'])->name('events.show');
+Route::get('/events_', [EventController::class, 'index'])->name('events.index');
+Route::get('/events_/create', [EventController::class, 'create'])->name('events.create');
+Route::post('/events_/create', [EventController::class, 'store'])->name('events.store');
+Route::get('/events_/{ne_id}/edit', [EventController::class, 'edit'])->name('events.edit');
+Route::post('/events_/{ne_id}/edit', [EventController::class, 'update'])->name('events.update');
+Route::get('/events_/{ne_id}', [EventController::class, 'show'])->name('events.show');

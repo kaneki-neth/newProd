@@ -42,9 +42,9 @@ class ResearchController extends Controller
             $query->where('date', '<=', $dateTo);
         }
 
-        $blogs = $query->orderBy('date', 'desc')->paginate(20);
+        $researches = $query->orderBy('date', 'desc')->paginate(20);
 
-        return view('research.index', compact('research', 'title', 'date_from', 'date_to', 'enabled'));
+        return view('research.index', compact('researches', 'title', 'date_from', 'date_to', 'enabled'));
     }
 
     public function show($r_id)

@@ -190,7 +190,7 @@
                         <input type="file" accept="image/*" id="mainImage" name="mainImage" style="display: none;" onchange="displayMainImage(this)">
                     </div>
                     <span id="sub_images-msg" class="error-msg text-danger"></span>
-                    <div id="imageGallery"
+                    <!-- <div id="imageGallery"
                         style="display: flex; gap: 10px; overflow-x: auto; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-top: 8px">
                         <div id="createButton"
                             style="border-radius: 4px; flex: 0 0 auto; width: 25%; aspect-ratio: 1/1; background: var(--bs-component-border-color); display: flex; align-items: center; justify-content: center; cursor: pointer;"
@@ -199,7 +199,7 @@
                                 onchange="displayImage(this)" multiple>
                             <i class="fa fa-plus fa-2x text-white"></i>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>

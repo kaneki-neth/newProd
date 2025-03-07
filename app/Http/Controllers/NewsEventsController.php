@@ -60,13 +60,15 @@ class NewsEventsController extends Controller
             ->where('ne_id', $ne_id)
             ->first();
 
-        $subImages = DB::table('news_events_images')
-            ->select('nei_id', 'image_file')
-            ->where('ne_id', $ne_id)
-            ->get()
-            ->toArray();
+        return view('news_events.show', compact('news_event'));
 
-        return view('news_events.show', compact('news_event', 'subImages'));
+        // $subImages = DB::table('news_events_images')
+        //     ->select('nei_id', 'image_file')
+        //     ->where('ne_id', $ne_id)
+        //     ->get()
+        //     ->toArray();
+
+        // return view('news_events.show', compact('news_event', 'subImages'));
     }
 
     public function create()
@@ -81,11 +83,13 @@ class NewsEventsController extends Controller
             ->where('ne_id', $ne_id)
             ->first();
 
-        $subImages = DB::table('news_events_images')
-            ->select('nei_id', 'image_file')
-            ->where('ne_id', $ne_id)
-            ->get()
-            ->toArray();
+        $subImages = [];
+
+        // $subImages = DB::table('news_events_images')
+        //     ->select('nei_id', 'image_file')
+        //     ->where('ne_id', $ne_id)
+        //     ->get()
+        //     ->toArray();
 
         return view('news_events.edit', compact('news_event', 'subImages'));
     }
@@ -161,7 +165,7 @@ class NewsEventsController extends Controller
 
             if ($request->has('subImagesToDelete')) {
                 $sub_image_ids = $request->input('subImagesToDelete');
-                DB::table('news_events_images')->whereIn('nei_id', $sub_image_ids)->delete();
+                DB::table('news_events_images')->where('ne_id', $ne_id)->whereIn('nei_id', $sub_image_ids)->delete();
             }
 
             $message = $ne_id

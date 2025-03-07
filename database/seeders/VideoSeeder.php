@@ -34,14 +34,14 @@ class VideoSeeder extends Seeder
             'title' => 'Video Title 3',
             'description' => 'Video Description 3',
             'date' => '2025-03-03',
-            'video_url' => 'https://youtu.be/cqIfgfmLTe4?list=RDcqIfgfmLTe4',
+            'video_url' => 'https://www.youtube.com/watch?v=cqIfgfmLTe4',
         ]);
 
         DB::table('videos')->insert([
             'title' => 'Video Title 4',
             'description' => 'Video Description 4',
             'date' => '2025-03-03',
-            'video_url' => 'https://youtu.be/cqIfgfmLTe4?list=RDcqIfgfmLTe4',
+            'video_url' => 'https://www.youtube.com/watch?v=cqIfgfmLTe4',
         ]);
 
         DB::table('videos')->insert([
@@ -55,7 +55,7 @@ class VideoSeeder extends Seeder
             'title' => 'Video Title 6',
             'description' => 'Video Description 6',
             'date' => '2025-03-03',
-            'video_url' => 'https://youtu.be/cqIfgfmLTe4?list=RDcqIfgfmLTe4',
+            'video_url' => 'https://www.youtube.com/watch?v=cqIfgfmLTe4',
         ]);
 
         DB::table('videos')->insert([
@@ -83,7 +83,7 @@ class VideoSeeder extends Seeder
             'title' => 'Video Title 10',
             'description' => 'Video Description 10',
             'date' => '2025-03-03',
-            'video_url' => 'https://youtu.be/cqIfgfmLTe4?list=RDcqIfgfmLTe4',
+            'video_url' => 'https://www.youtube.com/watch?v=cqIfgfmLTe4',
         ]);
 
         DB::table('videos')->insert([
@@ -251,7 +251,7 @@ class VideoSeeder extends Seeder
             'title' => 'Video Title 34',
             'description' => 'Video Description 34',
             'date' => '2025-03-03',
-            'video_url' => 'https://youtu.be/cqIfgfmLTe4?list=RDcqIfgfmLTe4',
+            'video_url' => 'https://www.youtube.com/watch?v=cqIfgfmLTe4',
         ]);
 
         DB::table('videos')->insert([
@@ -328,7 +328,7 @@ class VideoSeeder extends Seeder
             'title' => 'Video Title 45',
             'description' => 'Video Description 45',
             'date' => '2025-03-03',
-            'video_url' => 'https://youtu.be/cqIfgfmLTe4?list=RDcqIfgfmLTe4',
+            'video_url' => 'https://www.youtube.com/watch?v=cqIfgfmLTe4',
         ]);
 
         DB::table('videos')->insert([
@@ -349,7 +349,7 @@ class VideoSeeder extends Seeder
             'title' => 'Video Title 48',
             'description' => 'Video Description 48',
             'date' => '2025-03-03',
-            'video_url' => 'https://youtu.be/cqIfgfmLTe4?list=RDcqIfgfmLTe4',
+            'video_url' => 'https://www.youtube.com/watch?v=cqIfgfmLTe4',
         ]);
 
         DB::table('videos')->insert([
@@ -363,7 +363,7 @@ class VideoSeeder extends Seeder
             'title' => 'Video Title 50',
             'description' => 'Video Description 50',
             'date' => '2025-03-03',
-            'video_url' => 'https://youtu.be/cqIfgfmLTe4?list=RDcqIfgfmLTe4',
+            'video_url' => 'https://www.youtube.com/watch?v=cqIfgfmLTe4',
         ]);
 
 

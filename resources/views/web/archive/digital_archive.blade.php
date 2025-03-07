@@ -2,10 +2,10 @@
 
 @section('content')
 <main class="main main-archive">
-  <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="archive-wrapper container">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-column flex-md-row">
       <h1 class="archive-title">Digital Archive</h1>
-      <div class="search-bar-archive">
+      <div class="search-bar-archive mt-3 mt-md-0">
         <input
           type="text"
           class="form-control"
@@ -14,9 +14,16 @@
     </div>
 
     <div class="row">
-      <!-- filter section starts here -->
+      <!-- Mobile Filter Toggle Button -->
+      <div class="archive-filter-btn col-12 d-lg-none mb-3">
+        <button class="btn btn-outline-secondary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse">
+          <i class="bi bi-funnel me-2"></i>Filter & Sort Options
+        </button>
+      </div>
+
+      <!-- filter section starts here - collapsible on mobile -->
       <div class="col-lg-3">
-        <div class="filter-section">
+        <div class="filter-section collapse d-lg-block" id="filterCollapse">
           <h4>Sort by</h4>
           <div class="filter-option">
             <input type="checkbox" id="recently-added" />
@@ -116,94 +123,102 @@
             <p>50 swatches</p>
           </div>
 
-          <!-- First Row -->
-          <div class="col-md-4">
+          <!-- First Row - Mobile: full width -->
+          <div class="col-6 col-md-4">
             <div class="archive-item">
               <a href="/digital_archive_content">
-                <img src="{{url('web/assets/img/matix/materials/digital_archive.png')}}" />
+                <img src="{{url('web/assets/img/matix/materials/digital_archive.png')}}" alt="Abaca + Bacbac Mat #125" class="img-fluid" />
                 <h5 class="archive-item-title">Abaca + Bacbac Mat #125</h5>
                 <div class="tag">Metals</div>
               </a>
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-6 col-md-4">
             <div class="archive-item">
               <img
                 src="{{url('web/assets/img/matix/materials/digital_archive.png')}}"
-                alt="Abaca + Bacbac Mat #125" />
+                alt="Abaca + Bacbac Mat #125" 
+                class="img-fluid" />
               <h5 class="archive-item-title">Abaca + Bacbac Mat #125</h5>
               <div class="tag">Polymers</div>
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-6 col-md-4">
             <div class="archive-item">
               <img
                 src="{{url('web/assets/img/matix/materials/digital_archive.png')}}"
-                alt="Abaca + Bacbac Mat #125" />
+                alt="Abaca + Bacbac Mat #125"
+                class="img-fluid" />
               <h5 class="archive-item-title">Abaca + Bacbac Mat #125</h5>
               <div class="tag">Polymers</div>
             </div>
           </div>
 
           <!-- Second Row -->
-          <div class="col-md-4">
+          <div class="col-6 col-md-4">
             <div class="archive-item">
               <img
                 src="{{url('web/assets/img/matix/materials/digital_archive.png')}}"
-                alt="Abaca + Bacbac Mat #125" />
+                alt="Abaca + Bacbac Mat #125"
+                class="img-fluid" />
               <h5 class="archive-item-title">Abaca + Bacbac Mat #125</h5>
               <div class="tag">Textiles</div>
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-6 col-md-4">
             <div class="archive-item">
               <img
                 src="{{url('web/assets/img/matix/materials/digital_archive.png')}}"
-                alt="Abaca + Bacbac Mat #125" />
+                alt="Abaca + Bacbac Mat #125"
+                class="img-fluid" />
               <h5 class="archive-item-title">Abaca + Bacbac Mat #125</h5>
               <div class="tag">Textiles</div>
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-6 col-md-4">
             <div class="archive-item">
               <img
                 src="{{url('web/assets/img/matix/materials/digital_archive.png')}}"
-                alt="Abaca + Bacbac Mat #125" />
+                alt="Abaca + Bacbac Mat #125"
+                class="img-fluid" />
               <h5 class="archive-item-title">Abaca + Bacbac Mat #125</h5>
               <div class="tag">Textiles</div>
             </div>
           </div>
 
           <!-- Third Row -->
-          <div class="col-md-4">
+          <div class="col-6 col-md-4">
             <div class="archive-item">
               <img
                 src="{{url('web/assets/img/matix/materials/digital_archive.png')}}"
-                alt="Abaca + Bacbac Mat #125" />
+                alt="Abaca + Bacbac Mat #125"
+                class="img-fluid" />
               <h5 class="archive-item-title">Abaca + Bacbac Mat #125</h5>
               <div class="tag">Textiles</div>
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-6 col-md-4">
             <div class="archive-item">
               <img
                 src="{{url('web/assets/img/matix/materials/digital_archive.png')}}"
-                alt="Abaca + Bacbac Mat #125" />
+                alt="Abaca + Bacbac Mat #125"
+                class="img-fluid" />
               <h5 class="archive-item-title">Abaca + Bacbac Mat #125</h5>
               <div class="tag">Textiles</div>
             </div>
           </div>
 
-          <div class="col-md-4">
+          <div class="col-6 col-md-4">
             <div class="archive-item">
               <img
                 src="{{url('web/assets/img/matix/materials/digital_archive.png')}}"
-                alt="Abaca + Bacbac Mat #125" />
+                alt="Abaca + Bacbac Mat #125"
+                class="img-fluid" />
               <h5 class="archive-item-title">Abaca + Bacbac Mat #125</h5>
               <div class="tag">Textiles</div>
             </div>

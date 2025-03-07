@@ -9,10 +9,10 @@ class archive extends Controller
 {
     //
     public function index(){
-        return view('web.digital_archive');
+        return view('web.archive.digital_archive');
     }
 
     public function archive_details(){
-        return view('web.digital_archive_content');
+        return view('web.archive.archive_content');
     }
 }

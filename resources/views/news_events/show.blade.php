@@ -81,17 +81,15 @@
                     <div id="main-img-container" class="img-thumbnail d-flex justify-content-center align-items-center">
                         <img src="{{ asset('storage/'.$news_event->image_file) }}" alt="Image" style="width: 100%;">
                     </div>
-                <?php
-                    // @if(count($subImages) > 0)
-                    //     <div id="imageGallery" style="display: flex; gap: 10px; overflow-x: auto; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-top: 8px">
-                    //         @foreach($subImages as $subImage)
-                    //             <div class="image-container">
-                    //                 <img src="{{ asset('storage/'.$subImage->image_file) }}" style="width: 100%; height: 100%; border: 1px solid #d1c3c0">
-                    //             </div>
-                    //         @endforeach
-                    //     </div>
-                    // @endif
-                ?>
+                    @if(count($subImages) > 0)
+                        <div id="imageGallery" style="display: flex; gap: 10px; overflow-x: auto; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-top: 8px">
+                            @foreach($subImages as $subImage)
+                                <div class="image-container">
+                                    <img src="{{ asset('storage/'.$subImage->image_file) }}" style="width: 100%; height: 100%; border: 1px solid #d1c3c0">
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

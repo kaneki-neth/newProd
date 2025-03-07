@@ -54,7 +54,7 @@ class BlogController extends Controller
             ->where('b_id', $b_id)
             ->first();
 
-        $subImages = DB::table('blogs_images')
+        $subImages = DB::table('blog_images')
             ->select('bi_id', 'image_file')
             ->where('b_id', $b_id)
             ->get()
@@ -75,7 +75,7 @@ class BlogController extends Controller
             ->where('b_id', $b_id)
             ->first();
 
-        $subImages = DB::table('blogs_images')
+        $subImages = DB::table('blog_images')
             ->select('bi_id', 'image_file')
             ->where('b_id', $b_id)
             ->get()
@@ -153,7 +153,7 @@ class BlogController extends Controller
 
             if ($request->has('subImagesToDelete')) {
                 $sub_image_ids = $request->input('subImagesToDelete');
-                DB::table('blogs_images')->whereIn('bi_id', $sub_image_ids)->delete();
+                DB::table('blog_images')->whereIn('bi_id', $sub_image_ids)->delete();
             }
 
             $message = $b_id ? 'Blog updated successfully.' : 'Blog created successfully.';
@@ -221,7 +221,7 @@ class BlogController extends Controller
                 'updated_at' => now(),
             ];
         }
-        DB::table('blogs_images')->insert($imageData);
+        DB::table('blog_images')->insert($imageData);
 
         return $storedImagePaths;
     }

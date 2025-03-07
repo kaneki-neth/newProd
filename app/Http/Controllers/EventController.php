@@ -54,7 +54,7 @@ class EventController extends Controller
             ->where('e_id', $n_id)
             ->first();
 
-        $subImages = DB::table('event_images')
+        $subImages = DB::table('events_images')
             ->select('ei_id', 'image_file')
             ->where('e_id', $n_id)
             ->get()
@@ -75,7 +75,7 @@ class EventController extends Controller
             ->where('e_id', $n_id)
             ->first();
 
-        $subImages = DB::table('event_images')
+        $subImages = DB::table('events_images')
             ->select('ei_id', 'image_file')
             ->where('e_id', $n_id)
             ->get()
@@ -153,7 +153,7 @@ class EventController extends Controller
 
             if ($request->has('subImagesToDelete')) {
                 $sub_image_ids = $request->input('subImagesToDelete');
-                DB::table('event_images')->whereIn('ei_id', $sub_image_ids)->delete();
+                DB::table('events_images')->whereIn('ei_id', $sub_image_ids)->delete();
             }
 
             $message = $n_id ? 'Event updated successfully.' : 'Event created successfully.';
@@ -221,7 +221,7 @@ class EventController extends Controller
                 'updated_at' => now(),
             ];
         }
-        DB::table('event_images')->insert($imageData);
+        DB::table('events_images')->insert($imageData);
 
         return $storedImagePaths;
     }

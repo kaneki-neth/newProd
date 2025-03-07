@@ -27,7 +27,7 @@
 <div id="header" class="app-header">
     <!-- BEGIN navbar-header -->
     <div class="navbar-header">
-    <a href="/home"><img src="{{url('/restologoBlack.png')}}" alt="user_profile" class="ps-5" width="140px"></a>
+    <a href="/home"><img src="{{url('web/assets/img/mainlogo.png')}}" width="140px" class="ps-5" data-aos="fade-in"></a>
     <!-- <button type="button" class="navbar-mobile-toggler" data-toggle="app-sidebar-mobile">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>

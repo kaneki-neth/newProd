@@ -14,7 +14,7 @@
                         <div class="d-flex align-items-center">
                             <div class="flex-grow-1 text-center">
                                 <!-- <img src="{{ url('/images/_logo.pngz') }}" alt="user_profile" width="80px"> -->
-                                <h4>template test</h4>
+                                <img src="{{url('web/assets/img/matix_logo_white.png')}}" width="80px" data-aos="fade-in">
                             </div>
                             <div class="menu-caret ms-auto"></div>
                         </div>

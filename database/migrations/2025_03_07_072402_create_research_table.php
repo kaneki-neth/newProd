@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('news_events_images', function (Blueprint $table) {
-            $table->id('nei_id');
+        Schema::create('research', function (Blueprint $table) {
+            $table->id('r_id');
+            $table->string('title', 255);
+            $table->date('date');
+            $table->longText('description');
             $table->string('image_file');
-            $table->foreignId('ne_id')->constrained('news_events', 'ne_id');
+            $table->tinyInteger('enabled')->default(1);
 
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
@@ -27,9 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::table('news_events_images')->pluck('image_file')->each(function ($imageFile) {
-            Storage::disk('public')->delete($imageFile);
-        });
-        Schema::dropIfExists('news_events_images');
+        Schema::dropIfExists('research');
     }
 };

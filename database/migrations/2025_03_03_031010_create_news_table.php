@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('news_events', function (Blueprint $table) {
-            $table->id('ne_id');
-            $table->enum('category', ['news', 'event']);
+        Schema::create('news', function (Blueprint $table) {
+            $table->id('n_id');
             $table->string('title', 255);
             $table->date('date');
             $table->longText('description');
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('news_events');
+        Schema::dropIfExists('news');
     }
 };

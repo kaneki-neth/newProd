@@ -320,6 +320,7 @@
 
     });
 
+
     function fetchThumbnail(urlValue, element) {
     // Find the specific thumbnail inside this particular card
     const thumbnailPreview = element.querySelector("#thumbnailPreview");

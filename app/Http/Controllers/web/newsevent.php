@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
-use DB;
+// use DB;
 use Illuminate\Support\Facades\DB;
 class newsevent extends Controller
 {
@@ -49,7 +49,7 @@ class newsevent extends Controller
             unset($item->description);
         }
 
-        return view('web.news_and_events.events', compact('videos'), compact('news', 'events'));
+        return view('web.news_and_events.events', compact('news', 'events', 'videos'));
     }
 
     public function generate_excerpt($description, $maxLength = 300)

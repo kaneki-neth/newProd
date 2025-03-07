@@ -17,7 +17,7 @@ class EventController extends Controller
         $enabled = '';
 
         $query = DB::table('events')
-            ->select('e_id', 'title', 'date', 'enabled')
+            ->select('e_id', 'title', 'date', 'time', 'location', 'enabled')
             ->orderBy('date', 'desc');
 
         if ($request->has('title')) {
@@ -50,7 +50,7 @@ class EventController extends Controller
     public function show($n_id)
     {
         $event = DB::table('events')
-            ->select('e_id', 'title', 'date', 'description', 'image_file', 'enabled')
+            ->select('e_id', 'title', 'date', 'time', 'location', 'description', 'image_file', 'enabled')
             ->where('e_id', $n_id)
             ->first();
 
@@ -71,7 +71,7 @@ class EventController extends Controller
     public function edit($n_id)
     {
         $event = DB::table('events')
-            ->select('e_id', 'title', 'date', 'description', 'image_file', 'enabled')
+            ->select('e_id', 'title', 'date', 'time', 'location', 'description', 'image_file', 'enabled')
             ->where('e_id', $n_id)
             ->first();
 
@@ -124,6 +124,7 @@ class EventController extends Controller
             $data = [
                 'title' => $request->title,
                 'date' => $request->date,
+                'time' => $request->time,
                 'description' => $request->description,
                 'updated_by' => auth()->id(),
                 'updated_at' => now(),
@@ -182,11 +183,14 @@ class EventController extends Controller
         if ($request->description == strip_tags($request->description)) {
             $request->merge(['description' => trim(str_replace('&nbsp;', '', $request->description))]);
         }
+
         // <p>&nbsp;</p><p><br></p> not handled yet
 
         return Validator::make($request->all(), [
             'title' => 'required|max:255',
             'date' => 'required|date',
+            'time' => 'required|date_format:g:i A',
+            'location' => 'required|max:255',
             'description' => 'required',
             'mainImage' => ($n_id ? 'sometimes' : 'required').'|image|mimes:jpeg,png,jpg,gif,svg|max:102400',
             'sub_images' => 'sometimes|array',
@@ -197,6 +201,9 @@ class EventController extends Controller
         ], messages: [
             'title.required' => 'The title field is required.',
             'date.required' => 'The date field is required.',
+            'date.date' => 'The date field must be a valid date.',
+            'time.required' => 'The time field is required.',
+            'time.date_format' => 'The time field must be a valid time format.',
             'description.required' => 'The description field is required.',
             'mainImage.required' => 'The main image is required.',
             'mainImage.max' => 'The main image must not be greater than 100MB.',

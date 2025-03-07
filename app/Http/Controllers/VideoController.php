@@ -289,6 +289,7 @@ class VideoController extends Controller
 
     public function getThumbnail(Request $request): JsonResponse
     {
+        // dd($request);
         $url = $request->query('url');
 
         if (empty($url)) {

@@ -299,6 +299,13 @@
         </div>
       </a>
     @endforeach
+        <div class="news-card">
+          <img src="{{url('web/assets/img/matix/materials/video-1.png')}}" />
+          <div class="card-content">
+          <h3 class="card-title-video">Design Week 2025 Recap</h3>
+
+          </div>
+        </div>
         </div>
       </div>
       </div>

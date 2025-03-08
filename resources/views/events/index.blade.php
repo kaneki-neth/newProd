@@ -51,6 +51,14 @@
                             </div>
                         </div>
 
+                        <div class="col-lg-2 col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">Location</label>
+                                <input type="text" class="form-control form-control-sm custom-input" id="location" name="location"
+                                    value="{{ $location }}" placeholder="..." autocomplete="off">
+                            </div>
+                        </div>
+
                         <div class="col-lg-2 col-md-2">
                             <label class="form-label">Status</label>
                             <select class="select2 form-control" id="enabled" name="enabled">
@@ -86,15 +94,21 @@
                             <tr>
                                 <th class="text-center" width="15%">Date</th>
                                 <th class="text-center">Title</th>
+                                <th class="text-center" width="30%">Location</th>
                                 <th class="text-center" width="10%">Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($events as $e)
+                                @php
+                                    $dateTime = \Carbon\Carbon::parse($e->date . ' ' . $e->time);
+                                @endphp
                                 <tr>
-                                    <td class="text-center" width="15%">{{ date('F d, Y', strtotime($e->date)) }}</td>
-                                    <td class="" id="name" style="cursor: pointer"
-                                        onclick="location.href='/events_/{{ $e->e_id }}'">{{ $e->title }}</td>
+                                    <td class="text-center" width="15%" data-order="{{ $dateTime->toIso8601String() }}">
+                                        {{ $dateTime->format('F d, Y g:i A') }}
+                                    </td>
+                                    <td class="" style="cursor: pointer" onclick="location.href='/events_/{{ $e->e_id }}'">{{ $e->title }}</td>
+                                    <td class="text-center" width="30%">{{ $e->location }}</td>
                                     <td class="text-center" width="10%">
                                         @if($e->enabled)
                                             <i class="fa fa-check text-success"></i>
@@ -141,6 +155,12 @@
             scroller: true,
             paging: true,
             order: [[0, 'desc']],
+            columnDefs: [
+                { 
+                    targets: 0,
+                    type: 'date'
+                }
+            ]
         });
 
         function clearsearchfield() {
@@ -148,6 +168,7 @@
             $('#enabled').val('').trigger('change');
             $('#date_from').val('');
             $('#date_to').val('');
+            $('#location').val('');
         }
 
         var userTarget = "";

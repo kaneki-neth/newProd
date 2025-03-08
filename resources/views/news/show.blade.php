@@ -73,7 +73,7 @@
                         <span class="badge bg-warning rounded-pill">Disabled</span>
                     @endif
                 </div>
-                <p><i class="fa fa-calendar"></i> {{ date('F d, Y', strtotime($news->date)) }}</p>
+                <p><i class="fa fa-calendar"></i> {{ date('F j, Y', strtotime($news->date)) }}</p>
                 <p><?php echo $news->description ?></p>
             </div>
             <div class="col-md-5">

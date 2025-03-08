@@ -15,6 +15,7 @@ class EventController extends Controller
         $date_from = '';
         $date_to = '';
         $enabled = '';
+        $location = '';
 
         $query = DB::table('events')
             ->select('e_id', 'title', 'date', 'time', 'location', 'enabled')
@@ -42,21 +43,26 @@ class EventController extends Controller
             $query->where('date', '<=', $dateTo);
         }
 
+        if ($request->has('location')) {
+            $location = $request->location;
+            $query->where('location', 'like', "%$location%");
+        }
+
         $events = $query->orderBy('date', 'desc')->paginate(20);
 
-        return view('events.index', compact('events', 'title', 'date_from', 'date_to', 'enabled'));
+        return view('events.index', compact('events', 'title', 'date_from', 'date_to', 'enabled', 'location'));
     }
 
-    public function show($n_id)
+    public function show($e_id)
     {
         $event = DB::table('events')
             ->select('e_id', 'title', 'date', 'time', 'location', 'description', 'image_file', 'enabled')
-            ->where('e_id', $n_id)
+            ->where('e_id', $e_id)
             ->first();
 
         $subImages = DB::table('events_images')
             ->select('ei_id', 'image_file')
-            ->where('e_id', $n_id)
+            ->where('e_id', $e_id)
             ->get()
             ->toArray();
 
@@ -68,16 +74,16 @@ class EventController extends Controller
         return view('events.create');
     }
 
-    public function edit($n_id)
+    public function edit($e_id)
     {
         $event = DB::table('events')
             ->select('e_id', 'title', 'date', 'time', 'location', 'description', 'image_file', 'enabled')
-            ->where('e_id', $n_id)
+            ->where('e_id', $e_id)
             ->first();
 
         $subImages = DB::table('events_images')
             ->select('ei_id', 'image_file')
-            ->where('e_id', $n_id)
+            ->where('e_id', $e_id)
             ->get()
             ->toArray();
 
@@ -89,15 +95,20 @@ class EventController extends Controller
         return $this->handleRequest($request);
     }
 
-    public function update(Request $request, $n_id)
+    public function update(Request $request, $e_id)
     {
-        return $this->handleRequest($request, $n_id);
+        return $this->handleRequest($request, $e_id);
     }
 
     // Helper methods
-    protected function handleRequest(Request $request, $n_id = null)
+    protected function handleRequest(Request $request, $e_id = null)
     {
-        $validator = $this->validateRequest($request, $n_id);
+        $validator = $this->validateRequest($request, $e_id);
+
+        if ($request->has('time')) {
+            $time = date('H:i', strtotime($request->time));
+            $request->merge(['time' => $time]);
+        }
 
         if ($validator->fails()) {
             return response()->json([
@@ -112,8 +123,8 @@ class EventController extends Controller
 
             $mainImagePath = null;
             if ($request->has('mainImage')) {
-                if ($n_id) {
-                    $oldMainImage = DB::table('events')->where('e_id', $n_id)->value('image_file');
+                if ($e_id) {
+                    $oldMainImage = DB::table('events')->where('e_id', $e_id)->value('image_file');
                     if ($oldMainImage) {
                         Storage::disk('public')->delete($oldMainImage);
                     }
@@ -125,6 +136,7 @@ class EventController extends Controller
                 'title' => $request->title,
                 'date' => $request->date,
                 'time' => $request->time,
+                'location' => $request->location,
                 'description' => $request->description,
                 'updated_by' => auth()->id(),
                 'updated_at' => now(),
@@ -135,18 +147,18 @@ class EventController extends Controller
                 $data['image_file'] = $mainImagePath;
             }
 
-            if ($n_id) {
-                DB::table('events')->where('e_id', $n_id)->update($data);
+            if ($e_id) {
+                DB::table('events')->where('e_id', $e_id)->update($data);
             } else {
                 $data['created_by'] = auth()->id();
                 $data['created_at'] = now();
-                $n_id = DB::table('events')->insertGetId($data);
+                $e_id = DB::table('events')->insertGetId($data);
             }
 
             if ($request->hasFile('sub_images')) {
                 $storedImagePaths = array_merge(
                     $storedImagePaths,
-                    $this->storeSubImages($n_id, $request->file('sub_images'), $n_id ? true : false)
+                    $this->storeSubImages($e_id, $request->file('sub_images'), $e_id ? true : false)
                 );
             }
 
@@ -157,7 +169,7 @@ class EventController extends Controller
                 DB::table('events_images')->whereIn('ei_id', $sub_image_ids)->delete();
             }
 
-            $message = $n_id ? 'Event updated successfully.' : 'Event created successfully.';
+            $message = $e_id ? 'Event updated successfully.' : 'Event created successfully.';
             session()->flash('success', $message);
 
             return response()->json(['success' => true], 200);
@@ -168,11 +180,12 @@ class EventController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while processing the request.',
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
 
-    protected function validateRequest(Request $request, $n_id = null)
+    protected function validateRequest(Request $request, $e_id = null)
     {
         if ($request->has('date') && $request->date) {
             $request->merge(['date' => date('Y-m-d', strtotime($request->date))]);
@@ -192,7 +205,7 @@ class EventController extends Controller
             'time' => 'required|date_format:g:i A',
             'location' => 'required|max:255',
             'description' => 'required',
-            'mainImage' => ($n_id ? 'sometimes' : 'required').'|image|mimes:jpeg,png,jpg,gif,svg|max:102400',
+            'mainImage' => ($e_id ? 'sometimes' : 'required').'|image|mimes:jpeg,png,jpg,gif,svg|max:102400',
             'sub_images' => 'sometimes|array',
             'sub_images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:102400',
             'subImagesToDelete' => 'sometimes|array',
@@ -204,6 +217,7 @@ class EventController extends Controller
             'date.date' => 'The date field must be a valid date.',
             'time.required' => 'The time field is required.',
             'time.date_format' => 'The time field must be a valid time format.',
+            'location' => 'The location field is required',
             'description.required' => 'The description field is required.',
             'mainImage.required' => 'The main image is required.',
             'mainImage.max' => 'The main image must not be greater than 100MB.',
@@ -211,7 +225,7 @@ class EventController extends Controller
         ]);
     }
 
-    protected function storeSubImages($n_id, $subImages, $update = false)
+    protected function storeSubImages($e_id, $subImages, $update = false)
     {
         $storedImagePaths = [];
         $imageData = [];
@@ -220,7 +234,7 @@ class EventController extends Controller
             $storedImagePaths[] = $storedImagePath;
 
             $imageData[] = [
-                'e_id' => $n_id,
+                'e_id' => $e_id,
                 'image_file' => $storedImagePath,
                 'created_by' => auth()->id(),
                 'updated_by' => auth()->id(),

@@ -53,7 +53,7 @@
     <li class="breadcrumb-item"><a href="/events_">Events</a></li>
     <li class="breadcrumb-item"><a href="javascript:;">View</a></li>
 </ol>
-<h1 class="page-header">News View</h1>
+<h1 class="page-header">Events View</h1>
 
 <div class="panel panel-inverse">
     <div class="panel-body" id="pannel-body">
@@ -73,7 +73,9 @@
                         <span class="badge bg-warning rounded-pill">Disabled</span>
                     @endif
                 </div>
-                <p><i class="fa fa-calendar"></i> {{ date('F d, Y', strtotime($event->date)) }}</p>
+                <p><i class="fa fa-calendar"></i> {{ date('F j, Y', strtotime($event->date)) }}</p>
+                <p><i class="fa fa-clock"></i> {{ date('g:i A', strtotime($event->time)) }}</p>
+                <p><i class="fa fa-location-dot"></i> {{ $event->location }}</p>
                 <p><?php echo $event->description ?></p>
             </div>
             <div class="col-md-5">

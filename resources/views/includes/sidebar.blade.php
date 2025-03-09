@@ -79,12 +79,36 @@
                     <div class="menu-text">Videos</div>
                 </a>
             </div>
-            <div class="menu-item" id="news_events">
-                <a href="/news_events" class="menu-link">
+            <div class="menu-item" id="news">
+                <a href="/news" class="menu-link">
                     <div class="menu-icon">
                         <i class="fa fa-newspaper"></i>
                     </div>
-                    <div class="menu-text">News & Events</div>
+                    <div class="menu-text">News</div>
+                </a>
+            </div>
+            <div class="menu-item" id="blogs">
+                <a href="/blogs" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fa fa-blog"></i>
+                    </div>
+                    <div class="menu-text">Blogs</div>
+                </a>
+            </div>
+            <div class="menu-item" id="research">
+                <a href="/research" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fa fa-flask"></i>
+                    </div>
+                    <div class="menu-text">Research</div>
+                </a>
+            </div>
+            <div class="menu-item" id="events">
+                <a href="/events_" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    <div class="menu-text">Events</div>
                 </a>
             </div>
 

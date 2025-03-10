@@ -119,23 +119,17 @@
           <h5 class="text-uppercase arial_narrow_7">What's New?</h5>
 
           <div class="about-new owl-carousel">
-            <div class="item">
-              <h3 class="dmsans-regular mt-4"><strong>Baino / Lotus (Nelumbo nucifera)</strong></h3>
-              <p class="dmsans-regular">Posted 16 Nov 2025</p>
-              <img src="{{url('web/assets/img/matix/about-img.png')}}" class="img-fluid">
-            </div>
-
-            <div class="item">
-              <h3 class="dmsans-regular mt-4"><strong>MATIX launches new space at FabLab</strong></h3>
-              <p class="dmsans-regular">Posted 16 Nov 2025</p>
-              <img src="{{url('web/assets/img/matix/about-img-1.png')}}" class="img-fluid">
-            </div>
-
-            <div class="item">
-              <h3 class="dmsans-regular mt-4"><strong>Workshop for organic textiles in Argao</strong></h3>
-              <p class="dmsans-regular">Posted 16 Nov 2025</p>
-              <img src="{{url('web/assets/img/matix/about-img-2.png')}}" class="img-fluid">
-            </div>
+            @foreach($latest_news as $news)
+              <div class="item">
+                <a href="{{ route('news_content', ['n_id' => $news->n_id]) }}">
+                  <h3 class="dmsans-regular mt-4"><strong>{{ $news->title }}</strong></h3>
+                </a>
+                <p class="dmsans-regular">Posted {{ $news->date }}</p>
+                <div style="height: 230px;">
+                  <img src="{{ asset('storage/'.$news->image_file) }}" class="mw-100 mh-100 object-fit-contain">
+                </div>
+              </div>
+            @endforeach
           </div>
 
           <div class="carousel-progress">

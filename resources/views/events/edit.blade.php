@@ -49,7 +49,7 @@
         border-radius: 4px;
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
     }
 
     #imageGallery::-webkit-scrollbar {
@@ -236,7 +236,7 @@
 <script src="/assets/plugins/select2/dist/js/select2.min.js"></script>
 <script src="/assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
 <script> 
-    $('#blogs').addClass('active');
+    $('#events').addClass('active');
     var deleteOldSubImageIds = [];
     $(document).ready(function() {
         let subImages = @json($subImages);

@@ -79,7 +79,7 @@
             <div class="col-md-5">
                 <div class="d-flex flex-column mx-auto" style="max-width: 80%">
                     <div id="main-img-container" class="img-thumbnail d-flex justify-content-center align-items-center">
-                        <img src="{{ asset('storage/'.$news->image_file) }}" alt="Image" style="width: 100%;">
+                        <img src="{{ asset('storage/'.$news->image_file) }}" alt="Image" style="width: 100%;" style="width: 100%; height:100%; object-fit: contain;">
                     </div>
                     @if(count($subImages) > 0)
                         <div id="imageGallery" style="display: flex; gap: 10px; overflow-x: auto; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-top: 8px">

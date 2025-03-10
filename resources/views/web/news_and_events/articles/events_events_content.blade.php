@@ -7,28 +7,28 @@
         
         <div class="row">
           <div class="col-lg-6">
-            <h1 class="article-title">Matix UP Cebu Launch</h1>
+            <h1 class="article-title">{{ $event->title }}</h1>
             
             <div class="event-meta">
               <div class="event-meta-item">
                 <i class="bi bi-calendar"></i>
-                <span>Friday, March 21, 2025</span>
+                <span>{{ $event->date }}</span>
               </div>
               <div class="event-meta-item">
                 <i class="bi bi-clock"></i>
-                <span>10:00 AM PT</span>
+                <span>{{ $event->time }} PT</span>
               </div>
               <div class="event-meta-item">
                 <i class="bi bi-geo-alt"></i>
-                <span>Fabrication Laboratory UP Cebu</span>
+                <span>{{ $event->location }}</span>
               </div>
             </div>
             
             <div class="event-description">
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tempor ac purus et congue. Curabitur feugiat velit lorem, a efficitur dolor porttitor at. Aliquam rhoncus porta sem, vel eleifend lorem gravida in. Curabitur ullamcorper lectus at blandit ullamcorper. Fusce lorem nulla, commodo in commodo a, posuere vitae augue.</p>
+              <?php echo $event->description; ?>
             </div>
             
-            <div class="more-details">
+            <!-- <div class="more-details">
               <h2 class="more-dets-events">More details</h2>
               
               <div class="detailed-description">
@@ -38,11 +38,11 @@
                 
                 <p>Suspendisse pretium, arcu ac fringilla vulputate, sem felis imperdiet ipsum, a porttitor ipsum justo at ex. Mauris duis sem porttitor eget efficitur augue, cursus sit amet tellus. Sed eget vestibulum quam. Sed vulputate ligula eget felis efficitur, at tincidunt orci ultrices. Donec sed nequa ligula. Aenean sem risus, sollicitudin sit gravida eget, aliquam porta sapien. Sed eu mollis nulla, sit amet fringilla leo. Integer phareque libero a convilis vulputate. Aliquam erat volutpat. In finibus convallis, id id consectetur. Mauris interdum viverra mauris, ac vehicula magna fermentum pulvinar.</p>
               </div>
-            </div>
+            </div> -->
           </div>
           
           <div class="col-lg-6 event-image">
-            <img src="{{url('web/assets/img/matix/materials/events-0.png')}}" />
+            <img src="{{url('storage/'.$event->image_file)}}" />
           </div>
         </div>
       </div>

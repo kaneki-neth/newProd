@@ -36,25 +36,25 @@
         <h2 class="section-title">News</h2>
 
         <div class="news-grid">
-        @foreach($news as $n)
-      <a href={{ route('news_content', ['n_id' => $n->n_id]) }}>
-        <div class="news-card">
-        <div style="width: 100%; height: 280px;" class="d-flex justify-content-center align-items-center">
-        <img class="mw-100 mh-100" style="object-fit: contain;"
-        src="{{ asset('storage/' . $n->image_file) }}" />
-        </div>
-        <div class="card-content">
-        <h3 class="card-title">
-        {{ $n->title }}
-        </h3>
-        <p class="card-date">Posted {{ $n->date }}</p>
-        <p class="card-excerpt" style="height: 2.8em;">
-        {{ $n->excerpt }}
-        </p>
-        </div>
-        </div>
-      </a>
-    @endforeach
+          @foreach($news as $n)
+            <a href={{ route('news_content', ['n_id' => $n->n_id]) }}>
+              <div class="news-card">
+                <div style="width: 100%; height: 280px;" class="d-flex justify-content-center align-items-center">
+                  <img class="mw-100 mh-100" style="object-fit: contain;"
+                    src="{{ asset('storage/' . $n->image_file) }}" />
+                </div>
+                <div class="card-content">
+                  <h3 class="card-title">
+                    {{ $n->title }}
+                  </h3>
+                  <p class="card-date">Posted {{ $n->date }}</p>
+                  <p class="card-excerpt" style="height: 2.8em;">
+                    {{ $n->excerpt }}
+                  </p>
+                </div>
+              </div>
+            </a>
+          @endforeach
         </div>
       </div>
 
@@ -63,25 +63,25 @@
         <h2 class="section-title">Research</h2>
 
         <div class="news-grid">
-        @foreach($researches as $r)
-      <a href="{{ route('research_content', ['r_id' => $r->r_id]) }}">
-        <div class="news-card">
-        <div style="width: 100%; height: 280px;" class="d-flex justify-content-center align-items-center">
-        <img class="mw-100 mh-100" style="object-fit: contain;"
-        src="{{ asset('storage/' . $r->image_file) }}" />
-        </div>
-        <div class="card-content">
-        <h3 class="card-title">
-        {{ $r->title }}
-        </h3>
-        <p class="card-date">Posted {{ $r->date }}</p>
-        <p class="card-excerpt" style="height: 2.8em;">
-        {{ $r->excerpt }}
-        </p>
-        </div>
-        </div>
-      </a>
-    @endforeach
+          @foreach($researches as $r)
+            <a href="{{ route('research_content', ['r_id' => $r->r_id]) }}">
+              <div class="news-card">
+                <div style="width: 100%; height: 280px;" class="d-flex justify-content-center align-items-center">
+                  <img class="mw-100 mh-100" style="object-fit: contain;"
+                    src="{{ asset('storage/' . $r->image_file) }}" />
+                </div>
+                <div class="card-content">
+                  <h3 class="card-title">
+                    {{ $r->title }}
+                  </h3>
+                  <p class="card-date">Posted {{ $r->date }}</p>
+                  <p class="card-excerpt" style="height: 2.8em;">
+                    {{ $r->excerpt }}
+                  </p>
+                </div>
+              </div>
+            </a>
+          @endforeach
         </div>
       </div>
 
@@ -90,22 +90,25 @@
         <h2 class="section-title">Blog</h2>
 
         <div class="news-grid">
-        @foreach($blogs as $b)
-      <a href="{{ route('blog_content', ['b_id' => $b->b_id]) }}">
-        <div class="news-card">
-        <div style="width: 100%; height: 280px;" class="d-flex justify-content-center align-items-center">
-        <img class="mw-100 mh-100" style="object-fit: contain;"
-        src="{{ asset('storage/' . $b->image_file) }}" />
-        </div>
-        <div class="card-content">
-        <h3 class="card-title">
-        {{ $b->title }}
-        </h3>
-        <p class="card-date">Posted {{ $b->date }}</p>
-        </div>
-        </div>
-      </a>
-    @endforeach
+          @foreach($blogs as $b)
+            <a href="{{ route('blog_content', ['b_id' => $b->b_id]) }}">
+              <div class="news-card">
+                <div style="width: 100%; height: 280px;" class="d-flex justify-content-center align-items-center">
+                  <img class="mw-100 mh-100" style="object-fit: contain;"
+                  src="{{ asset('storage/' . $b->image_file) }}" />
+                </div>
+                <div class="card-content">
+                  <h3 class="card-title">
+                    {{ $b->title }}
+                  </h3>
+                  <p class="card-date">Posted {{ $b->date }}</p>
+                  <p class="card-excerpt" style="height: 2.8em;">
+                    {{ $b->excerpt }}
+                  </p>
+                </div>
+              </div>
+            </a>
+          @endforeach
         </div>
       </div>
 
@@ -114,27 +117,27 @@
         <h2 class="section-title">Events</h2>
 
         <div class="news-grid">
-        @foreach($events as $e)
-      <a href="{{ route('event_content', ['e_id' => $e->e_id]) }}">
-        <div class="news-card">
-        <div style="width: 100%; height: 280px;" class="d-flex justify-content-center align-items-center">
-        <img class="mw-100 mh-100" style="object-fit: contain;"
-        src="{{ asset('storage/' . $e->image_file) }}" />
-        </div>
-        <div class="card-content">
-        <h3 class="card-title">{{ $e->title }}</h3>
-        <p class="card-excerpt" style="height: 2.8em;">
-        {{ $e->excerpt }}
-        </p>
-        <div class="mt-3 card-info">
-        <span class="event-date">{{ $e->date }}</span>
-        <span class="event-time">{{ $e->time }}</span>
-        <span class="event-location">{{ $e->location }}</span>
-        </div>
-        </div>
-        </div>
-      </a>
-    @endforeach
+          @foreach($events as $e)
+            <a href="{{ route('event_content', ['e_id' => $e->e_id]) }}">
+              <div class="news-card">
+                <div style="width: 100%; height: 280px;" class="d-flex justify-content-center align-items-center">
+                  <img class="mw-100 mh-100" style="object-fit: contain;"
+                    src="{{ asset('storage/' . $e->image_file) }}" />
+                </div>
+                <div class="card-content">
+                  <h3 class="card-title">{{ $e->title }}</h3>
+                  <p class="card-excerpt" style="height: 2.8em;">
+                    {{ $e->excerpt }}
+                  </p>
+                  <div class="mt-3 card-info">
+                    <span class="event-date">{{ $e->date }}</span>
+                    <span class="event-time">{{ $e->time }}</span>
+                    <span class="event-location">{{ $e->location }}</span>
+                  </div>
+                </div>
+              </div>
+            </a>
+          @endforeach
         </div>
       </div>
 
@@ -143,38 +146,36 @@
         <h2 class="section-title">Videos</h2>
 
         <div class="news-grid">
-        @foreach ($videos as $video)
-      <a class="data-item" href="{{$video->video_url}}" id="urlInput" data-value="{{$video->video_url}}"
-        target="_blank">
-        <div class="news-card">
-        <div class="thumbnail-container" style="margin-left: auto">
-        <!-- main/big image -->
-        <div style="aspect-ratio: 16 / 9; width: 100%">
-        <div id="thumbnail" class="d-flex justify-content-center align-items-center border rounded"
-          style="height: 100%;">
-          <img id="thumbnailPreview" src=""
-          style="max-width: 100%; max-height: 100%; object-fit: cover; display: none; cursor: pointer;" />
-          <div id="thumbnailPlaceholder" class="text-center text-muted">
-          <i class="fa fa-image fa-3x mb-2"></i>
-          <p>Video thumbnail will appear here</p>
-          </div>
-        </div>
-        </div>
-        </div>
-        <div class="card-content">
-        <h3 class="card-title-video">{{$video->title}}</h3>
-        <p class="card-excerpt">
-        Uploaded <span>{{date('F d, Y', strtotime($video->date))}}</span>
-        </p>
-        </div>
-        </div>
-      </a>
-    @endforeach
+          @foreach ($videos as $video)
+            <a class="data-item" href="{{$video->video_url}}" id="urlInput" data-value="{{$video->video_url}}"
+              target="_blank">
+              <div class="news-card">
+              <div class="thumbnail-container" style="margin-left: auto">
+              <!-- main/big image -->
+              <div style="aspect-ratio: 16 / 9; width: 100%">
+              <div id="thumbnail" class="d-flex justify-content-center align-items-center border rounded"
+                style="height: 100%;">
+                <img id="thumbnailPreview" src=""
+                style="max-width: 100%; max-height: 100%; object-fit: cover; display: none; cursor: pointer;" />
+                <div id="thumbnailPlaceholder" class="text-center text-muted">
+                <i class="fa fa-image fa-3x mb-2"></i>
+                <p>Video thumbnail will appear here</p>
+                </div>
+              </div>
+              </div>
+              </div>
+              <div class="card-content">
+              <h3 class="card-title-video">{{$video->title}}</h3>
+              <p class="card-excerpt">
+              Uploaded <span>{{date('F d, Y', strtotime($video->date))}}</span>
+              </p>
+              </div>
+              </div>
+            </a>
+          @endforeach
         </div>
       </div>
       </div>
-    </div>
-    </div>
     </div>
     </div>
   </main>

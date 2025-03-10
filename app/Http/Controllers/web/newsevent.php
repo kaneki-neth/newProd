@@ -5,9 +5,9 @@ namespace App\Http\Controllers\web;
 use App\Http\Controllers\Controller;
 // use DB;
 use Illuminate\Support\Facades\DB;
+
 class newsevent extends Controller
 {
-    //
     private function getRecords($table, $columns, $dateFormat, $filterCurrent = true, $includeTime = false)
     {
         $query = DB::table($table)->select($columns)
@@ -79,7 +79,7 @@ class newsevent extends Controller
         $cleanDescription = $description;
         $cleanDescription = strip_tags($cleanDescription);
         if (strlen($cleanDescription) > $maxLength) {
-            return substr($cleanDescription, 0, $maxLength) . '...';
+            return substr($cleanDescription, 0, $maxLength).'...';
         }
 
         return $cleanDescription;
@@ -91,14 +91,17 @@ class newsevent extends Controller
             ->where('n_id', $n_id)
             ->first();
 
-        if (!$news->enabled) {
+        if (! $news->enabled) {
             return redirect()->route('news');
         }
+
+        $date = date_create($news->date);
+        $news->date = date_format($date, 'j M Y');
 
         $user = DB::table('users')->select(['first_name', 'last_name'])
             ->where('id', $news->created_by)
             ->first();
-        $news->created_by = $user->first_name . ' ' . $user->last_name;
+        $news->created_by = $user->first_name.' '.$user->last_name;
 
         return view('web.news_and_events.articles.events_news_content', compact('news'));
     }
@@ -109,14 +112,17 @@ class newsevent extends Controller
             ->where('r_id', $r_id)
             ->first();
 
-        if (!$research->enabled) {
+        if (! $research->enabled) {
             return redirect()->route('research');
         }
+
+        $date = date_create($research->date);
+        $research->date = date_format($date, 'j M Y');
 
         $user = DB::table('users')->select(['first_name', 'last_name'])
             ->where('id', $research->created_by)
             ->first();
-        $research->created_by = $user->first_name . ' ' . $user->last_name;
+        $research->created_by = $user->first_name.' '.$user->last_name;
 
         return view('web.news_and_events.articles.events_research_content', compact('research'));
     }
@@ -127,27 +133,41 @@ class newsevent extends Controller
             ->where('b_id', $b_id)
             ->first();
 
-        if (!$blog->enabled) {
+        if (! $blog->enabled) {
             return redirect()->route('blog');
         }
+
+        $date = date_create($blog->date);
+        $blog->date = date_format($date, 'j M Y');
 
         $user = DB::table('users')->select(['first_name', 'last_name'])
             ->where('id', $blog->created_by)
             ->first();
-        $blog->created_by = $user->first_name . ' ' . $user->last_name;
+        $blog->created_by = $user->first_name.' '.$user->last_name;
 
         return view('web.news_and_events.articles.events_blog_content', compact('blog'));
     }
 
     public function events_events_content($e_id)
     {
-        $event = DB::table('events')->select(['e_id', 'image_file', 'title', 'date', 'time', 'description', 'location', 'registration_link'])
+        $event = DB::table('events')->select([
+            'e_id', 'image_file', 'title', 'date', 'time',
+            'description', 'location', 'registration_link', 'enabled',
+        ])
             ->where('e_id', $e_id)
             ->first();
 
-        if (!$event) {
+        if (! $event->enabled) {
             return redirect()->route('events');
         }
+
+        $date = date_create($event->date);
+        $event->date = date_format($date, 'l, F j, Y');
+
+        $event->time = date_format(
+            date_create($event->time),
+            'g:i A'
+        );
 
         return view('web.news_and_events.articles.events_events_content', compact('event'));
     }

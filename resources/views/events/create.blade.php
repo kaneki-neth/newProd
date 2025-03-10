@@ -181,6 +181,12 @@
                     <span id="location-msg" class="error-msg text-danger"></span>
                 </div>
 
+                <div class="form-group mt-2">
+                    <label for="registration_link" class="form-label">Registration Link</label>
+                    <input type="text" class="form-control" id="registration_link" name="registration_link" placeholder="Registration Link">
+                    <span id="registration_link-msg" class="error-msg text-danger"></span>
+                </div>
+
                 <div class="row mt-2 g-0">
                     <label for="description" class="form-label" >Description <span class="text-danger">*</span></label>
                     <span id="description-msg" class="error-msg text-danger"></span>
@@ -328,6 +334,7 @@
         formData.append('time', $('#time').val());
         formData.append('location', $('#location').val());
         formData.append('description', $('#summernote').val());
+        formData.append('registration_link', $('#registration_link').val());
         formData.append('enabled', $('#enabled').is(':checked') ? 1 : 0);
         if($('#mainImage')[0].files[0]){
             formData.append('mainImage', $('#mainImage')[0].files[0]);

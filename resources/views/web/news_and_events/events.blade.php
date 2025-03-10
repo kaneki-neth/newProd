@@ -62,63 +62,24 @@
           <h2 class="section-title">Research</h2>
 
           <div class="news-grid">
-            <a href="/events_research_content">
-              <div class="news-card">
-                <img src="{{url('web/assets/img/matix/materials/news-1.png')}}" />
-                <div class="card-content">
-                  <h3 class="card-title">
-                    DTI launches newly inaugurated Matix UP Cebu
-                  </h3>
-                  <p class="card-date">Posted 16 Nov 2025</p>
-                  <p class="card-excerpt">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Nunc non justo nec urna euismod pulvinar.
-                  </p>
+            @foreach($researches as $r)
+              <a href="/events_research_content">
+                <div class="news-card">
+                  <div style="width: 100%; height: 280px;" class="d-flex justify-content-center align-items-center">
+                    <img class="mw-100 mh-100" style="object-fit: contain;" src="{{ asset('storage/'.$r->image_file) }}" />
+                  </div>
+                  <div class="card-content">
+                    <h3 class="card-title">
+                      {{ $r->title }}
+                    </h3>
+                    <p class="card-date">Posted {{ $r->date }}</p>
+                    <p class="card-excerpt" style="height: 2.8em;">
+                      {{ $r->excerpt }}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </a>
-
-            <div class="news-card">
-              <img src="{{url('web/assets/img/matix/materials/news-2.png')}}" />
-              <div class="card-content">
-                <h3 class="card-title">
-                  UP Cebu Product Design launches Design Week 2023
-                </h3>
-                <p class="card-date">Posted 16 Nov 2025</p>
-                <p class="card-excerpt">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nunc non justo nec urna euismod pulvinar.
-                </p>
-              </div>
-            </div>
-            <div class="news-card">
-              <img src="{{url('web/assets/img/matix/materials/news-3.png')}}" />
-              <div class="card-content">
-                <h3 class="card-title">
-                  Prof. AJ Mallari delivers talk "Re-storying Materials and
-                  its Making"
-                </h3>
-                <p class="card-date">Posted 16 Nov 2025</p>
-                <p class="card-excerpt">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nunc non justo nec urna euismod pulvinar.
-                </p>
-              </div>
-            </div>
-            <div class="news-card">
-              <img src="{{url('web/assets/img/matix/materials/news-4.png')}}" />
-              <div class="card-content">
-                <h3 class="card-title">
-                  Wa'y Ka's exhibit introduces new materials to the
-                  community
-                </h3>
-                <p class="card-date">Posted 16 Nov 2025</p>
-                <p class="card-excerpt">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nunc non justo nec urna euismod pulvinar.
-                </p>
-              </div>
-            </div>
+              </a>
+            @endforeach
           </div>
         </div>
 
@@ -127,63 +88,21 @@
           <h2 class="section-title">Blog</h2>
 
           <div class="news-grid">
-            <a href="/events_blog_content">
-              <div class="news-card">
-                <img src="{{url('web/assets/img/matix/materials/news-1.png')}}" />
-                <div class="card-content">
-                  <h3 class="card-title">
-                    DTI launches newly inaugurated Matix UP Cebu
-                  </h3>
-                  <p class="card-date">Posted 16 Nov 2025</p>
-                  <p class="card-excerpt">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Nunc non justo nec urna euismod pulvinar.
-                  </p>
+            @foreach($blogs as $b)
+              <a href="/events_blog_content">
+                <div class="news-card">
+                  <div style="width: 100%; height: 280px;" class="d-flex justify-content-center align-items-center">
+                    <img class="mw-100 mh-100" style="object-fit: contain;" src="{{ asset('storage/'.$b->image_file) }}" />
+                  </div>
+                  <div class="card-content">
+                    <h3 class="card-title">
+                      {{ $b->title }}
+                    </h3>
+                    <p class="card-date">Posted {{ $b->date }}</p>
+                  </div>
                 </div>
-              </div>
-            </a>
-
-            <div class="news-card">
-              <img src="{{url('web/assets/img/matix/materials/news-2.png')}}" />
-              <div class="card-content">
-                <h3 class="card-title">
-                  UP Cebu Product Design launches Design Week 2023
-                </h3>
-                <p class="card-date">Posted 16 Nov 2025</p>
-                <p class="card-excerpt">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nunc non justo nec urna euismod pulvinar.
-                </p>
-              </div>
-            </div>
-            <div class="news-card">
-              <img src="{{url('web/assets/img/matix/materials/news-3.png')}}" />
-              <div class="card-content">
-                <h3 class="card-title">
-                  Prof. AJ Mallari delivers talk "Re-storying Materials and
-                  its Making"
-                </h3>
-                <p class="card-date">Posted 16 Nov 2025</p>
-                <p class="card-excerpt">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nunc non justo nec urna euismod pulvinar.
-                </p>
-              </div>
-            </div>
-            <div class="news-card">
-              <img src="{{url('web/assets/img/matix/materials/news-4.png')}}" />
-              <div class="card-content">
-                <h3 class="card-title">
-                  Wa'y Ka's exhibit introduces new materials to the
-                  community
-                </h3>
-                <p class="card-date">Posted 16 Nov 2025</p>
-                <p class="card-excerpt">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nunc non justo nec urna euismod pulvinar.
-                </p>
-              </div>
-            </div>
+              </a>
+            @endforeach
           </div>
         </div>
 

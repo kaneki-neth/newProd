@@ -17,6 +17,7 @@ return new class extends Migration
             $table->date('date');
             $table->time('time');
             $table->string('location', 255);
+            $table->string('registration_link', 255);
             $table->longText('description');
             $table->string('image_file');
             $table->tinyInteger('enabled')->default(1);
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('news');
+        Schema::dropIfExists('events');
     }
 };

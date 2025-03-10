@@ -8,42 +8,59 @@ use DB;
 class newsevent extends Controller
 {
     //
+    private function getRecords($table, $columns, $dateFormat, $filterCurrent = true, $includeTime = false)
+    {
+        $query = DB::table($table)->select($columns)
+            ->where('enabled', 1);
+
+        if ($filterCurrent) {
+            $query->where('date', '<=', date('Y-m-d H:i:s'));
+        }
+
+        $items = $query->orderBy('date', 'desc')->get()->toArray();
+
+        foreach ($items as $item) {
+            $date = date_create($item->date);
+            $item->date = date_format($date, $dateFormat);
+            if ($includeTime) {
+                $item->time = date_format($date, 'h:i A');
+            }
+            $item->excerpt = $this->generate_excerpt($item->description);
+            unset($item->description);
+        }
+
+        return $items;
+    }
+
     public function index()
     {
-        $news = DB::table('news_events')
-            ->select('ne_id', 'image_file', 'title', 'date', 'description')
-            ->where('category', 'news')
-            ->where('enabled', 1)
-            ->where('date', '<=', date('Y-m-d H:i:s'))
-            ->orderBy('date', 'desc')
-            ->get()
-            ->toArray();
+        $news = $this->getRecords(
+            'news',
+            ['n_id', 'image_file', 'title', 'date', 'description'],
+            'j M Y'
+        );
 
-        foreach ($news as $item) {
-            $date = date_create($item->date);
-            $item->date = date_format($date, 'j M Y');
-            $item->excerpt = $this->generate_excerpt($item->description);
-            unset($item->description);
-        }
+        $researches = $this->getRecords(
+            'research',
+            ['r_id', 'image_file', 'title', 'date', 'description'],
+            'j M Y'
+        );
 
-        $events = DB::table('news_events')
-            ->select('ne_id', 'image_file', 'title', 'date', 'description')
-            ->where('category', 'event')
-            ->where('enabled', 1)
-            // ->where('date', '<=', date('Y-m-d H:i:s'))
-            ->orderBy('date', 'desc')
-            ->get()
-            ->toArray();
+        $blogs = $this->getRecords(
+            'blogs',
+            ['b_id', 'image_file', 'title', 'date', 'description'],
+            'j M Y'
+        );
 
-        foreach ($events as $item) {
-            $date = date_create($item->date);
-            $item->date = date_format($date, 'l F j Y');
-            $item->time = date_format($date, 'h:i A');
-            $item->excerpt = $this->generate_excerpt($item->description);
-            unset($item->description);
-        }
+        $events = $this->getRecords(
+            'events',
+            ['e_id', 'image_file', 'title', 'date', 'description'],
+            'l F j Y',
+            false,
+            true
+        );
 
-        return view('web.news_and_events.events', compact('news', 'events'));
+        return view('web.news_and_events.events', compact('news', 'researches', 'blogs', 'events'));
     }
 
     public function generate_excerpt($description, $maxLength = 300)
@@ -62,6 +79,7 @@ class newsevent extends Controller
 
     public function events_news_content()
     {
+
         return view('web.news_and_events.articles.events_news_content');
     }
 

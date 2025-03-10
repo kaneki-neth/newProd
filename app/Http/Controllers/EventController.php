@@ -56,7 +56,7 @@ class EventController extends Controller
     public function show($e_id)
     {
         $event = DB::table('events')
-            ->select('e_id', 'title', 'date', 'time', 'location', 'description', 'image_file', 'enabled')
+            ->select('e_id', 'title', 'date', 'time', 'location', 'registration_link', 'description', 'image_file', 'enabled')
             ->where('e_id', $e_id)
             ->first();
 
@@ -77,7 +77,7 @@ class EventController extends Controller
     public function edit($e_id)
     {
         $event = DB::table('events')
-            ->select('e_id', 'title', 'date', 'time', 'location', 'description', 'image_file', 'enabled')
+            ->select('e_id', 'title', 'date', 'time', 'location', 'registration_link', 'description', 'image_file', 'enabled')
             ->where('e_id', $e_id)
             ->first();
 
@@ -204,6 +204,7 @@ class EventController extends Controller
             'date' => 'required|date',
             'time' => 'required|date_format:g:i A',
             'location' => 'required|max:255',
+            'registration_link' => 'sometimes|max:255',
             'description' => 'required',
             'mainImage' => ($e_id ? 'sometimes' : 'required').'|image|mimes:jpeg,png,jpg,gif,svg|max:102400',
             'sub_images' => 'sometimes|array',

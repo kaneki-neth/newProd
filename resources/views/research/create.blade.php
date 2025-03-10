@@ -315,7 +315,7 @@
         });
 
         $.ajax({
-            url: '{{ route("blogs.store") }}',
+            url: '{{ route("research.store") }}',
             type: 'POST',
             data: formData,
             processData: false,

@@ -284,8 +284,12 @@
     });
 
     // Progress bar
+    let latest_news = @json($latest_news);
+    let count = latest_news.length;
+    $(".carousel-progress-bar").css("width", (1 / count) * 100 + "%");
+
     owl.on('changed.owl.carousel', function(event) {
-      var progress = (event.item.index / event.item.count) * 100;
+      var progress = ((event.item.index-1) / event.item.count) * 100;
       $(".carousel-progress-bar").css("width", progress + "%");
     });
   });

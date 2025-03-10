@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id('m_id');
             $table->string('name', 255);
             $table->string('material_code', 255)->unique();
+            $table->string('material_source', 255);
             $table->longText('description');
             $table->string('image_file')->nullable();
             $table->string('year', 4);

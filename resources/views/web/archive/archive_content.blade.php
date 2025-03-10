@@ -353,6 +353,30 @@
                     thumbnailsWrapper.style.gap = '5px';
                 }
             }
+
+    if (window.innerWidth <= 1199 && window.innerWidth > 768) {
+      // Adjust column widths for this specific range
+      document.querySelectorAll('.archive-col-lg-6').forEach(col => {
+        col.style.width = '100%';
+        col.style.marginBottom = '30px';
+      });
+
+      // Adjust image container for better display
+      const materialImage = document.querySelector('.material-image');
+      if (materialImage) {
+        materialImage.style.maxWidth = '70%';
+        materialImage.style.margin = '0 auto';
+      }
+
+      // Improve thumbnails layout
+      const thumbnailsWrapper = document.querySelector('.material-thumbnails-wrapper');
+      if (thumbnailsWrapper) {
+        thumbnailsWrapper.style.maxWidth = '70%';
+        thumbnailsWrapper.style.margin = '20px auto 0';
+      }
+    }
+
+    
         }
 
         // Run on page load and resize

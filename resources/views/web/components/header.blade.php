@@ -6,9 +6,9 @@
     <nav id="navmenu" class="navmenu">
       <ul class="nav-items">
         <li><a href="/about" id="nav-about">About MATIX<br></a></li>
-        <li><a href="/digital_archive" id="nav-archive">Digital Archive</a></li>
+        <li><a href="/digital_archive" id="nav-archive">Materials Library</a></li>
         <li><a href="/events" id="nav-events">News & Event+</a></li>
-        <li><a href="/contact" id="nav-contact">Contact</a></li>
+        <li><a href="/contact" id="nav-contact">Connect</a></li>
       </ul>
 
       <div class="search-bar">

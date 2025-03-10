@@ -6,10 +6,10 @@
   <section class="first-about">
     <div class="about-wrapper container">
       <div class="row">
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-6 col-lg-5">
           <h1 class="about-title">About Matix UP Cebu</h1>
         </div>
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-6 col-lg-7">
           <p class="about-description">
             Tatak Pinoy - MATIX UP Cebu is designed to be a multi-faceted
             innovation hub that supports material exploration, product
@@ -42,7 +42,7 @@
   <div class="second-about research-section">
     <div class="about-wrapper container">
       <div class="row">
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-6 col-lg-7">
           <h1>Materials Research and Development</h1>
           <h2>For the Academe: Faculty and Students</h2>
 
@@ -70,7 +70,7 @@
             and innovation.
           </p>
         </div>
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-6 col-lg-5">
           <div class="research-image">
             <img
               src="{{url('web/assets/img/matix/about-img-01.png')}}"
@@ -84,7 +84,7 @@
   <section class="third-about product-section">
     <div class="about-wrapper container">
       <div class="row">
-        <div class="col-md-6 col-12 order-md-1 order-2">
+        <div class="product-tab col-md-6 col-lg-7 col-12 order-md-1 order-2">
           <div class="product-images">
             <img
               src="{{url('web/assets/img/matix/about-img-02.png')}}"
@@ -95,7 +95,7 @@
           </div>
         </div>
 
-        <div class="col-md-6 col-12 order-md-2 order-1">
+        <div class="col-md-6 col-12 col-lg-5 order-md-2 order-1">
           <h1>Product Development and Business Incubation</h1>
           <h2>Bringing in International Experts and Visiting Professors</h2>
 
@@ -135,7 +135,7 @@
   <div class="fourth-about library-section">
     <div class="about-wrapper container">
       <div class="row">
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-6 col-lg-7">
           <h1>Materials Library</h1>
           <h2>Swatches and Resources</h2>
 
@@ -187,7 +187,7 @@
           </p>
         </div>
 
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-6 col-lg-5">
           <div class="materials-grid">
             <img
               src="{{url('web/assets/img/matix/about-img-04.png')}}"

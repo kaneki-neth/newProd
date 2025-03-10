@@ -5,6 +5,16 @@
     <div class="news-wrapper container">
       <h1 class="news-title">News & Events</h1>
 
+    <div class="mobile-dropdown">
+      <select id="category-dropdown">
+        <option value="news">News</option>
+        <option value="research">Research</option>
+        <option value="blog">Blog</option>
+        <option value="events">Events</option>
+        <option value="videos">Videos</option>
+      </select>
+    </div>
+
       <div class="content-layout">
         <div class="sidebar-news">
           <label>
@@ -87,6 +97,34 @@
       document.querySelectorAll('.card-title-video').forEach(excerpt => {
         truncateToWordCount(excerpt, 8); // Truncate to 25 words
       });
+
+    const categoryDropdown = document.getElementById('category-dropdown');
+
+    if (categoryDropdown) {
+      // Set initial dropdown value based on which radio is checked
+      const checkedRadio = document.querySelector('input[name="category"]:checked');
+      if (checkedRadio) {
+        categoryDropdown.value = checkedRadio.value;
+      }
+
+      // Add change event listener to the dropdown
+      categoryDropdown.addEventListener('change', function() {
+        // Hide all category content
+        document.querySelectorAll('.category-content').forEach(function(content) {
+          content.classList.remove('active');
+        });
+
+        // Show the selected category content
+        const selectedCategory = this.value;
+        document.getElementById(selectedCategory).classList.add('active');
+
+        // Also update the radio button state (for larger screens)
+        const radioToSelect = document.querySelector(`input[name="category"][value="${selectedCategory}"]`);
+        if (radioToSelect) {
+          radioToSelect.checked = true;
+        }
+      });
+    }
 
 
 

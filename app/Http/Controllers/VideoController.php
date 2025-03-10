@@ -289,6 +289,7 @@ class VideoController extends Controller
 
     public function getThumbnail(Request $request): JsonResponse
     {
+        // dd($request);
         $url = $request->query('url');
 
         if (empty($url)) {
@@ -329,6 +330,8 @@ class VideoController extends Controller
             '/youtu\.be\/([^\&\?\/]+)/',             // Shortened URL
             '/youtube\.com\/v\/([^\&\?\/]+)/',        // Alternative embed URL
             '/youtube\.com\/shorts\/([^\&\?\/]+)/',   // Shorts URL
+            '/facebook\.com\/.*\/videos\/([0-9]+)/', // Facebook video URL
+            '/facebook\.com\/watch\?v=([^\&\?\/]+)/', // Facebook video URL
         ];
 
         foreach ($patterns as $pattern) {

@@ -5,6 +5,7 @@ use App\Http\Controllers\web\archive;
 use App\Http\Controllers\web\contactus;
 use App\Http\Controllers\web\home;
 use App\Http\Controllers\web\newsevent;
+use App\Http\Controllers\VideoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [home::class, 'index']);
@@ -19,5 +20,6 @@ Route::get('/events_news_content/{n_id}', [newsevent::class, 'events_news_conten
 Route::get('/events_research_content/{r_id}', [newsevent::class, 'events_research_content'])->name('research_content');
 Route::get('/events_blog_content/{b_id}', [newsevent::class, 'events_blog_content'])->name('blog_content');
 Route::get('/events_events_content/{e_id}', [newsevent::class, 'events_events_content'])->name('event_content');
+Route::get('/fetch-thumbnail', [VideoController::class, 'getThumbnail'])->name('videos.getThumbnail');
 
 Route::get('/contact', [contactus::class, 'index']);

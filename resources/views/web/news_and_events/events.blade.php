@@ -343,7 +343,7 @@
     // Show loading state
     thumbnailPlaceholder.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>';
 
-    fetch(`/get-thumbnail?url=${encodeURIComponent(url)}`)
+    fetch(`/fetch-thumbnail?url=${encodeURIComponent(url)}`)
       .then(response => response.json())
       .then(data => {
       if (data.thumbnail) {

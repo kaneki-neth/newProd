@@ -137,6 +137,7 @@ class EventController extends Controller
                 'date' => $request->date,
                 'time' => $request->time,
                 'location' => $request->location,
+                'registration_link' => $request->registration_link,
                 'description' => $request->description,
                 'updated_by' => auth()->id(),
                 'updated_at' => now(),

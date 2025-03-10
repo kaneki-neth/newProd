@@ -37,7 +37,7 @@
 
           <div class="news-grid">
             @foreach($news as $n)
-              <a href="/events_news_content">
+              <a href={{ route('news_content', ['n_id' => $n->n_id]) }}>
                 <div class="news-card">
                   <div style="width: 100%; height: 280px;" class="d-flex justify-content-center align-items-center">
                     <img class="mw-100 mh-100" style="object-fit: contain;" src="{{ asset('storage/'.$n->image_file) }}" />
@@ -63,7 +63,7 @@
 
           <div class="news-grid">
             @foreach($researches as $r)
-              <a href="/events_research_content">
+              <a href="{{ route('research_content', ['r_id' => $r->r_id]) }}">
                 <div class="news-card">
                   <div style="width: 100%; height: 280px;" class="d-flex justify-content-center align-items-center">
                     <img class="mw-100 mh-100" style="object-fit: contain;" src="{{ asset('storage/'.$r->image_file) }}" />
@@ -89,7 +89,7 @@
 
           <div class="news-grid">
             @foreach($blogs as $b)
-              <a href="/events_blog_content">
+              <a href="{{ route('blog_content', ['b_id' => $b->b_id]) }}">
                 <div class="news-card">
                   <div style="width: 100%; height: 280px;" class="d-flex justify-content-center align-items-center">
                     <img class="mw-100 mh-100" style="object-fit: contain;" src="{{ asset('storage/'.$b->image_file) }}" />
@@ -112,7 +112,7 @@
 
           <div class="news-grid">
             @foreach($events as $e)
-              <a href="/events_events_content">
+              <a href="{{ route('event_content', ['e_id' => $e->e_id]) }}">
                 <div class="news-card">
                   <div style="width: 100%; height: 280px;" class="d-flex justify-content-center align-items-center">
                     <img class="mw-100 mh-100" style="object-fit: contain;" src="{{ asset('storage/'.$e->image_file) }}" />

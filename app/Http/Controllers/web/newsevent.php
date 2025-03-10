@@ -23,7 +23,10 @@ class newsevent extends Controller
             $date = date_create($item->date);
             $item->date = date_format($date, $dateFormat);
             if ($includeTime) {
-                $item->time = date_format($date, 'h:i A');
+                $item->time = date_format(
+                    date_create($item->time),
+                    'g:i A'
+                );
             }
             $item->excerpt = $this->generate_excerpt($item->description);
             unset($item->description);
@@ -54,7 +57,7 @@ class newsevent extends Controller
 
         $events = $this->getRecords(
             'events',
-            ['e_id', 'image_file', 'title', 'date', 'description', 'location'],
+            ['e_id', 'image_file', 'title', 'date', 'time', 'description', 'location'],
             'l F j Y',
             false,
             true
@@ -77,24 +80,70 @@ class newsevent extends Controller
         return $cleanDescription;
     }
 
-    public function events_news_content()
+    public function events_news_content($n_id)
     {
+        $news = DB::table('news')->select(['n_id', 'image_file', 'title', 'date', 'description', 'enabled', 'created_by'])
+            ->where('n_id', $n_id)
+            ->first();
 
-        return view('web.news_and_events.articles.events_news_content');
+        if (! $news->enabled) {
+            return redirect()->route('news');
+        }
+
+        $user = DB::table('users')->select(['first_name', 'last_name'])
+            ->where('id', $news->created_by)
+            ->first();
+        $news->created_by = $user->first_name.' '.$user->last_name;
+
+        return view('web.news_and_events.articles.events_news_content', compact('news'));
     }
 
-    public function events_research_content()
+    public function events_research_content($r_id)
     {
-        return view('web.news_and_events.articles.events_research_content');
+        $research = DB::table('research')->select(['r_id', 'image_file', 'title', 'date', 'description', 'enabled', 'created_by'])
+            ->where('r_id', $r_id)
+            ->first();
+
+        if (! $research->enabled) {
+            return redirect()->route('research');
+        }
+
+        $user = DB::table('users')->select(['first_name', 'last_name'])
+            ->where('id', $research->created_by)
+            ->first();
+        $research->created_by = $user->first_name.' '.$user->last_name;
+
+        return view('web.news_and_events.articles.events_research_content', compact('research'));
     }
 
-    public function events_blog_content()
+    public function events_blog_content($b_id)
     {
-        return view('web.news_and_events.articles.events_blog_content');
+        $blog = DB::table('blogs')->select(['b_id', 'image_file', 'title', 'date', 'description', 'enabled', 'created_by'])
+            ->where('b_id', $b_id)
+            ->first();
+
+        if (! $blog->enabled) {
+            return redirect()->route('blog');
+        }
+
+        $user = DB::table('users')->select(['first_name', 'last_name'])
+            ->where('id', $blog->created_by)
+            ->first();
+        $blog->created_by = $user->first_name.' '.$user->last_name;
+
+        return view('web.news_and_events.articles.events_blog_content', compact('blog'));
     }
 
-    public function events_events_content()
+    public function events_events_content($e_id)
     {
-        return view('web.news_and_events.articles.events_events_content');
+        $event = DB::table('events')->select(['e_id', 'image_file', 'title', 'date', 'time', 'description', 'location', 'registration_link'])
+            ->where('e_id', $e_id)
+            ->first();
+
+        if (! $event) {
+            return redirect()->route('events');
+        }
+
+        return view('web.news_and_events.articles.events_events_content', compact('event'));
     }
 }

@@ -37,6 +37,11 @@ class newsevent extends Controller
 
     public function index()
     {
+        $videos = DB::table('videos')
+            ->select('videos.*')
+            ->orderBy('date', 'desc')
+            ->get();
+
         $news = $this->getRecords(
             'news',
             ['n_id', 'image_file', 'title', 'date', 'description'],

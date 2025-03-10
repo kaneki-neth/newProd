@@ -92,7 +92,7 @@
                         class="table table-striped table-bordered align-middle table-responsive table-sm">
                         <thead>
                             <tr>
-                                <th class="text-center" width="15%">Date</th>
+                                <th class="text-center" width="20%">Date</th>
                                 <th class="text-center">Title</th>
                                 <th class="text-center" width="30%">Location</th>
                                 <th class="text-center" width="10%">Status</th>
@@ -104,7 +104,7 @@
                                     $dateTime = \Carbon\Carbon::parse($e->date . ' ' . $e->time);
                                 @endphp
                                 <tr>
-                                    <td class="text-center" width="15%" data-order="{{ $dateTime->toIso8601String() }}">
+                                    <td class="text-center" width="20%" data-order="{{ $dateTime->toIso8601String() }}">
                                         {{ $dateTime->format('F d, Y g:i A') }}
                                     </td>
                                     <td class="" style="cursor: pointer" onclick="location.href='/events_/{{ $e->e_id }}'">{{ $e->title }}</td>

@@ -125,7 +125,7 @@
                     <div class="mt-3 card-info">
                       <span class="event-date">{{ $e->date }}</span>
                       <span class="event-time">{{ $e->time }}</span>
-                      <!-- <span class="event-location">{{-- $e->location --}}</span> -->
+                      <span class="event-location">{{ $e->location }}</span>
                     </div>
                   </div>
                 </div>

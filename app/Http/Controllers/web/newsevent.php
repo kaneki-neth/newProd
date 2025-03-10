@@ -54,7 +54,7 @@ class newsevent extends Controller
 
         $events = $this->getRecords(
             'events',
-            ['e_id', 'image_file', 'title', 'date', 'description'],
+            ['e_id', 'image_file', 'title', 'date', 'description', 'location'],
             'l F j Y',
             false,
             true

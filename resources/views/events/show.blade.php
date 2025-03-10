@@ -76,6 +76,7 @@
                 <p><i class="fa fa-calendar"></i> {{ date('F j, Y', strtotime($event->date)) }}</p>
                 <p><i class="fa fa-clock"></i> {{ date('g:i A', strtotime($event->time)) }}</p>
                 <p><i class="fa fa-location-dot"></i> {{ $event->location }}</p>
+                <p><i class="fa-solid fa-link"></i> {{ $event->registration_link }}</p>
                 <p><?php echo $event->description ?></p>
             </div>
             <div class="col-md-5">

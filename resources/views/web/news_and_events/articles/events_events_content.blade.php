@@ -22,6 +22,11 @@
                 <i class="bi bi-geo-alt"></i>
                 <span>{{ $event->location }}</span>
               </div>
+              <div class="event-meta-item">
+                @if($event->registration_link)
+                  <a href="{{ $event->registration_link }}" class="btn btn-primary">Register</a>
+                @endif
+              </div>
             </div>
             
             <div class="event-description">

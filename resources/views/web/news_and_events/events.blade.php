@@ -133,6 +133,9 @@
                     <span class="event-date">{{ $e->date }}</span>
                     <span class="event-time">{{ $e->time }}</span>
                     <span class="event-location">{{ $e->location }}</span>
+                    <span class="event-registration">
+                        {{ $e->registration_link }}
+                    </span>
                   </div>
                 </div>
               </div>

@@ -8,14 +8,10 @@ use Illuminate\Support\Facades\DB;
 
 class newsevent extends Controller
 {
-    private function getRecords($table, $columns, $dateFormat, $filterCurrent = true, $includeTime = false)
+    private function getRecords($table, $columns, $dateFormat, $includeTime = false)
     {
         $query = DB::table($table)->select($columns)
             ->where('enabled', 1);
-
-        if ($filterCurrent) {
-            $query->where('date', '<=', date('Y-m-d H:i:s'));
-        }
 
         $items = $query->orderBy('date', 'desc')->get()->toArray();
 
@@ -64,7 +60,6 @@ class newsevent extends Controller
             'events',
             ['e_id', 'image_file', 'title', 'date', 'time', 'description', 'location', 'registration_link'],
             'l F j Y',
-            false,
             true
         );
 
@@ -92,7 +87,7 @@ class newsevent extends Controller
             ->first();
 
         if (! $news->enabled) {
-            return redirect()->route('news');
+            return redirect()->action([newsevent::class, 'index']);
         }
 
         $date = date_create($news->date);
@@ -113,7 +108,7 @@ class newsevent extends Controller
             ->first();
 
         if (! $research->enabled) {
-            return redirect()->route('research');
+            return redirect()->action([newsevent::class, 'index']);
         }
 
         $date = date_create($research->date);
@@ -134,7 +129,7 @@ class newsevent extends Controller
             ->first();
 
         if (! $blog->enabled) {
-            return redirect()->route('blog');
+            return redirect()->action([newsevent::class, 'index']);
         }
 
         $date = date_create($blog->date);
@@ -158,7 +153,7 @@ class newsevent extends Controller
             ->first();
 
         if (! $event->enabled) {
-            return redirect()->route('events');
+            return redirect()->action([newsevent::class, 'index']);
         }
 
         $date = date_create($event->date);

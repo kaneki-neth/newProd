@@ -3,70 +3,67 @@
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
-// use DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class newsevent extends Controller
 {
-    private function getRecords($table, $columns, $dateFormat, $includeTime = false)
+    public function index(Request $request)
     {
-        $query = DB::table($table)->select($columns)
-            ->where('enabled', 1);
+        // $videos = DB::table('videos')
+        //     ->select('videos.*')
+        //     ->orderBy('date', 'desc')
+        //     ->paginate(1, ['*'], 'videos');
 
-        $items = $query->orderBy('date', 'desc')->get()->toArray();
+        // return view('web.news_and_events.events', compact('news', 'researches', 'blogs', 'events', 'videos'));
 
-        foreach ($items as $item) {
-            $date = date_create($item->date);
-            $item->date = date_format($date, $dateFormat);
-            if ($includeTime) {
-                $item->time = date_format(
-                    date_create($item->time),
-                    'g:i A'
-                );
-            }
-            $item->excerpt = $this->generate_excerpt($item->description);
-            unset($item->description);
+        if (! $request->ajax()) {
+            return view('web.news_and_events.events');
         }
 
-        return $items;
-    }
+        $perPage = 1;
+        $category = $request->category;
 
-    public function index()
-    {
-        $videos = DB::table('videos')
-            ->select('videos.*')
+        if ($category != 'videos') {
+            $items = DB::table($category)
+                ->where('enabled', 1)
+                ->orderBy('date', 'desc')
+                ->selectRaw("{$category[0]}_id as id, image_file, title, date, description".($category == 'events' ? ', time, location, registration_link' : ''))
+                ->paginate($perPage, ['*']);
+
+            foreach ($items as $item) {
+                $date = date_create($item->date);
+                $item->date = date_format($date, $category == 'events' ? 'l, F j, Y' : 'j M Y');
+                if ($category == 'events') {
+                    $item->time = date_format(
+                        date_create($item->time),
+                        'g:i A'
+                    );
+                }
+                $item->excerpt = $this->generate_excerpt($item->description);
+                unset($item->description);
+            }
+
+            $routes = [
+                'news' => 'news_content',
+                'research' => 'research_content',
+                'blogs' => 'blog_content',
+                'events' => 'event_content',
+            ];
+
+            $routeName = $routes[$category];
+
+            return view('web.news_and_events.category_content', compact('items', 'routeName', 'category'))->render();
+        }
+
+        $items = DB::table('videos')
             ->orderBy('date', 'desc')
-            ->get();
+            ->paginate($perPage, ['*']);
 
-        $news = $this->getRecords(
-            'news',
-            ['n_id', 'image_file', 'title', 'date', 'description'],
-            'j M Y'
-        );
-
-        $researches = $this->getRecords(
-            'research',
-            ['r_id', 'image_file', 'title', 'date', 'description'],
-            'j M Y'
-        );
-
-        $blogs = $this->getRecords(
-            'blogs',
-            ['b_id', 'image_file', 'title', 'date', 'description'],
-            'j M Y'
-        );
-
-        $events = $this->getRecords(
-            'events',
-            ['e_id', 'image_file', 'title', 'date', 'time', 'description', 'location', 'registration_link'],
-            'l F j Y',
-            true
-        );
-
-        return view('web.news_and_events.events', compact('news', 'researches', 'blogs', 'events', 'videos'));
+        return view('web.news_and_events.category_content', compact('items', 'category'))->render();
     }
 
-    public function generate_excerpt($description, $maxLength = 300)
+    public function generate_excerpt($description, $maxLength = 100)
     {
         $img_replacement = ' ';
         $img_pattern = '/<img[^>]+src="data:image\/[^;]+;base64,[^"]+"[^>]*>/';

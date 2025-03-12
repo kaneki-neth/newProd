@@ -132,7 +132,20 @@
 
   <script>
     $(document).ready(function () {
-      fetchData();
+      var queryString = window.location.search;
+      var urlParams = new URLSearchParams(queryString);
+
+      var category = urlParams.get('category');
+      if (category) {
+        $('input[name="category"][value="' + category + '"]').prop('checked', true);
+      }
+
+      var page = urlParams.get('page');
+      if (page) {
+        fetchData(page);
+      } else {
+        fetchData();
+      }
     });
 
     $('input[name="category"]').change(function () {

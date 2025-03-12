@@ -10,18 +10,11 @@ class newsevent extends Controller
 {
     public function index(Request $request)
     {
-        // $videos = DB::table('videos')
-        //     ->select('videos.*')
-        //     ->orderBy('date', 'desc')
-        //     ->paginate(1, ['*'], 'videos');
-
-        // return view('web.news_and_events.events', compact('news', 'researches', 'blogs', 'events', 'videos'));
-
         if (! $request->ajax()) {
             return view('web.news_and_events.events');
         }
 
-        $perPage = 1;
+        $perPage = 20;
         $category = $request->category;
 
         if ($category != 'videos') {

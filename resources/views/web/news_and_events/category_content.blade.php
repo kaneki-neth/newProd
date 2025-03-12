@@ -24,12 +24,6 @@
           </div>
         </a>
       @endforeach
-      <script>
-        document.querySelectorAll('.pagination a').forEach(function (element) {
-          element.removeAttribute('href');
-          element.setAttribute('onclick', 'paginate(this)');
-        });
-      </script>
     </div>
 
   @else
@@ -59,17 +53,18 @@
           </div>
         </a>
       @endforeach
-
       <script>
-        document.querySelectorAll('.pagination a').forEach(function (element) {
-          element.removeAttribute('href');
-          element.setAttribute('onclick', 'paginate(this)');
-        });
-
         document.querySelectorAll('.data-item').forEach(item => {
           fetchThumbnail(item.getAttribute('data-value'), item);
         });
       </script>
     </div>
   @endif
+
+  <script>
+    document.querySelectorAll('.pagination a').forEach(function (element) {
+      element.removeAttribute('href');
+      element.setAttribute('onclick', 'paginate(this)');
+    });
+  </script>
 </div>

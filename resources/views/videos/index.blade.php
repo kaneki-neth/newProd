@@ -167,7 +167,6 @@
 
         var tblrows = 0;
         var height = screen.height;
-        $("#pannel-body").attr("style", 'height: 78vh;');
         tblrows = parseInt(height * 0.45) - 30;
 
         $('#data-table-scroller').DataTable({

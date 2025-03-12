@@ -19,3 +19,15 @@
     </nav>
   </div>
 </header>
+
+<script>
+    document.querySelector('.search-bar').addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            const query = event.target.value;
+            if (query) {
+                window.location.href = `/digital_archive?page=1&search=${encodeURIComponent(query)}`;
+            }
+        }
+    });
+</script>

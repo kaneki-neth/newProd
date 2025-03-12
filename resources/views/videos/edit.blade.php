@@ -247,7 +247,7 @@
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    location.reload();
+                    window.location.href = '/videos/show/' + {{ $video->v_id }};
                 },
                 error: function (xhr) {
                     console.log(xhr);

@@ -28,7 +28,7 @@
         <li class="breadcrumb-item"><a href="{{ route('videos.index') }}">Videos</a></li>
         <li class="breadcrumb-item"><a href="javascript:;">View Video</a></li>
     </ol>
-    <h1 class="page-header">Vue Video</h1>
+    <h1 class="page-header">View Video</h1>
 
     <!-- make new -->
 

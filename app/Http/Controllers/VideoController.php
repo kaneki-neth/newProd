@@ -224,61 +224,6 @@ class VideoController extends Controller
         }
     }
 
-    // public function update(Request $request)
-    // {
-
-    //     $request->merge(['description' => strip_tags($request->description)]);
-
-    //     $validator = Validator::make($request->all(), [
-    //         'title' => 'required',
-    //         'video_url' => 'required',
-    //         'date' => 'required',
-    //         'description' => 'required',
-    //     ], messages: [
-    //         'title.required' => 'The title is required.',
-    //         'video_url.required' => 'The video URL is required.',
-    //         'date.required' => 'The date is required.',
-    //         'description.required' => 'The description is required.',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'errors' => $validator->getMessageBag()->toArray(),
-    //         ], 400);
-    //     }
-
-    //     $videoData = [
-    //         'title' => $request->input('title'),
-    //         'description' => $request->input('description'),
-    //         'date' => $request->input('date'),
-    //         'video_url' => $request->input('video_url'),
-    //         'status' => $request->input('status'),
-    //         'updated_by' => auth()->id(),
-    //         'updated_at' => now(),
-    //     ];
-
-    //     try {
-    //         DB::table('videos')
-    //             ->where('v_id', $request->video_id)
-    //             ->update($videoData);
-
-    //         $message = 'Video updated successfully.';
-    //         session()->flash('success', $message);
-
-    //         return response()->json([
-    //             'success' => true,
-    //             'message' => $message
-    //         ], 200);
-
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Failed to update video'
-    //         ], 500);
-    //     }
-    // }
-
     /**
      * Remove the specified resource from storage.
      */

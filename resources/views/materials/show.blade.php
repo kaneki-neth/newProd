@@ -211,12 +211,19 @@
 
                     <div class="row g-0 mt-3">
                         <div class="d-flex align-items-center justify-around">
-                            <label class="form-label mr-3" for="enabled">Enabled:</label>
-                            @if($material->enabled == 1)
-                                <span class="badge bg-primary rounded-pill">Enabled</span>
-                            @else
-                                <span class="badge bg-warning rounded-pill">Disabled</span>
-                            @endif
+                            @php
+                                //<label class="form-label mr-3" for="enabled">Enabled:</label>
+                                //@if($material->enabled == 1)
+                                //    <span class="badge bg-primary rounded-pill">Enabled</span>
+                                //@else
+                                //    <span class="badge bg-warning rounded-pill">Disabled</span>
+                                //@endif
+                            @endphp                         
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="enabled" name="enabled" {{$material->enabled ? 'checked' : ''}} 
+                            onclick="return false;" onkeydown="return false;" 
+                            style="pointer-events: none;">
                         </div>
                     </div>
     
@@ -229,49 +236,60 @@
                             @endphp
                         </div>
                     </div>
-                    <div class="row">
-                            <div class="col-12 mt-3">
-                                <div style="border-radius: 4px;">
-                                    <table class="properties_table table table-responsive" id="properties_table" style="border-radius: 4px;">
-                                        <thead class="table-light">
+                    
+                    <div class="row g-0 mt-3">
+                        <div class="col-12">
+                            <div>
+                                <table class="properties_table table table-responsive" id="properties_table" style="border-radius: 4px;">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Soft Properties</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="properties_tableBody" style="border-radius: 4px;">
+                                        @if(count($properties) < 1)
                                             <tr>
-                                                <th>Properties</th>
-                                                <th></th>
-                                                <th></th>
+                                                <td colspan="3">
+                                                    <span>No Data available..</span>
+                                                </td>
                                             </tr>
-                                        </thead>
-                                        <tbody id="properties_tableBody" style="border-radius: 4px;">
-                                            @if(count($properties) < 1)
-                                                <tr>
-                                                    <td colspan="3">
-                                                        <span>No Data available..</span>
-                                                    </td>
-                                                </tr>
-                                            @endif
-                                            @forEach($properties as $prop)
-                                                <tr>
-                                                    <td style="width:50%">
-                                                        <div>
-                                                            <label for="property" class="form-label">Name</label> 
-                                                            <div class="form-control">
-                                                                {{ $prop->name }}
-                                                            </div>
+                                        @endif
+                                        @forEach($properties as $prop)
+                                            <tr>
+                                                <td style="width:100% !important" colspan="2">
+                                                    <div>
+                                                        <label for="property" class="form-label">Name</label> 
+                                                        <div class="form-control">
+                                                            {{ $prop->name }}
                                                         </div>
-                                                    </td>
-                                                    <td style="width:50%">
-                                                        <div>
-                                                            <label for="property" class="form-label">Value</label>
-                                                            <div class="form-control">
-                                                                {{ $prop->value }}
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td> </td>  
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-
+                                                    </div>
+                                                </td>
+                                                
+                                                <td> </td>  
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-0">
+                        <div class="col">
+                            <label for="material_source" class="form-label">Material Source</label>
+                            <div class="form-control">
+                                @if ($material->material_source)
+                                    {{ $material->material_source}}
+                                @else
+                                    <p></p>
+                                @endif                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3 g-0">
+                            <div class="col-12">
+                                <div style="border-radius: 4px;">
                                     <table class="technical_properties_table table table-responsive"
                                         id="technical_properties_table" style="border-radius: 4px;">
                                         <thead class="table-light">
@@ -354,17 +372,16 @@
                                 </div>
                             </div>
                         </div>
-    
                 </div>
-               
+
                 <div class="col-4 d-flex align-items-end flex-column" style="height: 100%">
                     <div class="row g-0">
                         <div class="col-9" style="margin-left: auto">
                             <div class="alert alert-yellow fade" id="imageError"></div>
                             <label class="form-label">Image</label>
-                            <div style="border:1px solid var(--bs-component-border-color); border-radius:4px; aspect-ratio: 1 / 1; margin-left: 0 !important; margin-right: 0 !important;"
+                            <div class="w-100 overflow-hidden ratio ratio-1x1" style="border:1px solid var(--bs-component-border-color); border-radius:4px; margin-left: 0 !important; margin-right: 0 !important;"
                                 class="row g-0">
-                                <img src='{{ asset('storage').'/'.$material->image_file}}' id="mainImage">
+                                <img class="w-100 h-100 object-fit-cover"" src='{{ asset('storage').'/'.$material->image_file}}' id="mainImage">
                             </div>
                             @if (count($images) > 0)
                                 <div id="imageGallery"
@@ -378,9 +395,7 @@
                             @endif
                         </div>
                     </div>
-                    
                 </div>
-        
             </form>
         </div>
     </div>

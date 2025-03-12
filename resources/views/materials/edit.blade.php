@@ -55,7 +55,7 @@
         .preview-image {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
             border: 1px solid #d1c3c0;
         }
 
@@ -127,10 +127,12 @@
         .error-message {
             color: red;
             font-size: 12px;
-            display: block;
+            display: inline;
             margin-top: 5px;
             position: relative;
             background-color: white;
+            bottom: 10px;
+            left: 8px;
         }
 
         .select2 {
@@ -244,7 +246,7 @@
                         </div>
                         <div class="row g-0 mt-3">
                             <div class="d-flex flex-row gap-2">
-                                <label class="form-label" for="enabled">Enabled <span class="text-danger">*</span></label>
+                                <label class="form-label" for="enabled">Status <span class="text-danger">*</span></label>
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" role="switch" id="enabled" name="enabled" {{ $material->enabled ? 'checked' : '' }}>
                                 </div>
@@ -259,13 +261,13 @@
                                 </textarea>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row g-0">
                             <div class="col-12 mt-3">
-                                <div style="border-radius: 4px;">
+                                <div>
                                     <table class="properties_table table table-responsive" id="properties_table" style="border-radius: 4px;">
                                         <thead class="table-light">
                                             <tr>
-                                                <th>Properties</th>
+                                                <th>Soft Properties</th>
                                                 <th></th>
                                                 <th class="col-span-2" style="text-align: right;">
                                                     <button
@@ -286,18 +288,10 @@
                                             @endif
                                             @forEach($properties as $prop)
                                                 <tr>
-                                                    <td style="width:50%">
+                                                    <td style="width:100% !important" colspan="2">
                                                         <div>
                                                             <label class="form-label" for="property">Name </label>
                                                             <input class="property-name form-control form-control-xs" name="property_name[]" value="{{$prop->name}}" style=" width:100%">
-                                                            
-                                                        </div>
-                                                    </td>
-                                                    <td style="width:50%">
-                                                        <div>
-                                                            <label class="form-label" for="property">Value </label>
-                                                            <input type="text" class="form-control form-control-xs" name="property_value[]" value="{{$prop->value}}" style=" width:100%">
-                                                            
                                                         </div>
                                                     </td>
                                                     <td class="d-flex justify-content-center align-items-center" style="height:100%">
@@ -309,7 +303,20 @@
                                             @endforeach
                                         </tbody>
                                     </table>
-
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-0">
+                            <div class="col">
+                                <label for="material_source" class="form-label">Material Source</label>
+                                <input type="text" class="form-control form-control-xs validate custom-input" name="material_source"
+                                    placeholder="..." id="material_source" value="{{ old('name', $material->material_source) }}">
+                                <span id="material_source-msg" class="error-message"></span>
+                            </div>
+                        </div>
+                        <div class="row mt-3 g-0">
+                            <div class="col-12">
+                                <div style="border-radius: 4px;">
                                     <table class="technical_properties_table table table-responsive"
                                         id="technical_properties_table" style="border-radius: 4px;">
                                         <thead class="table-light">
@@ -409,12 +416,12 @@
                 <div class="col-4 d-flex align-items-end flex-column" style="height: 100%">
                     <div class="row g-0">
                         <div class="col-9" style="margin-left: auto">
-                            <label class="form-label">Upload Image</label>
-                            <div style="border:1px solid var(--bs-component-border-color); border-radius:4px; aspect-ratio: 1 / 1; margin-left: 0 !important; margin-right: 0 !important; cursor: pointer;"
+                            <label class="form-label">Upload Image <span class="text-danger">*</span></label>
+                            <div class="w-100 overflow-hidden ratio ratio-1x1" style="border:1px solid var(--bs-component-border-color); border-radius:4px; margin-left: 0 !important; margin-right: 0 !important; cursor: pointer;"
                                 class="row g-0" onclick="document.getElementById('main_material_image').click();">
                                 <input type="file" accept="image/*" id="main_material_image" style="display: none;"
                                         onchange="displayMainImage(this)">
-                                <img src='/assets/userProfile/no-image-avail.jpg' id="mainImage">
+                                <img class="w-100 h-100 object-fit-cover" src='/assets/userProfile/no-image-avail.jpg' id="mainImage">
                             </div>
                             <div id="imageGallery"
                                 style="display: flex; gap: 10px; overflow-x: auto; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-top: 8px">
@@ -473,7 +480,7 @@
 
                     let img = document.createElement('img');
                     img.src = e.target.result;
-                    img.classList.add('preview-image'); 
+                    img.classList.add('preview-image');  
                     img.id = `preview-image-${imageCount}`;
 
                     let hoverOverlay = document.createElement('div'); 
@@ -557,18 +564,10 @@
             }
             let newRow = document.createElement('tr');
             newRow.innerHTML = `
-                            <td style="width:50%">
+                            <td style="width:100% !important" colspan="2">
                                 <div>
                                     <label class="form-label" for="property">Name </label>
                                     <input class="property-name form-control form-control-xs" name="property_name[]"
-                                        style=" width:100%">
-                                    
-                                </div>
-                            </td>
-                            <td style="width:50%">
-                                <div>
-                                    <label class="form-label" for="property">Value </label>
-                                    <input type="text" class="form-control form-control-xs" name="property_value[]"
                                         style=" width:100%">
                                     
                                 </div>
@@ -792,7 +791,7 @@
             for (let i = 0; i < propertyNames.length; i++) {
                 properties.push({
                     name: propertyNames[i].value,
-                    value: propertyValues[i].value,
+                    value: 'No Value',
                     type: 'soft'
                 });
             }
@@ -854,10 +853,7 @@
                 contentType: false,
                 success: function (response) {
                     console.log(response);
-                    setTimeout(() => {
-                        window.location.href=`/material/show/{{$material->m_id}}`;
-                    }, 2000);
-
+                    window.location.href=`/material/show/{{$material->m_id}}`;
                 },
                 error: function (xhr) {
                     if (xhr.status === 400) {

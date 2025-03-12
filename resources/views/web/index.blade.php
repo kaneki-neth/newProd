@@ -154,83 +154,40 @@
 
   <!-- archive starts here -->
   <section id="about-materials" data-aos="fade-up" data-aos-delay="100">
-    <div class="container">
-      <div class="row">
-        <div class="col-12 d-flex justify-content-between">
-          <h3 class="arial_narrow_7">
-            Materials
-          </h3>
-          <a href="/digital_archive" class="arial_narrow_7 reroute c-black">Go to digital archives</a>
-        </div>
-        <div class="slides col-12 mt-5">
-          <div class="materials owl-carousel owl-theme">
-            <div class="item">
-              <div style="width: 80%;">
-                <img src="{{url('web/assets/img/matix/materials/digital_archive.png')}}" class="">
-              </div>
-              <div>
-                <h6 class="dmsans-semi-bold mt-3 mb-2">Abaca + Bacbac Mat #125</h6>
-                <div style="height: 40px;">
-                  <a href="#" class="read-more mt-3" style="padding: 7px 15px;
-                border: 1px solid #e2e2e246;
-                border-radius: 20px;
-                font-size: 12px;
-                background-color: #e2e2e246;"><span class="arial_narrow_7 c-light-light-gray dmsans-regular">Textiles</span></a>
-                </div>
-              </div>
-            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-between">
+                        <h3 class="arial_narrow_7">
+                            Materials
+                        </h3>
+                        <a href="/digital_archive" class="arial_narrow_7 reroute c-black">Go to digital archives</a>
+                    </div>
+                    <div class="slides col-12 mt-5">
+                        <div class="materials owl-carousel owl-theme">
+                            @foreach ($recommended_materials as $material)
+                                <div class="item">
+                                    <div style="width: 80%; aspect-ratio: 1 / 1; overflow: hidden;">
+                                        <img src="{{ asset('storage') . '/' . $material->image_file }}" class="w-100 h-100 object-fit-cover">
+                                    </div>
+                                    <div>
+                                        <h6 class="dmsans-semi-bold mt-3 mb-2">{{ $material->material_name }}</h6>
+                                        <div style="height: 40px;">
+                                            <a href="#" class="read-more mt-3" style="padding: 7px 15px;
+                                                border: 1px solid #e2e2e246;
+                                                border-radius: 20px;
+                                                font-size: 12px;
+                                                background-color: #e2e2e246;">
+                                                <span class="arial_narrow_7 c-light-light-gray dmsans-regular">{{ $material->category_name }}</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
 
-            <div class="item">
-              <div style="width: 80%;">
-                <img src="{{url('web/assets/img/matix/materials/image-mat-2.png')}}" class="">
-              </div>
-              <div>
-                <h6 class="dmsans-semi-bold mt-3 mb-2">Abaca + Bacbac Mat #125</h6>
-                <div style="height: 40px;">
-                  <a href="#" class="read-more mt-3" style="padding: 7px 15px;
-                border: 1px solid #e2e2e246;
-                border-radius: 20px;
-                font-size: 12px;
-                background-color: #e2e2e246;"><span class="arial_narrow_7 c-light-light-gray dmsans-regular">Textiles</span></a>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-
-            <div class="item">
-              <div style="width: 80%;">
-                <img src="{{url('web/assets/img/matix/materials/polyem.png')}}" class="">
-              </div>
-              <div>
-                <h6 class="dmsans-semi-bold mt-3 mb-2">Polyem Vasa</h6>
-                <div style="height: 40px;">
-                  <a href="#" class="read-more mt-3" style="padding: 7px 15px;
-                border: 1px solid #e2e2e246;
-                border-radius: 20px;
-                font-size: 12px;
-                background-color: #e2e2e246;"><span class="arial_narrow_7 c-light-light-gray dmsans-regular">Textiles</span></a>
-                </div>
-              </div>
-            </div>
-
-            <div class="item">
-              <div style="width: 80%;">
-                <img src="{{url('web/assets/img/matix/materials/image.png')}}" class="">
-              </div>
-              <div>
-                <h6 class="dmsans-semi-bold mt-3 mb-2">Outdoor 008 Twisted</h6>
-                <div style="height: 40px;">
-                  <a href="#" class="read-more mt-3" style="padding: 7px 15px;
-                border: 1px solid #e2e2e246;
-                border-radius: 20px;
-                font-size: 12px;
-                background-color: #e2e2e246;"><span class="arial_narrow_7 c-light-light-gray dmsans-regular">Textiles</span></a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-  </section>
+        </section>
   <!-- archive ends here -->
 
   <!-- mail starts here -->

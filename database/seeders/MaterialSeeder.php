@@ -13,17 +13,20 @@ class MaterialSeeder extends Seeder
     public function run(): void
     {
         // Creating Test Material
-        $materialId = DB::table('materials')->insertGetId([
-            'name' => 'Test Material',
-            'material_code' => 'TM001',
-            'description' => 'test material',
-            'image_file' => 'test-material.jpg',
-            'year' => '2025',
-            'created_by' => 1,
-            'updated_by' => 1,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        for ($i=1; $i <= 5; $i++) { 
+            $materialId = DB::table('materials')->insertGetId([
+                'name' => 'Material ' . $i,
+                'material_code' => 'TM00' . $i,
+                'material_source' => 'Material Research Place',
+                'description' => 'test material #' . $i,
+                'image_file' => 'test-material.jpg',
+                'year' => '2025',
+                'created_by' => 1,
+                'updated_by' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
 
         // Creating Test Category
         for ($i = 1; $i <= 2; $i++) {
@@ -35,16 +38,29 @@ class MaterialSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+        }
 
+        $categoryId = DB::table('categories')->insertGetId([
+            'name' => 'Test Category '.$i,
+            'description' => 'test category '.$i,
+            'enabled' => 0,
+            'created_by' => 1,
+            'updated_by' => 1,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        for ($i=1; $i <= 5; $i++) { 
             DB::table('item_categories')->insert([
-                'm_id' => $materialId,
-                'c_id' => $categoryId,
+                'm_id' => $i,
+                'c_id' => rand(1, 2),
                 'created_by' => 1,
                 'updated_by' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
         }
+
 
         // Creating Test Property: ['soft', 'technical', 'application', 'soft']
         $property_types = ['soft', 'technical', 'application', 'soft'];

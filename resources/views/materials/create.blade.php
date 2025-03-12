@@ -123,10 +123,23 @@
     .error-message {
         color: red;
         font-size: 12px;
+        display: inline;
+        margin-top: 5px;
+        position: relative;
+        background-color: white;
+        bottom: 10px;
+        left: 8px;
+    }
+
+    #mainImage-msg.error-message {
+        color: red;
+        font-size: 12px;
         display: block;
         margin-top: 5px;
         position: relative;
         background-color: white;
+        bottom: 0px;
+        left: 0px;
     }
 
     .select2 {
@@ -205,13 +218,13 @@
                     <div class="col">
                         <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
                         <input type="text" class="form-control form-control-xs validate custom-input" name="name"
-                            placeholder="..." id="name">
+                            placeholder="..." id="name" value="{{ old('name') }}">
                         <span id="name-msg" class="error-message"></span>
                     </div>
                     <div class="col-md-4">
                         <label for="code" class="form-label">Code <span class="text-danger">*</span></label>
                         <input type="text"
-                            class="form-control form-control-xs validate @error('code') is-invalid @enderror custom-input"
+                            class="form-control form-control-xs validate custom-input"
                             id="code" name="code" value="{{ old('code') }}" placeholder="...">
                         <span id="code-msg" class="error-message"></span>
                     </div>
@@ -242,14 +255,14 @@
                 </div>
                 <div class="row g-0 mt-3">
                     <div class="d-flex flex-row gap-2">
-                        <label class="form-label" for="enabled">Enabled <span class="text-danger">*</span></label>
+                        <label class="form-label" for="enabled">Status <span class="text-danger">*</span></label>
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" role="switch" id="enabled" name="enabled"
                                 checked>
                         </div>
                     </div>
                 </div>
-                <div class="row mt-3 g-0">
+                <div class="row g-0 mt-3">
                     <label for="material_description" class="form-label">Description <span
                             class="text-danger">*</span></label>
                     <span id="description-msg" class="error-msg text-danger"></span>
@@ -258,14 +271,15 @@
                             placeholder="Enter text ..." rows="12"></textarea>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12 mt-3">
-                        <div style="border-radius: 4px;">
+                
+                <div class="row g-0 mt-3">
+                    <div class="col-12">
+                        <div>
                             <table class="properties_table table table-responsive" id="properties_table"
                                 style="border-radius: 4px;">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Properties</th>
+                                        <th>Soft Properties</th>
                                         <th></th>
                                         <th class="col-span-2" style="text-align: right;"><button style="width: 50px"
                                                 type="button" id="addRowBtnRoles" onclick="addPropertyRow()"
@@ -275,27 +289,30 @@
                                 </thead>
                                 <tbody id="properties_tableBody" style="border-radius: 4px;">
                                     <tr>
-                                        <td style="width:50%">
+                                        <td style="width:100% !important" colspan="2">
                                             <div>
                                                 <label class="form-label" for="property">Name </label>
                                                 <input class="property-name form-control form-control-xs "
                                                     name="property_name" id="property-name-field" style=" width:100%">
-
                                             </div>
-                                        </td>
-                                        <td style="width:50%">
-                                            <div>
-                                                <label class="form-label" for="property">Value </label>
-                                                <input type="text" class="form-control form-control-xs "
-                                                    name="property_value" style=" width:100%">
-
-                                            </div>
-                                        </td>
-                                        <td>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-0">
+                    <div class="col">
+                        <label for="material_source" class="form-label">Material Source</label>
+                        <input type="text" class="form-control form-control-xs validate custom-input" name="material_source"
+                            placeholder="..." id="material_source">
+                        <span id="material_source-msg" class="error-message"></span>
+                    </div>
+                </div>
+                <div class="row g-0 mt-3">
+                    <div class="col-12">
+                        <div style="border-radius: 4px;">
                             <table class="technical_properties_table table table-responsive"
                                 id="technical_properties_table" style="border-radius: 4px;">
                                 <thead class="table-light">
@@ -315,7 +332,6 @@
                                                 <label class="form-label" for="property">Name </label>
                                                 <input class="form-control form-control-xs "
                                                     name="technical_property_name" style="width:100%">
-
                                             </div>
                                         </td>
                                         <td style="width:50%">
@@ -370,14 +386,14 @@
             <div class="col-4 d-flex align-items-end flex-column" style="height: 100%">
                 <div class="row g-0">
                     <div class="col-9" style="margin-left: auto">
-                        <label class="form-label">Upload Image</label>
+                        <label class="form-label">Upload Image <span class="text-danger">*</span></label>
                         <span id="mainImage-msg" class="error-message"></span>
 
-                        <div style="border:1px solid var(--bs-component-border-color); border-radius:4px; aspect-ratio: 1 / 1; margin-left: 0 !important; margin-right: 0 !important; cursor: pointer;"
+                        <div class="w-100 overflow-hidden ratio ratio-1x1 m-0" style="border:1px solid var(--bs-component-border-color); border-radius:4px; cursor: pointer;"
                             class="row g-0" onclick="document.getElementById('mainImage').click();">
                             <input type="file" accept="image/*" id="mainImage" style="display: none;"
                                 onchange="displayMainImage(this)">
-                            <img src='/assets/userProfile/no-image-avail.jpg' id="mainImagePreview">
+                            <img class="w-100 h-100 object-fit-cover" src='/assets/userProfile/no-image-avail.jpg' id="mainImagePreview">
                         </div>
                         <div id="imageGallery"
                             style="display: flex; gap: 10px; overflow-x: auto; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-top: 8px">
@@ -562,7 +578,7 @@
         formData.append('code', document.querySelector('input[name="code"]').value);
         formData.append('name', document.querySelector('input[name="name"]').value);
         formData.append('year', document.querySelector('select[name="year"]').value);
-        formData.append('year', document.querySelector('select[name="year"]').value);
+        formData.append('material_source', document.querySelector('input[name="material_source"]').value);
         formData.append('description', document.querySelector('textarea[name="material_description"]').value);
         formData.append('enabled', $('#enabled').is(':checked') ? 1 : 0);
 
@@ -581,7 +597,7 @@
         document.querySelectorAll('#properties_tableBody tr').forEach(row => {
             let name = row.querySelector('input[name="property_name"]').value;
 
-            let value = row.querySelector('input[name="property_value"]').value;
+            let value = "No Value";
             if (name && value) {
                 properties.push({ name, value, type: 'soft' });
             }
@@ -660,7 +676,7 @@
                         }
                     }
 
-                    Swal.close();
+                    // Swal.close();
                 }
                 else if (xhr.status === 413) {
                     Swal.fire({
@@ -688,20 +704,11 @@
 
         let newRow = document.createElement('tr');
         newRow.innerHTML = `
-                            <td style="width:50%">
+                            <td style="width:100% !important" colspan="2">
                                 <div>
-                                    <label for="property">Name </label>
-                                    <input class="property-name form-control form-control-xs" name="property_name"
-                                        style=" width:100%">
-                                    
-                                </div>
-                            </td>
-                            <td style="width:50%">
-                                <div>
-                                    <label for="property">Value </label>
-                                    <input type="text" class="form-control form-control-xs" name="property_value"
-                                        style=" width:100%">
-                                    
+                                    <label class="form-label" for="property">Name </label>
+                                    <input class="property-name form-control form-control-xs "
+                                        name="property_name" id="property-name-field" style=" width:100%">
                                 </div>
                             </td>
                             <td class="d-flex justify-content-center align-items-center" style="height:100%">

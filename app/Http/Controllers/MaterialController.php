@@ -37,8 +37,8 @@ class MaterialController extends Controller
         }
 
         $query = $query->orderBy('name', 'asc');
-
-        $materials = $query->paginate(20);
+        
+        $materials = $query->paginate(3);
 
         return view('materials.index', compact('materials', 'name', 'material_code', 'enabled', 'year'));
     }
@@ -105,7 +105,7 @@ class MaterialController extends Controller
     public function show(string $m_id)
     {
         $material = DB::table('materials')
-            ->select('materials.material_code', 'materials.name', 'materials.description', 'materials.year', 'm_id', 'image_file', 'enabled')
+            ->select('materials.material_code', 'materials.name', 'materials.description', 'materials.year', 'm_id', 'image_file', 'enabled', 'material_source')
             ->where('m_id', $m_id)
             ->first();
 
@@ -146,7 +146,7 @@ class MaterialController extends Controller
             ->where('type', '=', "application")
             ->get();
 
-        // dd(compact('material', 'categories', 'images', 'soft_properties', 'technical_properties', 'application_properties'));
+        // dd(compact('material', 'categories', 'images', 'properties', 'techProperties', 'susProperties', 'selectedCategories'));
 
         return view('materials.show', compact('material', 'categories', 'images', 'properties', 'techProperties', 'susProperties', 'selectedCategories'));
     }
@@ -278,6 +278,7 @@ class MaterialController extends Controller
         return Validator::make($request->all(), [
             'code' => 'required|' . $uniqueCodeRule,
             'name' => 'required',
+            'material_source' => 'nullable|string|min:3|max:255',
             'categories' => 'required|array',
             'categories.*' => 'exists:categories,c_id',
             'properties' => 'sometimes|array',
@@ -302,6 +303,7 @@ class MaterialController extends Controller
             'code.required' => 'The material code is required.',
             'code.unique' => 'The material code must be unique.',
             'name.required' => 'The material name is required.',
+            'material_source.max' => 'The material source must not exceed 255 characters.',
             'categories.required' => 'At least one category is required.',
             'categories.*.exists' => 'A selected category is invalid.',
             'properties.*.name.required' => 'The property name is required.',
@@ -324,6 +326,7 @@ class MaterialController extends Controller
         $materialData = [
             'material_code' => $request->input('code'),
             'name' => $request->input('name'),
+            'material_source' => $request->input('material_source'),
             'description' => $request->input('description'),
             'year' => $request->input('year'),
             'updated_by' => auth()->id(),

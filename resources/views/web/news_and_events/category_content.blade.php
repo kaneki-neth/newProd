@@ -1,7 +1,25 @@
+<style>
+    .active>.page-link, .page-link.active {
+        border-color: #37423b;
+        background-color: #37423b;
+    }
+    .active>.page-link:hover, .page-link.active{
+        color: #fff;
+        border: 1px solid #37423b !important;
+    }
+
+    .page-link:hover {
+        border-color: #e2e6de;
+        color: #37423b;
+    }
+    
+    .page-link {
+        color: #37423b;
+    }
+</style>
+
 <div id="news" class="category-content active">
   <h2 class="section-title">{{ ucfirst($category) }}</h2>
-
-  {{ $items->links('pagination::bootstrap-4') }}
 
   @if($category != 'videos')
     <div class="news-grid">
@@ -60,6 +78,10 @@
       </script>
     </div>
   @endif
+
+  <div class="d-flex justify-content-center" style="margin-top: 100px !important;">
+    {{ $items->links('pagination::bootstrap-4') }}
+  </div>
 
   <script>
     document.querySelectorAll('.pagination a').forEach(function (element) {

@@ -14,7 +14,7 @@ class newsevent extends Controller
             return view('web.news_and_events.events');
         }
 
-        $perPage = 20;
+        $perPage = 1;
         $category = $request->category;
 
         if ($category != 'videos') {

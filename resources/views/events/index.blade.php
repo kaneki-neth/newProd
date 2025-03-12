@@ -108,7 +108,7 @@
                                         {{ $dateTime->format('F d, Y g:i A') }}
                                     </td>
                                     <td class="" style="cursor: pointer" onclick="location.href='/events_/{{ $e->e_id }}'">{{ $e->title }}</td>
-                                    <td class="text-center" width="30%">{{ $e->location }}</td>
+                                    <td width="30%">{{ $e->location }}</td>
                                     <td class="text-center" width="10%">
                                         @if($e->enabled)
                                             <i class="fa fa-check text-success"></i>
@@ -121,7 +121,7 @@
                         </tbody>
                     </table>
                     <div class="d-flex justify-content-end mt-1">
-                        {{ $events->links('pagination::bootstrap-4') }}
+                        {{ $events->links() }}
                     </div>
                 </div>
             </div>

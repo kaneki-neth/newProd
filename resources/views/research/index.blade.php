@@ -107,7 +107,7 @@
                         </tbody>
                     </table>
                     <div class="d-flex justify-content-end mt-1">
-                        {{ $researches->links('pagination::bootstrap-4') }}
+                        {{ $researches->links() }}
                     </div>
                 </div>
             </div>

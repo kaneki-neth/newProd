@@ -107,7 +107,7 @@
                         </tbody>
                     </table>
                     <div class="d-flex justify-content-end mt-1">
-                        {{ $blogs->links('pagination::bootstrap-4') }}
+                        {{ $blogs->links() }}
                     </div>
                 </div>
             </div>

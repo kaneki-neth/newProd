@@ -26,6 +26,7 @@ class home extends Controller
             ->join('item_categories', 'materials.m_id', '=', 'item_categories.m_id')
             ->join('categories', 'item_categories.c_id', '=', 'categories.c_id')
             ->select('materials.name as material_name', 'materials.m_id', 'materials.image_file', DB::raw('MIN(categories.name) as category_name'))
+            ->where('materials.enabled', 1)
             ->groupBy('materials.m_id', 'material_name')
             ->get();
 

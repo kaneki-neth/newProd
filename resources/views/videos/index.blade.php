@@ -198,9 +198,9 @@
 
         function clearsearchfield() {
             $('#title').val('');
+            $('#status').val('').trigger('change');
             $('#date_from').val('');
             $('#date_to').val('');
-            $('#status').val('');
         }
     </script>
 

@@ -243,11 +243,15 @@
     // Progress bar
     let latest_news = @json($latest_news);
     let count = latest_news.length;
-    $(".carousel-progress-bar").css("width", (1 / count) * 100 + "%");
-
+    $(".carousel-progress-bar").css("width", (100 / count) + "%");
+    var p_index = 1;
     owl.on('changed.owl.carousel', function(event) {
-      var progress = ((event.item.index-1) / event.item.count) * 100;
-      $(".carousel-progress-bar").css("width", progress + "%");
+      p_index++;
+      if (p_index > count) {
+        p_index = 1;
+      }
+      let progress = (100 / count) * p_index + "%";
+      $(".carousel-progress-bar").css("width", progress);
     });
   });
 

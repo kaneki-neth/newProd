@@ -42,7 +42,9 @@ class BlogController extends Controller
             $query->where('date', '<=', $dateTo);
         }
 
-        $blogs = $query->orderBy('date', 'desc')->paginate(20);
+        $blogs = $query->orderBy('date', 'desc')
+            ->paginate(20)
+            ->appends($request->except('page'));
 
         return view('blogs.index', compact('blogs', 'title', 'date_from', 'date_to', 'enabled'));
     }

@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -49,8 +48,9 @@ class VideoController extends Controller
         }
 
         // dd($status);
-        $videos = $query->orderBy('date', 'desc')->paginate(20);
-
+        $videos = $query->orderBy('date', 'desc')
+            ->paginate(20)
+            ->appends($request->except('page'));
 
         // $videos = $videos->map(function ($video) {
         //     $video->date = Carbon::parse($video->date)->format('F j, Y');
@@ -70,13 +70,14 @@ class VideoController extends Controller
     {
         return view('videos.create');
     }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
 
-        if (!preg_match('/>(\s*[^<\s].*?)</', $request->description)) {
+        if (! preg_match('/>(\s*[^<\s].*?)</', $request->description)) {
             $request->merge(['description' => strip_tags($request->description)]);
         }
         if ($request->description == strip_tags($request->description)) {
@@ -125,12 +126,12 @@ class VideoController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => $message
+                'message' => $message,
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to create video'
+                'message' => 'Failed to create video',
             ], 500);
         }
     }
@@ -162,7 +163,7 @@ class VideoController extends Controller
      */
     public function update(Request $request, string $videoId)
     {
-        if (!preg_match('/>(\s*[^<\s].*?)</', $request->description)) {
+        if (! preg_match('/>(\s*[^<\s].*?)</', $request->description)) {
             $request->merge(['description' => strip_tags($request->description)]);
         }
         if ($request->description == strip_tags($request->description)) {
@@ -245,7 +246,7 @@ class VideoController extends Controller
             // Extract video ID from different types of YouTube URLs
             $videoId = $this->extractYoutubeId($url);
 
-            if (!$videoId) {
+            if (! $videoId) {
                 return response()->json(['error' => 'Invalid YouTube URL'], 400);
             }
 
@@ -259,7 +260,7 @@ class VideoController extends Controller
             }
 
             return response()->json([
-                'thumbnail' => $thumbnailUrl
+                'thumbnail' => $thumbnailUrl,
             ]);
 
         } catch (\Exception $e) {

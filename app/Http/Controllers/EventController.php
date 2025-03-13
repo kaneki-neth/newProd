@@ -48,7 +48,9 @@ class EventController extends Controller
             $query->where('location', 'like', "%$location%");
         }
 
-        $events = $query->orderBy('date', 'desc')->paginate(20);
+        $events = $query->orderBy('date', 'desc')
+            ->paginate(20)
+            ->appends($request->except('page'));
 
         return view('events.index', compact('events', 'title', 'date_from', 'date_to', 'enabled', 'location'));
     }

@@ -42,7 +42,9 @@ class NewsController extends Controller
             $query->where('date', '<=', $dateTo);
         }
 
-        $news = $query->orderBy('date', 'desc')->paginate(20);
+        $news = $query->orderBy('date', 'desc')
+            ->paginate(20)
+            ->appends($request->except('page'));
 
         return view('news.index', compact('news', 'title', 'date_from', 'date_to', 'enabled'));
     }

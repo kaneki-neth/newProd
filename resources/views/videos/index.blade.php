@@ -29,10 +29,25 @@
         .input-daterange>span {
             height: 30px;
         }
+
+        .table-responsive {
+            overflow-x: hidden;
+        }
+
+        .table-responsive table {
+            table-layout: auto;
+        }
+
+        .table-responsive td {
+            word-wrap: break-word;
+            max-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
 
     <ol class="breadcrumb float-xl-end">
-        <li class="breadcrumb-item"><a href="javascript:;">News and Events</a></li>
+        <li class="breadcrumb-item"><a href="javascript:;">Videos</a></li>
     </ol>
     <h1 class="page-header">Videos List</h1>
 
@@ -91,15 +106,16 @@
                         class="table table-striped table-bordered align-middle table-responsive table-sm">
                         <thead>
                             <tr>
-                                <th>Title</th>
-                                <th>Video URL</th>
-                                <th>Date</th>
-                                <th style="text-align: center; width: 10%;">Status</th>
+                                <th class="text-center" width="15%">Date</th>
+                                <th class="text-center" width="40%">Title</th>
+                                <th class="text-center" width="35%">Video URL</th>
+                                <th class="text-center" width="10%">Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($videos as $video)
                                 <tr>
+                                    <td class="text-center">{{ date('F d, Y', strtotime($video->date)) }}</td>
                                     <td id="name" style="cursor: pointer; color:#28acb5"
                                         onclick="location.href='/videos/show/{{ $video->v_id }}'">
                                         {{ $video->title }}
@@ -108,7 +124,6 @@
                                         onclick="window.open('{{ $video->video_url }}', '_blank')">
                                         {{ $video->video_url }}
                                     </td>
-                                    <td>{{ date('F d, Y', strtotime($video->date)) }}</td>
                                     <td style="text-align: center;">
                                         @if($video->status == 1)
                                             <i class="fa-solid fa-check text-success"></i>
@@ -140,6 +155,7 @@
     <script src="/assets/plugins/moment/min/moment.min.js"></script>
 
     <script>
+        $("#pannel-body").attr("style", 'min-height: 78vh;');
         $('#videos').addClass('active');
 
         $(document).ready(function () {
@@ -176,7 +192,7 @@
             scrollCollapse: true,
             scroller: true,
             paging: true,
-            order: [[2, 'desc']],
+            order: [[0, 'desc']],
             pageLength: 20,
         });
 

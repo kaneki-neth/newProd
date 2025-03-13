@@ -12,7 +12,7 @@
             transition: 0.1s;
         }
 
-        #max-properties{
+        #max-properties {
             display: inline-block;
             color: #000;
             padding: 5px 13px;
@@ -78,7 +78,7 @@
 
                         <div class="material-description mt-5">
                             <h3 class="archive-section-heading">Description</h3>
-                            {{ $material->description }}
+                            <?php echo $material->description ?>
                         </div>
 
                         <div class="source-section mt-4">
@@ -117,7 +117,8 @@
 
                     <div class="archive-col-lg-6 col-lg-6 position-relative">
                         <div class="w-100 overflow-hidden ratio ratio-1x1 material-image mobile-full-width ">
-                            <img class="w-100 h-100 object-fit-cover" src='{{ asset('storage') . '/' . $material->image_file}}' />
+                            <img class="w-100 h-100 object-fit-cover"
+                                src='{{ asset('storage') . '/' . $material->image_file}}' />
                         </div>
 
                         <div class="material-thumbnails-wrapper">
@@ -127,7 +128,8 @@
                             <div class="material-thumbnails mobile-full-width">
                                 @foreach ($images as $image)
                                     <div class="thumbnail active">
-                                        <img class="w-100 h-100 object-fit-cover" src="{{ asset('storage') . '/' . $image->image_file }}" />
+                                        <img class="w-100 h-100 object-fit-cover"
+                                            src="{{ asset('storage') . '/' . $image->image_file }}" />
                                     </div>
                                 @endforeach  
                             </div>
@@ -149,7 +151,8 @@
                                         @foreach ($recommended_materials as $rec_material)
                                             <div class="item">
                                                 <div style="width: 80%" class="overflow-hidden ratio ratio-1x1">
-                                                    <img class="w-100 h-100 object-fit-cover" src="{{ asset('storage') . '/' . $rec_material->image_file }}"
+                                                    <img class="w-100 h-100 object-fit-cover"
+                                                        src="{{ asset('storage') . '/' . $rec_material->image_file }}"
                                                         onclick="window.location.href=`/digital_archive_content/{{ $rec_material->m_id }}`" />
                                                 </div>
                                                 <div>
@@ -173,7 +176,7 @@
                                     <div class="mt-2">
                                         <h5>{{ $material->name }}</h5>
                                         <p class="mb-1">{{ $material->material_source }}</p>
-                                        <img src="{{url('web/assets/img/mainlogo.png')}}" class="logo-archive img-fluid"/>
+                                        <img src="{{url('web/assets/img/mainlogo.png')}}" class="logo-archive img-fluid" />
                                     </div>
                                 </div>
                             </div>
@@ -185,27 +188,27 @@
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
         let material = @json($material);
         $("#nav-archive").addClass("active");
         $(document).ready(function () {
             console.log("ttest");
             createQRCode(material['m_id']);
-            document.getElementById('qr-code').addEventListener('click', function() { 
-                const element = document.getElementById('download-qr'); 
+            document.getElementById('qr-code').addEventListener('click', function () {
+                const element = document.getElementById('download-qr');
                 console.log("starrttt");
-                html2canvas(element).then((canvas) => { 
-                // Convert the canvas to a data URL 
-                const imgData = canvas.toDataURL('image/png'); 
-    
-                // Create a link to download the image 
-                const link = document.createElement('a'); 
-                link.href = imgData; 
-                link.download = material['material_code'] + '.png'; 
-                link.click(); 
-                }); 
-            }); 
+                html2canvas(element).then((canvas) => {
+                    // Convert the canvas to a data URL 
+                    const imgData = canvas.toDataURL('image/png');
+
+                    // Create a link to download the image 
+                    const link = document.createElement('a');
+                    link.href = imgData;
+                    link.download = material['material_code'] + '.png';
+                    link.click();
+                });
+            });
         });
 
         function createQRCode(input) {
@@ -214,12 +217,12 @@
             const materialId = input;
             const link = window.location.origin + "/digital_archive_content/" + materialId;
             const qrcodeContainer = document.getElementById("qr-code");
-            
+
             if (!qrcodeContainer) {
                 console.error("QR code container not found");
                 return;
             }
-            
+
             qrcodeContainer.innerHTML = "";
 
             try {

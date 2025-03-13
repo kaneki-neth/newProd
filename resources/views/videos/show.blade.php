@@ -126,6 +126,7 @@
     <script src="/assets/plugins/summernote/dist/summernote-lite.min.js"></script>
 
     <script>
+        $("#pannel-body").attr("style", 'min-height: 78vh;');
         $('#videos').addClass('active');
         // $("#pannel-body").attr("style", 'height: 78vh;');
         $(document).ready(function () {

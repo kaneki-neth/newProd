@@ -148,6 +148,7 @@
     <script src="/assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
 
     <script>
+        $("#pannel-body").attr("style", 'min-height: 78vh;');
         $('#videos').addClass('active');
         // $("#pannel-body").attr("style", 'height: 78vh;');
         // Initialize datepicker

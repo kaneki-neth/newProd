@@ -209,28 +209,78 @@
         </div>
 
         <div class="col-md-7">
-          <div class="row">
-            <div class="col-12 col-md-6">
-              <label class="dmsans-semi-bold">Full name</label>
-              <input class="dmsans-regular" type="text" name="name" style="width: 100%; padding: 4px 25px; border: 1px solid #ccc;">
+          <form method="post" action="/subscribe">
+            @csrf
+            <div class="row">
+              <div class="col-12 col-md-6">
+                <label class="dmsans-semi-bold">Full name</label>
+                <input class="dmsans-regular @error('name') is-invalid @enderror" type="text" name="name" value="{{ old('name') }}" style="width: 100%; padding: 4px 25px; border: 1px solid #ccc;">
+                @error('name')
+                <div class="invalid-feedback d-block text-danger">{{ $message }}</div>
+                @enderror
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="dmsans-semi-bold">Email Address</label>
+                <input class="dmsans-regular @error('email') is-invalid @enderror" type="email" name="email" value="{{ old('email') }}" style="width: 100%; padding: 4px 25px; border: 1px solid #ccc;">
+                @error('email')
+                <div class="invalid-feedback d-block text-danger">{{ $message }}</div>
+                @enderror
+              </div>
             </div>
-            <div class="col-12 col-md-6">
-              <label class="dmsans-semi-bold">Email Address</label>
-              <input class="dmsans-regular" type="text" name="email" style="width: 100%; padding: 4px 25px; border: 1px solid #ccc;">
-            </div>
-          </div>
 
-          <div class="mt-3">
-            <a href="#" class="read-more" style="padding: 10px 30px; border: 1px solid black; display: inline-block;">
-              <span class="arial_narrow_7 c-black">Subscribe</span>
-            </a>
-          </div>
+            <div class="mt-3">
+              <button type="submit" class="read-more" style="padding: 10px 30px; border: 1px solid black; display: inline-block; background: none;">
+                <span class="arial_narrow_7 c-black">Subscribe</span>
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
   </section>
+
+  <div class="toast-container position-fixed top-0 end-0 p-3">
+    @if(session('success'))
+    <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          {{ session('success') }}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+    @endif
+
+    @if(session('warning'))
+    <div class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          {{ session('warning') }}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+    @endif
+  </div>
   <!-- mail ends here -->
 </main>
+
+@if(session('success') || session('warning'))
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+    var toastList = toastElList.map(function(toastEl) {
+      return new bootstrap.Toast(toastEl);
+    });
+    toastList.forEach(toast => toast.show());
+    
+    // Auto-hide after 3 seconds
+    setTimeout(function() {
+      toastList.forEach(toast => toast.hide());
+    }, 3000);
+  });
+</script>
+@endif
 
 <script>
   $(document).ready(function() {

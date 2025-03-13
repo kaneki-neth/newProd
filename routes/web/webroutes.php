@@ -24,3 +24,5 @@ Route::get('/events_events_content/{e_id}', [newsevent::class, 'events_events_co
 Route::get('/fetch-thumbnail', [VideoController::class, 'getThumbnail'])->name('videos.getThumbnail');
 
 Route::get('/contact', [contactus::class, 'index']);
+Route::post('/email-sent', [contactus::class, 'connect_submit']);
+Route::post('/subscribe', [contactus::class, 'connect_subscribe']);

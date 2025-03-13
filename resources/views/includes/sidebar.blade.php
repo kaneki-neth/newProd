@@ -24,12 +24,12 @@
             </div>
             <div id="appSidebarProfileMenu" class="collapse">
                 @if(Auth::user()->can('company_settings'))
-                    <div class="menu-item pt-5px" id="company_settings">
-                        <a href="/settings/company" class="menu-link">
-                            <div class="menu-icon"><i class="fa fa-cog"></i></div>
-                            <div class="menu-text">Company Settings</div>
-                        </a>
-                    </div>
+                <div class="menu-item pt-5px" id="company_settings">
+                    <a href="/settings/company" class="menu-link">
+                        <div class="menu-icon"><i class="fa fa-cog"></i></div>
+                        <div class="menu-text">Company Settings</div>
+                    </a>
+                </div>
                 @endif
                 <div class="menu-item" id="myAccount">
                     <a href="/settings/myAccount" class="menu-link">
@@ -51,6 +51,15 @@
                         <i class="fa fa-home"></i>
                     </div>
                     <div class="menu-text">Home</div>
+                </a>
+            </div>
+
+            <div class="menu-item" id="connect">
+                <a href="/connect-mail" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <div class="menu-text">Connect</div>
                 </a>
             </div>
 
@@ -113,59 +122,59 @@
             </div>
 
             @if(Auth::user()->can('role-full') || Auth::user()->can('role-view') || Auth::user()->can('user-full') || Auth::user()->can('user-view'))
-                <div class="menu-item has-sub" id="SysAdmin">
-                    <a href="javascript:;" class="menu-link">
-                        <div class="menu-icon">
-                            <i class="fa fa-key"></i>
-                        </div>
-                        <div class="menu-text">System Administration</div>
-                        <div class="menu-caret"></div>
-                    </a>
-                    <div class="menu-submenu" id="Sys_admin">
-                        @if(Auth::user()->can('role-full') || Auth::user()->can('role-view'))
-                            <div class="menu-item" id="role">
-                                <a href="/sys_admin/role_controller" class="menu-link">
-                                    <div class="menu-text">Roles</div>
-                                </a>
-                            </div>
-                        @endif
-                        @if(Auth::user()->can('user-full') || Auth::user()->can('user-view'))
-                            <div class="menu-item" id="user">
-                                <a href="/sys_admin/user" class="menu-link">
-                                    <div class="menu-text">Users</div>
-                                </a>
-                            </div>
-                        @endif
+            <div class="menu-item has-sub" id="SysAdmin">
+                <a href="javascript:;" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fa fa-key"></i>
                     </div>
+                    <div class="menu-text">System Administration</div>
+                    <div class="menu-caret"></div>
+                </a>
+                <div class="menu-submenu" id="Sys_admin">
+                    @if(Auth::user()->can('role-full') || Auth::user()->can('role-view'))
+                    <div class="menu-item" id="role">
+                        <a href="/sys_admin/role_controller" class="menu-link">
+                            <div class="menu-text">Roles</div>
+                        </a>
+                    </div>
+                    @endif
+                    @if(Auth::user()->can('user-full') || Auth::user()->can('user-view'))
+                    <div class="menu-item" id="user">
+                        <a href="/sys_admin/user" class="menu-link">
+                            <div class="menu-text">Users</div>
+                        </a>
+                    </div>
+                    @endif
                 </div>
+            </div>
             @endif
 
             @if(Auth::user()->can('look_up_view') || Auth::user()->can('look_up_full'))
-                <div class="menu-item has-sub" id="application">
-                    <a href="javascript:;" class="menu-link">
-                        <div class="menu-icon">
-                            <i class="fa fa-gears"></i>
-                        </div>
-                        <div class="menu-text">Application Settings</div>
-                        <div class="menu-caret"></div>
-                    </a>
-                    <div class="menu-submenu" id="developer">
-                        <div class="menu-item has-sub" id="lookup">
-                            <a href="javascript:;" class="menu-link">
-                                <div class="menu-text">Developer</div>
-                                <div class="menu-caret"></div>
-                            </a>
+            <div class="menu-item has-sub" id="application">
+                <a href="javascript:;" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fa fa-gears"></i>
+                    </div>
+                    <div class="menu-text">Application Settings</div>
+                    <div class="menu-caret"></div>
+                </a>
+                <div class="menu-submenu" id="developer">
+                    <div class="menu-item has-sub" id="lookup">
+                        <a href="javascript:;" class="menu-link">
+                            <div class="menu-text">Developer</div>
+                            <div class="menu-caret"></div>
+                        </a>
 
-                            <div class="menu-submenu">
-                                <div class="menu-item" id="look">
-                                    <a href="{{ route('app_lookup.index') }}" class="menu-link" id="look">
-                                        <div class="menu-text">Lookups</div>
-                                    </a>
-                                </div>
+                        <div class="menu-submenu">
+                            <div class="menu-item" id="look">
+                                <a href="{{ route('app_lookup.index') }}" class="menu-link" id="look">
+                                    <div class="menu-text">Lookups</div>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
             @endif
 
             <!-- BEGIN minify-button -->

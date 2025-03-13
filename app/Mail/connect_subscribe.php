@@ -7,18 +7,18 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class connect_mail extends Mailable
+class connect_subscribe extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $connect;
+    public $subscriber;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(connect_model $connect)
+    public function __construct(connect_model $subscriber)
     {
-        $this->connect = $connect;
+        $this->subscriber = $subscriber;
     }
 
     /**
@@ -26,7 +26,7 @@ class connect_mail extends Mailable
      */
     public function build()
     {
-        return $this->subject('MATIX Inquiry: ' . $this->connect->purpose)
-                    ->view('connect.connect_nmail');
+        return $this->subject('Exciting Updates Await!')
+                    ->view('connect.connect_nsubscribe'); //subscribe blade to use for gmail
     }
 }

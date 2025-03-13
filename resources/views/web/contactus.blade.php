@@ -3,6 +3,23 @@
 @section('content')
 <main class="main main-connect">
   <div class="container">
+
+    <div class="row">
+      <div class="col-12">
+        @if(session('success'))
+        <div class="alert alert-success alert-sm py-2">
+          {{ session('success') }}
+        </div>
+        @endif
+
+        @if(session('warning'))
+        <div class="alert alert-warning alert-sm py-2">
+          {{ session('warning') }}
+        </div>
+        @endif
+      </div>
+    </div>
+
     <div class="row g-5">
       <div class="col-md-5">
         <section class="mb-5">
@@ -28,51 +45,65 @@
           <div class="mb-2 d-flex">
             <div class="social-label">Instagram</div>
             <a href="" target="_blank">
-              <div class="content-left">matixupcebu</div>
+              <div class="content-left">matix_upcebu</div>
             </a>
           </div>
           <div class="mb-2 d-flex">
             <div class="social-label">TikTok</div>
             <a href="" target="_blank">
-              <div class="content-left">matixupcebu</div>
+              <div class="content-left">matix_upcebu</div>
             </a>
           </div>
           <div class="mb-2 d-flex">
             <div class="social-label">YouTube</div>
             <a href="" target="_blank">
-              <div class="content-left">matixupcebu</div>
+              <div class="content-left">matix_upcebu</div>
             </a>
           </div>
         </section>
       </div>
 
       <div class="connect-right col-md-7">
-        <form>
+
+        <form method="POST" action="/email-sent">
+          @csrf
           <div class="mb-3">
             <label for="fullname" class="form-label">Full name</label>
-            <input type="text" class="form-input form-control form-control-sm" id="fullname" required>
+            <input type="text" class="form-input form-control form-control-sm @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}">
+            @error('name')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
           </div>
 
           <div class="mb-3">
             <label for="email" class="form-label">Email address</label>
-            <input type="email" class="form-input form-control form-control-sm" id="email" required>
+            <input type="email" class="form-input form-control form-control-sm @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}">
+            @error('email')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
           </div>
 
           <div class="mb-3">
             <label for="purpose" class="form-label">Purpose</label>
-            <select class="form-input form-select form-select-sm" id="purpose">
-              <option selected>see options</option>
-              <option value="0">General Inquiry</option>
-              <option value="1">Book a Visit</option>
-              <option value="2">Collaboration</option>
-              <option value="3">Event Registration</option>
-              <option value="4">Others</option>
+            <select class="form-input form-select form-select-sm @error('purpose') is-invalid @enderror" id="purpose" name="purpose">
+              <option selected disabled>see options</option>
+              <option value="General Inquiry" {{ old('purpose') == 'General Inquiry' ? 'selected' : '' }}>General Inquiry</option>
+              <option value="Book a Visit" {{ old('purpose') == 'Book a Visit' ? 'selected' : '' }}>Book a Visit</option>
+              <option value="Collaboration" {{ old('purpose') == 'Collaboration' ? 'selected' : '' }}>Collaboration</option>
+              <option value="Event Registration" {{ old('purpose') == 'Event Registration' ? 'selected' : '' }}>Event Registration</option>
+              <option value="Others" {{ old('purpose') == 'Others' ? 'selected' : '' }}>Others</option>
             </select>
+            @error('purpose')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
           </div>
 
           <div class="mb-3">
             <label for="message" class="form-label">Message</label>
-            <textarea class="form-input form-control form-control-sm" id="message" rows="20"></textarea>
+            <textarea class="form-input form-control form-control-sm @error('message') is-invalid @enderror" id="message" name="message" rows="20">{{ old('message') }}</textarea>
+            @error('message')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
           </div>
 
           <button type="submit" class="connect-submit btn btn-sm btn-outline-dark px-4">Submit</button>

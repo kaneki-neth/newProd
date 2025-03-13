@@ -114,30 +114,35 @@
   <section id="about" class="about section">
     <div class="container">
       <div class="row gy-4">
-        <div class="about-right col-lg-6 order-1 order-lg-2" data-aos="fade-up" data-aos-delay="100" style="padding-left: 60px; border-left: 1px solid gray;">
+        @if (count($latest_news) > 0)
+          <div class="about-right col-lg-6 order-1 order-lg-2" data-aos="fade-up" data-aos-delay="100" style="padding-left: 60px; border-left: 1px solid gray;">
 
-          <h5 class="text-uppercase arial_narrow_7">What's New?</h5>
+            <h5 class="text-uppercase arial_narrow_7">What's New?</h5>
 
-          <div class="about-new owl-carousel">
-            @foreach($latest_news as $news)
-              <div class="item">
-                <a href="{{ route('news_content', ['n_id' => $news->n_id]) }}">
-                  <h3 class="dmsans-regular mt-4"><strong>{{ $news->title }}</strong></h3>
-                </a>
-                <p class="dmsans-regular">Posted {{ $news->date }}</p>
-                <div style="height: 230px;">
-                  <img src="{{ asset('storage/'.$news->image_file) }}" class="mw-100 mh-100 object-fit-contain">
+            <div class="about-new owl-carousel">
+              @foreach($latest_news as $news)
+                <div class="item">
+                  <a href="{{ route('news_content', ['n_id' => $news->n_id]) }}">
+                    <h3 class="dmsans-regular mt-4"><strong>{{ $news->title }}</strong></h3>
+                  </a>
+                  <p class="dmsans-regular">Posted {{ $news->date }}</p>
+                  <div style="height: 230px;">
+                    <img src="{{ asset('storage/'.$news->image_file) }}" class="mw-100 mh-100 object-fit-contain">
+                  </div>
                 </div>
-              </div>
-            @endforeach
-          </div>
+              @endforeach
+            </div>
 
-          <div class="carousel-progress">
-            <div class="carousel-progress-bar"></div>
+            <div class="carousel-progress">
+              <div class="carousel-progress-bar"></div>
+            </div>
           </div>
-        </div>
+        @endif
 
-        <div class="about-left col-lg-6 order-2 order-lg-1 content d-flex align-items-center" data-aos="fade-up" data-aos-delay="200" style="border-right: 1px solid gray; padding-right: 60px;">
+        <div class="about-left {{ count($latest_news) > 0 ? 'col-lg-6' : 'col-lg-12' }} order-2 order-lg-1 content d-flex align-items-center" 
+          data-aos="fade-up" data-aos-delay="200"
+          style={{ count($latest_news) > 0 ? "border-right: 1px solid gray; padding-right: 60px;" : "" }}
+        >
           <div>
             <h1 class="arial_narrow_7">Materials Innovation <br>and Exploration</h1>
             <p class="dmsans-regular mt-4">
@@ -153,41 +158,43 @@
   <!-- about ends here -->
 
   <!-- archive starts here -->
-  <section id="about-materials" data-aos="fade-up" data-aos-delay="100">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12 d-flex justify-content-between">
-                        <h3 class="arial_narrow_7">
-                            Materials
-                        </h3>
-                        <a href="/digital_archive" class="arial_narrow_7 reroute c-black">Go to digital archives</a>
+  @if (count($recommended_materials) > 0)
+    <section id="about-materials" data-aos="fade-up" data-aos-delay="100">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 d-flex justify-content-between">
+            <h3 class="arial_narrow_7">
+              Materials
+            </h3>
+            <a href="/digital_archive" class="arial_narrow_7 reroute c-black">Go to digital archives</a>
+          </div>
+          <div class="slides col-12 mt-5">
+            <div class="materials owl-carousel owl-theme">
+              @foreach ($recommended_materials as $material)
+                <div class="item">
+                  <div style="width: 80%; aspect-ratio: 1 / 1; overflow: hidden;">
+                    <img src="{{ asset('storage') . '/' . $material->image_file }}" class="w-100 h-100 object-fit-cover">
+                  </div>
+                  <div>
+                    <h6 class="dmsans-semi-bold mt-3 mb-2">{{ $material->material_name }}</h6>
+                    <div style="height: 40px;">
+                      <a href="#" class="read-more mt-3" style="padding: 7px 15px;
+                        border: 1px solid #e2e2e246;
+                        border-radius: 20px;
+                        font-size: 12px;
+                        background-color: #e2e2e246;">
+                        <span class="arial_narrow_7 c-light-light-gray dmsans-regular">{{ $material->category_name }}</span>
+                      </a>
                     </div>
-                    <div class="slides col-12 mt-5">
-                        <div class="materials owl-carousel owl-theme">
-                            @foreach ($recommended_materials as $material)
-                                <div class="item">
-                                    <div style="width: 80%; aspect-ratio: 1 / 1; overflow: hidden;">
-                                        <img src="{{ asset('storage') . '/' . $material->image_file }}" class="w-100 h-100 object-fit-cover">
-                                    </div>
-                                    <div>
-                                        <h6 class="dmsans-semi-bold mt-3 mb-2">{{ $material->material_name }}</h6>
-                                        <div style="height: 40px;">
-                                            <a href="#" class="read-more mt-3" style="padding: 7px 15px;
-                                                border: 1px solid #e2e2e246;
-                                                border-radius: 20px;
-                                                font-size: 12px;
-                                                background-color: #e2e2e246;">
-                                                <span class="arial_narrow_7 c-light-light-gray dmsans-regular">{{ $material->category_name }}</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-
-                        </div>
-                    </div>
+                  </div>
                 </div>
-        </section>
+              @endforeach
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  @endif
   <!-- archive ends here -->
 
   <!-- mail starts here -->

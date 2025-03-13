@@ -40,6 +40,8 @@ class MaterialController extends Controller
         
         $materials = $query->paginate(3);
 
+        $materials->appends(compact('name', 'material_code', 'enabled', 'year'));
+        
         return view('materials.index', compact('materials', 'name', 'material_code', 'enabled', 'year'));
     }
 

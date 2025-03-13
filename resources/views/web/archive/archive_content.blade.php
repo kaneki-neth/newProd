@@ -78,7 +78,9 @@
 
                         <div class="material-description mt-5">
                             <h3 class="archive-section-heading">Description</h3>
-                            <?php echo $material->description ?>
+                            @php
+                                echo $material->description;
+                            @endphp
                         </div>
 
                         <div class="source-section mt-4">

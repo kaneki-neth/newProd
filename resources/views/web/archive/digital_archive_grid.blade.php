@@ -46,6 +46,6 @@
         </div>
     @endforeach
     <div class="d-flex justify-content-center" style="margin-top:100px !important">
-        {{ $materials->links('pagination::bootstrap-4') }}
+        {{ $materials->appends(['categories' => $categories, 'selectedYear' => $selectedYear, 'sortOptions' => $sortOptions, 'selectedCategories' => $selectedCategories, 'searchQuery' => $searchQuery])->links('pagination::bootstrap-4') }}
     </div>
 </div>

@@ -115,7 +115,7 @@
             </div>
         </div>
         <div class="panel-body d-flex flex-col justify-content-end align-items-bottom mt-1 pt-0">
-            {{ $materials->links('pagination::bootstrap-4') }}
+            {{ $materials->links() }}
         </div>
     </div>
 
@@ -148,6 +148,8 @@
         function clearsearchfield() {
             $("#name").val('');
             $("#material_code").val('');
+            $("#year").val('');
+            $("#enabled").val(null).trigger('change');
         }
     </script>
 

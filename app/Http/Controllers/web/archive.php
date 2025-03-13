@@ -11,10 +11,11 @@ class archive extends Controller
     //
     public function index(Request $request)
     {
-        $selectedYear = ''; 
+        // dd($request->all());
+        $selectedYear = null;
         $sortOptions = [];
         $selectedCategories = [];
-        $searchQuery = '';
+        $searchQuery = null;
 
         $query = DB::table('materials')
             ->select(
@@ -23,14 +24,15 @@ class archive extends Controller
                 'materials.image_file',
                 'materials.created_at',
                 'materials.year',
-                DB::raw('GROUP_CONCAT(DISTINCT categories.name ORDER BY categories.name SEPARATOR ", ") as category_name') 
+                DB::raw('GROUP_CONCAT(DISTINCT categories.name ORDER BY categories.name SEPARATOR ", ") as category_name')
             )
             ->join('item_categories', 'materials.m_id', '=', 'item_categories.m_id')
             ->join('categories', 'item_categories.c_id', '=', 'categories.c_id')
             ->where('materials.enabled', 1);
+            
 
-        if ($request->has('year')) {
-            $selectedYear = $request->input('year');
+        if ($request->has('selectedYear')) {
+            $selectedYear = $request->input('selectedYear');
             $query->where('materials.year', $selectedYear);
         }
 
@@ -39,17 +41,17 @@ class archive extends Controller
             $query->whereIn('categories.c_id', $selectedCategories);
         }
 
-        if ($request->has('search')) {
-            $searchQuery = $request->input('search');
-            $query->where(function($q) use ($searchQuery) {
+        if ($request->has('searchQuery')) {
+            $searchQuery = $request->input('searchQuery');
+            $query->where(function ($q) use ($searchQuery) {
                 $q->where('materials.name', 'like', "%$searchQuery%")
                 ->orWhere('materials.material_code', 'like', "%$searchQuery%")
                 ->orWhere('materials.description', 'like', "%$searchQuery%");
             });
         }
 
-        if ($request->has('sort')) {
-            $sortOptions = $request->input('sort');
+        if ($request->has('sortOptions')) {
+            $sortOptions = $request->input('sortOptions');
 
             if (in_array("alphabetical", $sortOptions)) {
                 $query->orderBy('materials.name', 'asc');
@@ -70,7 +72,7 @@ class archive extends Controller
         // dd($query->get());
 
 
-        $materials = $query->paginate(3);
+        $materials = $query->paginate(5);
 
         $categories = DB::table('categories')
             ->select('c_id', 'name')
@@ -78,9 +80,10 @@ class archive extends Controller
             ->orderBy('name', 'asc')
             ->get();
 
+        // dd(compact('categories', 'materials', 'selectedYear', 'sortOptions', 'selectedCategories', 'searchQuery'));
         if ($request->ajax()) {
             return response()->json([
-                'html' => view('web.archive.digital_archive_grid', compact('materials', 'categories'))->render()
+                'html' => view('web.archive.digital_archive_grid', compact('categories', 'materials', 'selectedYear', 'sortOptions', 'selectedCategories', 'searchQuery'))->render()
             ], 200);
         }
 

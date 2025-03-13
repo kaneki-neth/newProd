@@ -26,7 +26,8 @@
             event.preventDefault();
             const query = event.target.value;
             if (query) {
-                window.location.href = `/digital_archive?page=1&search=${encodeURIComponent(query)}`;
+                // window.location.href = `/digital_archive?page=1&search=${encodeURIComponent(query)}`;
+                window.location.href = `/search_content/${encodeURIComponent(query)}`;
             }
         }
     });

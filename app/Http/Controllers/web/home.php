@@ -32,4 +32,42 @@ class home extends Controller
 
         return view('web.index', compact('latest_news', 'recommended_materials'));
     }
+
+    public function search_content(string $searchTerm)
+    {
+        $query = DB::table('materials')
+            ->select(
+                'materials.m_id',
+                'materials.name',
+                'materials.image_file',
+                'materials.created_at',
+                'materials.year',
+                DB::raw('GROUP_CONCAT(DISTINCT categories.name ORDER BY categories.name SEPARATOR ", ") as category_name')
+            )
+            ->join('item_categories', 'materials.m_id', '=', 'item_categories.m_id')
+            ->join('categories', 'item_categories.c_id', '=', 'categories.c_id')
+            ->where('materials.enabled', 1);
+        
+        if ($searchTerm) {
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('materials.name', 'like', "%$searchTerm%")
+                ->orWhere('materials.material_code', 'like', "%$searchTerm%")
+                ->orWhere('materials.description', 'like', "%$searchTerm%");
+            });
+        }
+
+        $query->groupBy(
+            'materials.m_id',
+            'materials.name',
+            'materials.image_file',
+            'materials.created_at',
+            'materials.year'
+        );        
+
+        // dd($query->get());
+        $materials = $query->paginate(5);
+
+
+        return view('web.search_content_grid', compact('materials', 'searchTerm'));
+    }
 }

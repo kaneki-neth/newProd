@@ -9,6 +9,7 @@ use App\Http\Controllers\VideoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [home::class, 'index']);
+Route::get('/search_content/{searchTerm}', [home::class, 'search_content']);
 
 Route::get('/about', [aboutus::class, 'index']);
 

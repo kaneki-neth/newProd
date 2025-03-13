@@ -91,34 +91,37 @@
             }
         });
         $(document).ready(function () {
-            submitFilters(); 
+            page = new URLSearchParams(window.location.search).get("page") || 1;
+            submitFilters(page);
 
             $("#search-bar").on("keypress", function (event) {
                 if (event.key === "Enter") {
                     let searchQuery = $(this).val().trim(); 
-                    submitFilters(selectedYear, searchQuery);
+                    submitFilters();
                 }
             });
 
-            function submitFilters() {
+            function submitFilters(pageNumber = 1) {
                 let queryParams = {};
-                queryParams.page = new URLSearchParams(window.location.search).get("page") || 1;
+                queryParams.page = pageNumber;
+                console.log(queryParams);
 
                 let sortOptions = $(".sort-checkbox:checked")
                     .map((_, el) => el.id)
                     .get();
 
                 if (sortOptions.length) {
-                    queryParams.sort = sortOptions;
+                    queryParams.sortOptions = sortOptions;
                 }
 
                 let searchValue = $("#search-bar").val().trim();
                 if (searchValue) {
-                    queryParams.search = searchValue;
+                    queryParams.searchQuery = searchValue;
                 }
-
+                console.log("this the selected year", selectedYear);
+                
                 if (selectedYear) {
-                    queryParams.year = selectedYear;
+                    queryParams.selectedYear = selectedYear;
                 }
 
                 let selectedCategories = $(".category-checkbox:checked")
@@ -129,13 +132,11 @@
                     queryParams.selectedCategories = selectedCategories;
                 }
 
-                if (selectedCategories.length > 0) {
-                    queryParams.selectedCategories = selectedCategories; 
-                }
                 console.log("Query Params Object:", queryParams);
                 let queryString = $.param(queryParams);
                 console.log("Query string:", queryString);
-
+                console.log("im gona put this thru the url", "/digital_archive?" + queryString);
+                
                 $.ajax({
                     url: "/digital_archive?" + queryString,
                     type: "GET",
@@ -151,17 +152,17 @@
                 document.querySelectorAll(".year-option").forEach((opt) => opt.classList.remove("selected"));
                 this.classList.add("selected");
                 selectedYear = this.dataset.year || this.textContent.trim();
-                submitFilters(selectedYear, $("#search-bar").val().trim());
-                });
+                submitFilters();
+            });
         });
 
         // Checkbox filtering
-        $("input[type='checkbox']").on("change", function() {
-            submitFilters(selectedYear, $("#search-bar").val().trim());
+        $(".category-checkbox").on("change", function() {
+            submitFilters();
         });
 
         $("#alphabetical, #recently-added").on("change", function() {
-            submitFilters(selectedYear, $("#search-bar").val().trim());
+            submitFilters();
         });
         });
         // Category dropdown toggle

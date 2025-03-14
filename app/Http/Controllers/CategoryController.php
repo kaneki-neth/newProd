@@ -8,6 +8,12 @@ use Validator;
 
 class CategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:category-read', ['only' => ['index']]);
+        $this->middleware('permission:category-write', ['only' => ['create', 'store', 'edit', 'update']]);
+    }
+
     public function index(Request $request)
     {
         $name = '';

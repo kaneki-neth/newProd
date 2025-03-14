@@ -10,6 +10,24 @@ use Illuminate\Support\Facades\Validator;
 
 class VideoController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:video-write', [
+            'only' => [
+                'create',
+                'store',
+                'edit',
+                'update',
+            ],
+        ]);
+        $this->middleware('permission:video-read|video-write', [
+            'only' => [
+                'index',
+                'show',
+            ],
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      */

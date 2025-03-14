@@ -89,7 +89,7 @@
   /* Default color used for the majority of the text content across the entire website */
   --heading-color: #37423b;
   /* Color for headings, subheadings and title throughout the website */
-  --accent-color: #5fcf80;
+  --accent-color: orange;
   /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
   --surface-color: #ffffff;
   /* The surface color is used as a background of boxed elements within sections, such as cards, icon boxes, or other elements that require a visual separation from the global background. */
@@ -101,7 +101,7 @@
 :root {
   --nav-color: #272828;
   /* The default color of the main navmenu links */
-  --nav-hover-color: #5fcf80;
+  --nav-hover-color: #D5FF1C;
   /* Applied to main navmenu links when they are hovered over or active */
   --nav-mobile-background-color: #ffffff;
   /* Used as the background color for mobile navigation menu */
@@ -109,7 +109,7 @@
   /* Used as the background color for dropdown items that appear when hovering over primary navigation items */
   --nav-dropdown-color: #272828;
   /* Used for navigation links of the dropdown items in the navigation menu. */
-  --nav-dropdown-hover-color: #5fcf80;
+  --nav-dropdown-hover-color: #D5FF1C;
   /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
 }
 
@@ -144,11 +144,12 @@ body {
 
 a {
   text-decoration: none;
+  color: #000;
   transition: 0.3s;
 }
 
 a:hover {
-  color: #accf13;
+  color: #000;
   text-decoration: none;
 }
 
@@ -401,7 +402,7 @@ h6 {
 
 
 /* Underline h4 on hover */
-.owl-carousel .item:hover h3 {
+.owl-carousel .item:hover h1 {
   text-decoration: underline;
   cursor: pointer;
 }
@@ -442,6 +443,8 @@ h6 {
 --------------------------------------------------------------*/
 /* Navmenu - Desktop */
 @media (min-width: 1200px) {
+
+  /* general starts here */
   .navmenu {
     padding: 0;
     display: flex;
@@ -567,6 +570,16 @@ h6 {
     left: -100%;
     visibility: visible;
   }
+
+  /* general ends here */
+
+  /* about page starts here */
+  .product-section h1,
+  .product-description {
+    width: auto !important;
+  }
+
+  /* about page ends here */
 }
 
 /* Navmenu - Mobile */
@@ -719,7 +732,7 @@ h6 {
     margin: 12px 0 1px 0 !important;
   }
 
-  .about-right h3 {
+  .about-right h1 {
     font-size: 25px !important;
   }
 
@@ -735,6 +748,7 @@ h6 {
   .product-section h1,
   .library-section h1 {
     font-size: 30px !important;
+    width: auto !important;
   }
 
   .product-images,
@@ -880,7 +894,7 @@ h6 {
     text-align: justify;
   }
 
-  .about-right h3 {
+  .about-right h1 {
     font-size: 20px;
   }
 
@@ -1045,11 +1059,8 @@ h6 {
     font-size: 28px;
   }
 
-  .about-right h3 {
-    font-size: 20px;
-  }
-
-  .about-left h1 {
+  .about-left h1,
+  .about-right h1 {
     font-size: 24px !important;
   }
 
@@ -1429,7 +1440,7 @@ h6 {
 
 }
 
-@media (max-width: 767px) and (min-width: 375px) {
+@media (max-width: 767px) and (min-width: 376px) {
 
   /* general starts here */
   .header .logo img {
@@ -1474,16 +1485,13 @@ h6 {
     font-size: 28px;
   }
 
-  .about-right h3 {
-    font-size: 20px;
-  }
-
   .about-right p,
   .about-left p {
     font-size: 12px;
   }
 
-  .about-left h1 {
+  .about-left h1,
+  .about-right h1 {
     font-size: 24px !important;
   }
 
@@ -1889,7 +1897,7 @@ h6 {
     font-size: 28px;
   }
 
-  .about-right h3 {
+  .about-right h1 {
     font-size: 20px;
   }
 
@@ -2135,6 +2143,11 @@ h6 {
     margin: 0 auto;
   }
 
+  #qrModal .qr {
+    height: 350px !important;
+    margin: 0 auto !important;
+  }
+
   #qrModal h5,
   #qrModal p {
     margin-left: 35px !important;
@@ -2192,6 +2205,10 @@ h6 {
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 20px;
+  }
+
+  .news-card-img {
+    height: auto !important;
   }
 
   .content-layout {
@@ -2263,8 +2280,17 @@ h6 {
   /* news and events page ends here */
 
   /* footer starts here */
+  .footer .footer-about .logo {
+    display: flex !important;
+    justify-content: center;
+  }
+
   .footer .footer-about .logo img {
     max-height: 60px !important;
+  }
+
+  .footer .footer-links {
+    padding: 25px 35px 0 !important;
   }
 
   .col-lg-4.col-md-12 {
@@ -3645,7 +3671,7 @@ section,
 .about-title {
   font-weight: 600;
   font-size: 32px;
-  margin-bottom: 30px;
+  margin-bottom: 0px;
   font-family: "Arial_narrow_7";
 }
 
@@ -3674,7 +3700,7 @@ section,
 .filter-section {
   padding: 20px 0;
   border-right: 1px solid #000;
-  height: 550px;
+  height: auto;
 }
 
 .filter-section h4 {
@@ -3770,6 +3796,10 @@ section,
   font-weight: bold;
 }
 
+input[type="radio"] {
+  accent-color: black;
+}
+
 /* Custom scrollbar styling for better appearance */
 .year-options::-webkit-scrollbar {
   width: 5px;
@@ -3852,35 +3882,6 @@ section,
   width: 550px;
   text-align: justify;
 }
-
-/* .material-image {
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.material-image img {
-  width: auto;
-  height: auto;
-}
-
-.material-thumbnails {
-  display: flex;
-  margin-top: 15px;
-}
-
-.thumbnail {
-  width: 80px;
-  height: 80px;
-  overflow: hidden;
-  margin-right: 10px;
-  cursor: pointer;
-}
-
-.thumbnail img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-} */
 
 .material-image {
   overflow: hidden;
@@ -4000,10 +4001,6 @@ section,
   font-weight: bold;
 }
 
-#qrModal .qr {
-  width: 365px;
-}
-
 #qrModal h5 {
   text-align: left;
   margin-left: 95px;
@@ -4116,12 +4113,32 @@ section,
 .card-info {
   display: flex;
   flex-direction: column;
+  position: relative;
+  margin-bottom: 40px;
 }
 
 .event-date,
 .event-time,
 .event-location {
   margin-bottom: 3px;
+}
+
+.event-link {
+  position: absolute;
+  bottom: -35px;
+  right: 10px;
+  font-size: 12px;
+  width: auto;
+  background: none;
+  border: 1px solid #444;
+  padding: 10px;
+  transition: 0.3s ease;
+}
+
+.event-link:hover,
+.reg-btn:hover {
+  background: #000;
+  color: #fff;
 }
 
 .card-excerpt {
@@ -4202,6 +4219,13 @@ section,
   margin-right: 10px;
 }
 
+.reg-btn {
+  border: 1px solid #444;
+  border-radius: 0;
+  font-size: 13px;
+  transition: 0.3s ease;
+}
+
 .event-description {
   width: 550px;
   margin-bottom: 100px;
@@ -4267,6 +4291,7 @@ section,
 .product-section h1,
 .library-section h1 {
   font-family: "dm-sans-semi-bold";
+  width: 550px;
   color: #000;
   margin-bottom: 10px;
 }
@@ -4329,7 +4354,7 @@ section,
 
 
 .main-connect .connect-right {
-  margin-top: 155px;
+  margin-top: 95px;
 }
 
 .connect-right .form-input {
@@ -4402,4 +4427,52 @@ section,
   color: #000;
 }
 
+.media-kit {
+  margin: 60px 0;
+}
+
+.media-kit .media-kit-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+}
+
+.media-kit .media-kit-image {
+  border: 1px solid #e0e0e0;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.media-kit .media-kit-image:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.media-kit h6 {
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin-top: 0.75rem;
+  color: #333;
+  line-height: 1.4;
+}
+
+.media-kit h6 a {
+  color: #000;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.media-kit h6 a:hover {
+  opacity: 0.8;
+}
+
 /* connect page ends here */
+
+/* search spec page starts here */
+.search-spec {
+  font-family: 'Arial_narrow_7';
+  font-size: 20px;
+}
+
+.search-term-text { font-size: 30px; }
+
+/* search spec page starts here */

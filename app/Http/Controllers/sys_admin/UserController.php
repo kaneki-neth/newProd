@@ -2,23 +2,33 @@
 
 namespace App\Http\Controllers\sys_admin;
 
+use App\Http\Controllers\Controller;
+use App\Models\app\model_has_permissions;
+use App\Models\app\model_has_roles;
+use App\Models\app\org_user_bu;
 use App\Models\User;
 use DB;
 use Hash;
-use Illuminate\Http\RedirectResponse;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\View\View;
-use Spatie\Permission\Models\Role;
-use Illuminate\Validation\Rule;
-use App\Models\app\org_user_bu;
-use App\Models\app\model_has_permissions;
-use App\Models\app\model_has_roles;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:user-view|user-full', ['only' => [
+            'index', 'show',
+        ]]);
+        $this->middleware('permission:user-full', ['only' => [
+            'create',
+            'store',
+            'edit',
+            'update',
+        ]]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -26,11 +36,11 @@ class UserController extends Controller
      */
     public function index(Request $request): View
     {
-        $bu_id = "";
-        $alias = "";
-        $email = "";
-        $first_name = "";
-        $last_name = "";
+        $bu_id = '';
+        $alias = '';
+        $email = '';
+        $first_name = '';
+        $last_name = '';
         $users = [];
 
         $query = DB::table('users as u')
@@ -45,25 +55,24 @@ class UserController extends Controller
             )->orderBy('u.first_name', 'asc');
         // dd($query->get());
 
-
         if ($request->has('filter')) {
             if ($request->email) {
-                $query->where('u.email', 'like', '%' . $request->email . '%');
+                $query->where('u.email', 'like', '%'.$request->email.'%');
                 $email = $request->email;
             }
 
             if ($request->alias) {
-                $query->where('u.alias', 'like', '%' . $request->alias . '%');
+                $query->where('u.alias', 'like', '%'.$request->alias.'%');
                 $alias = $request->alias;
             }
 
             if ($request->first_name) {
-                $query->where('u.first_name', 'like', '%' . $request->first_name . '%');
+                $query->where('u.first_name', 'like', '%'.$request->first_name.'%');
                 $first_name = $request->first_name;
             }
 
             if ($request->last_name) {
-                $query->where('u.last_name', 'like', '%' . $request->last_name . '%');
+                $query->where('u.last_name', 'like', '%'.$request->last_name.'%');
                 $last_name = $request->last_name;
             }
 
@@ -91,9 +100,9 @@ class UserController extends Controller
             ->get();
 
         $roles = DB::table('roles as rol')
-        ->select('rol.name', 'rol.id')
-        ->orderBy('rol.name', 'ASC')
-        ->get();
+            ->select('rol.name', 'rol.id')
+            ->orderBy('rol.name', 'ASC')
+            ->get();
 
         // $permissionname = DB::table('permissions as per')
         //     ->select('per.name', 'per.id')
@@ -132,13 +141,13 @@ class UserController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->getMessageBag()->toArray()
+                'errors' => $validator->getMessageBag()->toArray(),
             ], 400);
         }
 
         $defaultImageUrl = 'assets/userProfile/default-image.jpg';
 
-        $user = new User();
+        $user = new User;
         $user->alias = $request->input('alias');
         $hashedPassword = Hash::make($request->input('password'));
         $user->password = $hashedPassword;
@@ -172,7 +181,7 @@ class UserController extends Controller
                 ];
             }
         }
-        if (!empty($roles)) {
+        if (! empty($roles)) {
             model_has_roles::insert($roles);
         }
 
@@ -188,7 +197,7 @@ class UserController extends Controller
                 ];
             }
         }
-        if (!empty($permissions)) {
+        if (! empty($permissions)) {
             model_has_permissions::insert($permissions);
         }
 
@@ -207,7 +216,8 @@ class UserController extends Controller
         }
         org_user_bu::insert($businessUnits);
 
-        session()->flash('success', "User Successfully Added!");
+        session()->flash('success', 'User Successfully Added!');
+
         return response()->json(['success' => true], 200);
     }
 
@@ -220,6 +230,7 @@ class UserController extends Controller
     public function show($id): View
     {
         $user = User::find($id);
+
         // dd($user);
         return view('users.show', compact('user'));
     }
@@ -271,15 +282,15 @@ class UserController extends Controller
             ->get();
 
         $tbl_roles = DB::table('roles')
-                ->orderBy('name', 'ASC')
-                ->get();
+            ->orderBy('name', 'ASC')
+            ->get();
 
         $tbl_permission = DB::table('permissions')
-                ->orderBy('display_name', 'ASC')
-                ->get();
+            ->orderBy('display_name', 'ASC')
+            ->get();
 
         $tbl_businessUnit = DB::table('org_business_units')
-                ->get();
+            ->get();
 
         $enabledBusinessUnits = DB::table('org_user_bu')
             ->join('org_business_units', 'org_user_bu.bu_id', '=', 'org_business_units.bu_id')
@@ -331,11 +342,11 @@ class UserController extends Controller
             ->get();
 
         $perInfo = DB::table('model_has_permissions as mhp')
-        ->join('users as u', 'mhp.model_id', '=', 'u.id')
-        ->join('permissions as p', 'mhp.permission_id', '=', 'p.id')
-        ->where('u.id', $request->_user)
-        ->orderBy('p.display_name', 'ASC')
-        ->get();
+            ->join('users as u', 'mhp.model_id', '=', 'u.id')
+            ->join('permissions as p', 'mhp.permission_id', '=', 'p.id')
+            ->where('u.id', $request->_user)
+            ->orderBy('p.display_name', 'ASC')
+            ->get();
 
         $businessUnitsInfo = DB::table('org_user_bu as ubu')
             ->join('users as u', 'ubu.user_id', '=', 'u.id')
@@ -344,15 +355,15 @@ class UserController extends Controller
             ->get();
 
         $tbl_roles = DB::table('roles')
-                ->orderBy('name', 'ASC')
-                ->get();
+            ->orderBy('name', 'ASC')
+            ->get();
 
         $tbl_permission = DB::table('permissions')
-        ->orderBy('display_name', 'ASC')
-        ->get();
+            ->orderBy('display_name', 'ASC')
+            ->get();
 
         $tbl_businessUnit = DB::table('org_business_units')
-                ->get();
+            ->get();
 
         $enabledBusinessUnits = DB::table('org_user_bu')
             ->join('org_business_units', 'org_user_bu.bu_id', '=', 'org_business_units.bu_id')
@@ -390,7 +401,7 @@ class UserController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->getMessageBag()->toArray()
+                'errors' => $validator->getMessageBag()->toArray(),
             ], 400);
         }
 
@@ -430,13 +441,13 @@ class UserController extends Controller
             if ($orgUserBu) {
                 // Record exists, update it
                 DB::table('org_user_bu')
-                ->where('user_id', $userId)
-                ->where('bu_id', $buId)
-                ->update([
-                    'enabled' => 1,
-                    'updated_by' => auth()->user()->id,
-                    'updated_at' => now(),
-                ]);
+                    ->where('user_id', $userId)
+                    ->where('bu_id', $buId)
+                    ->update([
+                        'enabled' => 1,
+                        'updated_by' => auth()->user()->id,
+                        'updated_at' => now(),
+                    ]);
             } else {
                 // Record does not exist, create it
                 org_user_bu::create([
@@ -452,32 +463,19 @@ class UserController extends Controller
         foreach ($businessUnitsUnchecked as $buId) {
             // Record exists, update it
             DB::table('org_user_bu')
-            ->where('user_id', $userId)
-            ->where('bu_id', $buId)
-            ->update([
-                'enabled' => 0,
-                'updated_by' => auth()->user()->id,
-                'updated_at' => now(),
-            ]);
+                ->where('user_id', $userId)
+                ->where('bu_id', $buId)
+                ->update([
+                    'enabled' => 0,
+                    'updated_by' => auth()->user()->id,
+                    'updated_at' => now(),
+                ]);
         }
 
-        session()->flash('success', "User Successfully Updated!");
-        return response()->json(array('success' => true), 200);
+        session()->flash('success', 'User Successfully Updated!');
 
-    }
+        return response()->json(['success' => true], 200);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id): RedirectResponse
-    {
-        User::find($id)->delete();
-
-        return redirect()->route('users.index')
-            ->with('success', 'User deleted successfully');
     }
 
     public function verify_to_changePass()
@@ -486,19 +484,20 @@ class UserController extends Controller
             ->where('id', auth()->user()->id)
             ->first();
 
-        if ($user->reset_on_login == 1 ||   date('Y-m-d') >= $user->next_pwd_change) {
-            return "true";
+        if ($user->reset_on_login == 1 || date('Y-m-d') >= $user->next_pwd_change) {
+            return 'true';
         } else {
-            return "false";
+            return 'false';
         }
     }
 
     public function reset_password($user_id)
     {
         $user = User::find($user_id);
-        if (!$user) {
+        if (! $user) {
             return response()->json(['error' => 'User not found'], 404);
         }
+
         return view('users.reset_password', compact('user'));
     }
 
@@ -513,14 +512,14 @@ class UserController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->getMessageBag()->toArray()
+                'errors' => $validator->getMessageBag()->toArray(),
             ], 400);
         }
 
         $id = $request->input('user_id');
 
         $user = User::find($id);
-        if (!$user) {
+        if (! $user) {
             return response()->json(['error' => 'User not found'], 404);
         }
         $hashedPassword = Hash::make($request->input('new_password'));
@@ -533,6 +532,7 @@ class UserController extends Controller
         try {
             $user->save();
             session()->flash('success', 'User Password Successfully Changed.');
+
             return response()->json(['success' => true], 200);
         } catch (\Illuminate\Database\QueryException $e) {
             return response()->json(['error' => 'An error occurred while updating the user. Please try again later.'], 500);

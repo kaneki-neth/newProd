@@ -60,7 +60,10 @@
         <div class="row">
             <div class="col-md-12 d-flex justify-content-start gap-2">
                 <a href="/blogs" class="btn btn-primary btn-xs"><i class="fa fa-arrow-left"></i> Back</a>
-                <a href="/blogs/{{ $blog->b_id }}/edit" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Edit</a>
+                @can('blog-write')
+                    <a href="/blogs/{{ $blog->b_id }}/edit" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i>
+                        Edit</a>
+                @endcan
             </div>
         </div>
         <div class="row mt-3">

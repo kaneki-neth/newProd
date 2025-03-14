@@ -18,7 +18,7 @@
 
         <div class="hero-sum-img1 col-6 col-md-3" data-aos="fade-up" data-aos-delay="100">
           <div class="text-center">
-            <img src="{{url('web/assets/img/img_ico/img_ico1.png')}}" class="img-fluid" style="width: 60%;">
+            <img src="{{url('web/assets/img/img_ico/img_ico1.png')}}" class="img-fluid" style="width: 60%; margin-top: -2px !important;">
           </div>
           <div class="text-center">
             <p class="hero-sum-title dmsans-semi-bold mb-0" style="font-size: 20px;">Explore 1000+ materials</p>
@@ -114,39 +114,33 @@
   <section id="about" class="about section">
     <div class="container">
       <div class="row gy-4">
-        @if (count($latest_news) > 0)
-          <div class="about-right col-lg-6 order-1 order-lg-2" data-aos="fade-up" data-aos-delay="100" style="padding-left: 60px; border-left: 1px solid gray;">
-
-            <h5 class="text-uppercase arial_narrow_7">What's New?</h5>
-
-            <div class="about-new owl-carousel">
-              @foreach($latest_news as $news)
-                <div class="item">
-                  <a href="{{ route('news_content', ['n_id' => $news->n_id]) }}">
-                    <h3 class="dmsans-regular mt-4"><strong>{{ $news->title }}</strong></h3>
-                  </a>
-                  <p class="dmsans-regular">Posted {{ $news->date }}</p>
-                  <div style="height: 230px;">
-                    <img src="{{ asset('storage/'.$news->image_file) }}" class="mw-100 mh-100 object-fit-contain">
-                  </div>
+        @if(count($latest_news) > 0)
+        <div class="about-right col-lg-6 order-1 order-lg-2" data-aos="fade-up" data-aos-delay="100" style="padding-left: 60px; border-left: 1px solid gray;">
+          <h5 class="text-uppercase arial_narrow_7">What's New?</h5>
+          <div class="about-new owl-carousel">
+            @foreach($latest_news as $news)
+            <div class="item">
+              <a href="{{ route('news_content', ['n_id' => $news->n_id]) }}">
+                <h1 class="arial_narrow_7 mt-4"><strong>{{ $news->title }}</strong></h1>
+                <p class="dmsans-regular">Posted {{ $news->date }}</p>
+                <div style="width: 100%; height: 236px; overflow: hidden;">
+                  <img src="{{ asset('storage/'.$news->image_file) }}" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
-              @endforeach
+              </a>
             </div>
-
-            <div class="carousel-progress">
-              <div class="carousel-progress-bar"></div>
-            </div>
+            @endforeach
           </div>
+          <div class="carousel-progress">
+            <div class="carousel-progress-bar"></div>
+          </div>
+        </div>
         @endif
 
-        <div class="about-left {{ count($latest_news) > 0 ? 'col-lg-6' : 'col-lg-12' }} order-2 order-lg-1 content d-flex align-items-center" 
-          data-aos="fade-up" data-aos-delay="200"
-          style={{ count($latest_news) > 0 ? "border-right: 1px solid gray; padding-right: 60px;" : "" }}
-        >
+        <div class="about-left @if(count($latest_news) == 0) col-lg-12 @else col-lg-6 @endif order-2 order-lg-1 content d-flex align-items-center" data-aos="fade-up" data-aos-delay="200" style="border-right: 1px solid gray; padding-right: 60px;">
           <div>
             <h1 class="arial_narrow_7">Materials Innovation <br>and Exploration</h1>
-            <p class="dmsans-regular mt-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus suscipit erat in nibh auctor posuere. Donec a venenatis mauris. Mauris mollis risus eu turpis condimentum, et sagittis ex facilisis. Duis et quam a eros posuere volutpat. Morbi vel maximus leo, nec pellentesque quam. Vivamus porta iaculis ante at laoreet. Integer facilisis vehicula arcu at faucibus.
+            <p class="dmsans-regular mt-4" style="text-align: justify;">
+              The MATIX Lab is dedicated to pioneering research, developing sustainable solutions, and fostering industry-academic collaborations in materials science and design. Through its comprehensive services, MATIX Lab acts as a catalyst for new discoveries, economic opportunities, and socially responsible innovation, shaping a future where materials are designed with purpose, sustainability, and impact.
             </p>
 
             <a href="/about" class="read-more mt-3"><span class="arial_narrow_7">Learn More</span></a>
@@ -159,41 +153,42 @@
 
   <!-- archive starts here -->
   @if (count($recommended_materials) > 0)
-    <section id="about-materials" data-aos="fade-up" data-aos-delay="100">
-      <div class="container">
-        <div class="row">
-          <div class="col-12 d-flex justify-content-between">
-            <h3 class="arial_narrow_7">
-              Materials
-            </h3>
-            <a href="/digital_archive" class="arial_narrow_7 reroute c-black">Go to digital archives</a>
-          </div>
-          <div class="slides col-12 mt-5">
-            <div class="materials owl-carousel owl-theme">
-              @foreach ($recommended_materials as $material)
-                <div class="item">
-                  <div style="width: 80%; aspect-ratio: 1 / 1; overflow: hidden;">
-                    <img src="{{ asset('storage') . '/' . $material->image_file }}" class="w-100 h-100 object-fit-cover">
-                  </div>
-                  <div>
-                    <h6 class="dmsans-semi-bold mt-3 mb-2">{{ $material->material_name }}</h6>
-                    <div style="height: 40px;">
-                      <a href="#" class="read-more mt-3" style="padding: 7px 15px;
-                        border: 1px solid #e2e2e246;
-                        border-radius: 20px;
-                        font-size: 12px;
-                        background-color: #e2e2e246;">
-                        <span class="arial_narrow_7 c-light-light-gray dmsans-regular">{{ $material->category_name }}</span>
-                      </a>
-                    </div>
-                  </div>
+  <section id="about-materials" data-aos="fade-up" data-aos-delay="100">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 d-flex justify-content-between">
+          <h3 class="arial_narrow_7">
+            Materials
+          </h3>
+          <a href="/digital_archive" class="arial_narrow_7 reroute c-black">Go to digital archives</a>
+        </div>
+        <div class="slides col-12 mt-5">
+          <div class="materials owl-carousel owl-theme">
+            @foreach ($recommended_materials as $material)
+            <div class="item">
+              <div style="width: 80%; aspect-ratio: 1 / 1; overflow: hidden;">
+                <img src="{{ asset('storage') . '/' . $material->image_file }}" class="w-100 h-100 object-fit-cover">
+              </div>
+              <div>
+                <h6 class="dmsans-semi-bold mt-3 mb-2">{{ $material->material_name }}</h6>
+                <div style="height: 40px;">
+                  <a id="category-tag" data-category-id="{{ $material->category_id }}" class="read-more mt-3" style="cursor:pointer; padding: 7px 15px;
+                                    border: 1px solid #e2e2e246;
+                                    border-radius: 20px;
+                                    font-size: 12px;
+                                    background-color: #e2e2e246;">
+                    <span
+                      class="arial_narrow_7 c-light-light-gray dmsans-regular">{{ $material->category_name }}</span>
+                  </a>
                 </div>
-              @endforeach
+              </div>
             </div>
+            @endforeach
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
   @endif
   <!-- archive ends here -->
 
@@ -204,7 +199,8 @@
         <div class="col-md-5">
           <h2 class="c-black arial_narrow_7">Join our mailing list</h2>
           <p class="dmsans-regular mt-3">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus suscipit erat in nibh auctor posuere. Donec a venenatis mauris. Mauris mollis risus eu turpis condimentum, et sagittis ex facilisis.
+            Get the latest updates, breakthroughs, and events from the heart of innovation in materials development. 
+            Be part of the future—subscribe now and never miss out.
           </p>
         </div>
 
@@ -273,7 +269,7 @@
       return new bootstrap.Toast(toastEl);
     });
     toastList.forEach(toast => toast.show());
-    
+
     // Auto-hide after 3 seconds
     setTimeout(function() {
       toastList.forEach(toast => toast.hide());
@@ -283,6 +279,22 @@
 @endif
 
 <script>
+  $(document).on('click', '#category-tag', function(e) {
+    e.preventDefault();
+    let queryParams = {};
+    queryParams.page = 1;
+    let categoryId = $(this).data('categoryId');
+    queryParams.selectedCategories = [categoryId];
+    let queryString = $.param(queryParams);
+    $.ajax({
+      url: "/digital_archive?" + queryString,
+      type: "GET",
+      success: function(response) {
+        window.location.href = "/digital_archive?" + queryString;
+      }
+    });
+  });
+
   $(document).ready(function() {
     var owl = $(".about-new");
 
@@ -318,7 +330,7 @@
     owl.owlCarousel({
       margin: 10,
       loop: true,
-      nav: false,
+      nav: true,
       autoplay: true,
       autoplayTimeout: 3000,
       autoplayHoverPause: true,

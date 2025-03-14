@@ -4,7 +4,9 @@
 <main class="main-news">
 
   <div class="article-container">
-    <div class="article-category">Research</div>
+    <a href="/events?category=research">
+      <div class="article-category">Research</div>
+    </a>
     <h1 class="article-title">
       {{ $research->title }}
     </h1>
@@ -17,7 +19,9 @@
       alt="{{ $research->title }}" class="article-featured-image" />
 
     <div class="article-content">
-      <?php echo $research->description; ?>
+      <p>
+        <?php echo $research->description; ?>
+      </p>
     </div>
   </div>
 </main>

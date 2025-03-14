@@ -5,9 +5,23 @@
     </a>
     <nav id="navmenu" class="navmenu">
       <ul class="nav-items">
-        <li><a href="/about" id="nav-about">About MATIX<br></a></li>
-        <li><a href="/digital_archive" id="nav-archive">Materials Library</a></li>
-        <li><a href="/events" id="nav-events">News & Event+</a></li>
+
+        <!-- dropdowns please help -->
+        <!-- this is the parent nav -->
+        <!-- <li><a href="/about" id="nav-about">About MATIX +<br></a></li> -->
+        <!-- this is the children navs -->
+        <li><a href="/vision_mission" id="nav-about">Vision & Mission<br></a></li>
+        <li><a href="/core_programs" id="nav-about">Core Programs<br></a></li>
+
+        <!-- this is the parent nav -->
+        <!-- <li><a href="" id="nav-archive">Materials Library +</a></li> -->
+        <!-- this is the children navs -->
+        <li><a href="/digital_archive" id="nav-archive">Materials Archive</a></li>
+        <li><a href="/digital_archive_new" id="nav-archive">New Materials Developed</a></li>
+
+
+
+        <li><a href="/events" id="nav-events">News and Events</a></li>
         <li><a href="/contact" id="nav-contact">Connect</a></li>
       </ul>
 
@@ -21,14 +35,14 @@
 </header>
 
 <script>
-    document.querySelector('.search-bar').addEventListener('keypress', function (event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            const query = event.target.value;
-            if (query) {
-                // window.location.href = `/digital_archive?page=1&search=${encodeURIComponent(query)}`;
-                window.location.href = `/search_content/${encodeURIComponent(query)}`;
-            }
-        }
-    });
+  document.querySelector('.search-bar').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      const query = event.target.value;
+      if (query) {
+        // window.location.href = `/digital_archive?page=1&search=${encodeURIComponent(query)}`;
+        window.location.href = `/search_content/${encodeURIComponent(query)}`;
+      }
+    }
+  });
 </script>

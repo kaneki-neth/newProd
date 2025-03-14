@@ -9,6 +9,12 @@ use Validator;
 
 class ResearchController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:research-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:research-write', ['only' => ['create', 'store', 'edit', 'update']]);
+    }
+
     public function index(Request $request)
     {
         $title = '';

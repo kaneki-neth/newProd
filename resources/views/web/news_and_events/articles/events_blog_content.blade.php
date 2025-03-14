@@ -4,7 +4,9 @@
 <main class="main-news">
 
   <div class="article-container">
-    <div class="article-category">Blog</div>
+    <a href="/events?category=blogs">
+      <div class="article-category">Blogs</div>
+    </a>
     <h1 class="article-title">
       {{ $blog->title }}
     </h1>
@@ -17,7 +19,9 @@
       alt="{{ $blog->title }}" class="article-featured-image" />
 
     <div class="article-content">
-      <?php echo $blog->description; ?>
+      <p>
+        <?php echo $blog->description; ?>
+      </p>
     </div>
   </div>
 </main>

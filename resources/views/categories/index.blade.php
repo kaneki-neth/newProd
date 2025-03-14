@@ -4,9 +4,12 @@
 
 @section('content')
     <style>
+        @can('category-write')
         #name:hover {
             font-weight: bold;
+            color: #28acb5;
         }
+        @endcan
         .custom-input {
             height: 30px;
         }
@@ -24,10 +27,13 @@
     <div class="panel panel-inverse">
         <div class="panel-body" id="pannel-body">
             <div class="table-responsive" style="overflow-x: hidden">
+                @can('category-write')
                 <div class="d-flex justify-content-end">
-                    <button class="btn btn-primary btn-xs" onclick="add_category()"><i class="fa fa-plus"></i> Add
-                        New</button>
+                    <button class="btn btn-primary btn-xs" onclick="add_category()">
+                        <i class="fa fa-plus"></i> Add New
+                    </button>
                 </div>
+                @endcan
 
                 <form id="form-search" style="">
                     <input type="hidden" name="filter" value="true">
@@ -69,8 +75,12 @@
                         <tbody>
                             @foreach($categories as $category)
                                 <tr>
-                                    <td id="name" style="color:#28acb5"
-                                        onclick="showmodaledit(`<?php echo $category->c_id ?>`)">
+                                    <td id="name" 
+                                        @can('category-write') 
+                                            style="color:#28acb5"
+                                            onclick="showmodaledit(`<?php echo $category->c_id ?>`)"
+                                        @endcan
+                                    >
                                         {{ $category->name }}
                                     </td>
                                     <td class="text-center">{{ $category->description }}</td>

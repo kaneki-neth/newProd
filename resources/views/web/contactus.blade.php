@@ -21,8 +21,8 @@
     </div>
 
     <div class="row g-5">
-      <div class="col-md-5">
-        <section class="mb-5">
+      <div class="col-md-6">
+        <div class="my-5">
           <h2>Connect with us</h2>
           <div class="mb-2 d-flex">
             <div class="contact-label">Email</div>
@@ -32,38 +32,50 @@
             <div class="contact-label">Phone</div>
             <div class="content-left">(032) 232 8187</div>
           </div>
-        </section>
+        </div>
 
-        <section>
+        <div class="my-5">
           <h2>Socials</h2>
           <div class="mb-2 d-flex">
             <div class="social-label">Facebook</div>
-            <a href="" target="_blank">
+            <a href="https://www.facebook.com/matixupcebu" target="_blank">
               <div class="content-left">matixupcebu</div>
             </a>
           </div>
           <div class="mb-2 d-flex">
             <div class="social-label">Instagram</div>
-            <a href="" target="_blank">
+            <a href="https://www.instagram.com/matix_upc/" target="_blank">
               <div class="content-left">matix_upcebu</div>
             </a>
           </div>
           <div class="mb-2 d-flex">
             <div class="social-label">TikTok</div>
-            <a href="" target="_blank">
+            <a href="https://www.tiktok.com/@matix_upc" target="_blank">
               <div class="content-left">matix_upcebu</div>
             </a>
           </div>
           <div class="mb-2 d-flex">
             <div class="social-label">YouTube</div>
-            <a href="" target="_blank">
+            <a href="https://www.youtube.com/@matix_upc" target="_blank">
               <div class="content-left">matix_upcebu</div>
             </a>
           </div>
-        </section>
+        </div>
+
+        <div class="media-kit">
+          <h2>Media Kit</h2>
+          <div class="media-kit-container">
+            <a href="{{url('web/assets/pdf/matix_media_kit.pdf')}}" download="matix_media_kit.pdf">
+              <img src="{{url('web/assets/img/media_kit.png')}}" style="cursor: pointer;">
+            </a>
+            <h6>View or <a style="text-decoration: underline;" href="{{url('web/assets/pdf/matix_media_kit.pdf')}}" download="matix_media_kit.pdf">download</a> our media kit for any of your publicity and media needs.</h6>
+          </div>
+        </div>
       </div>
 
-      <div class="connect-right col-md-7">
+      <div class="connect-right col-md-6">
+
+        <h2 class="mb-4">Leave us a message.</h2>
 
         <form method="POST" action="/email-sent">
           @csrf

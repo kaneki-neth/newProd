@@ -9,6 +9,12 @@ use Validator;
 
 class EventController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:event-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:event-write', ['only' => ['create', 'store', 'edit', 'update']]);
+    }
+
     public function index(Request $request)
     {
         $title = '';

@@ -19,12 +19,10 @@
         }
 
         .select2.select2-container .selection .select2-selection.select2-selection--multiple {
-            height: 30px !important;
             min-height: 30px !important;
         }
 
         .select2.select2-container .selection .select2-selection.select2-selection--single {
-            height: 30px !important;
             min-height: 30px !important;
         }
 

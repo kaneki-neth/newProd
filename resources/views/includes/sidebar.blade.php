@@ -54,6 +54,7 @@
                 </a>
             </div>
 
+            @can('connect-read')
             <div class="menu-item" id="connect">
                 <a href="/connect-mail" class="menu-link">
                     <div class="menu-icon">
@@ -62,7 +63,9 @@
                     <div class="menu-text">Connect</div>
                 </a>
             </div>
+            @endcan
 
+            @canany(['category-read', 'category-write'])
             <div class="menu-item" id="category">
                 <a href="/category" class="menu-link">
                     <div class="menu-icon">
@@ -71,7 +74,9 @@
                     <div class="menu-text">Categories</div>
                 </a>
             </div>
+            @endcanany
 
+            @canany(['material-read', 'material-write'])
             <div class="menu-item" id="material">
                 <a href="/material" class="menu-link">
                     <div class="menu-icon">
@@ -80,6 +85,9 @@
                     <div class="menu-text">Materials</div>
                 </a>
             </div>
+            @endcanany
+
+            @canany(['video-read', 'video-write'])
             <div class="menu-item" id="videos">
                 <a href="/videos" class="menu-link">
                     <div class="menu-icon">
@@ -88,6 +96,9 @@
                     <div class="menu-text">Videos</div>
                 </a>
             </div>
+            @endcanany
+
+            @canany(['news-read', 'news-write'])
             <div class="menu-item" id="news">
                 <a href="/news" class="menu-link">
                     <div class="menu-icon">
@@ -96,6 +107,9 @@
                     <div class="menu-text">News</div>
                 </a>
             </div>
+            @endcanany
+
+            @canany(['blog-read', 'blog-write'])
             <div class="menu-item" id="blogs">
                 <a href="/blogs" class="menu-link">
                     <div class="menu-icon">
@@ -104,6 +118,9 @@
                     <div class="menu-text">Blogs</div>
                 </a>
             </div>
+            @endcanany
+
+            @canany(['research-read', 'research-write'])
             <div class="menu-item" id="research">
                 <a href="/research" class="menu-link">
                     <div class="menu-icon">
@@ -112,6 +129,9 @@
                     <div class="menu-text">Research</div>
                 </a>
             </div>
+            @endcanany
+
+            @canany(['event-read', 'event-write'])
             <div class="menu-item" id="events">
                 <a href="/events_" class="menu-link">
                     <div class="menu-icon">
@@ -120,6 +140,7 @@
                     <div class="menu-text">Events</div>
                 </a>
             </div>
+            @endcanany
 
             @if(Auth::user()->can('role-full') || Auth::user()->can('role-view') || Auth::user()->can('user-full') || Auth::user()->can('user-view'))
             <div class="menu-item has-sub" id="SysAdmin">

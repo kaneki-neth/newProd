@@ -83,16 +83,15 @@ class archive extends Controller
         // dd(compact('categories', 'materials', 'selectedYear', 'sortOptions', 'selectedCategories', 'searchQuery'));
         if ($request->ajax()) {
             return response()->json([
-                'html' => view('web.archive.digital_archive_grid', compact('categories', 'materials', 'selectedYear', 'sortOptions', 'selectedCategories', 'searchQuery'))->render()
-            ], 200);
+            'html' => view('web.archive.digital_archive_grid', compact('categories', 'materials', 'selectedYear', 'sortOptions', 'selectedCategories', 'searchQuery'))->render()
+            ], 200)
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            ->header('Cache-Control', 'post-check=0, pre-check=0', false)
+            ->header('Pragma', 'no-cache');
         }
 
         return view('web.archive.digital_archive', compact('categories', 'materials', 'selectedYear', 'sortOptions', 'selectedCategories', 'searchQuery'));
     }
-
-
-
-
 
     public function archive_details(int $m_id)
     {
@@ -146,5 +145,57 @@ class archive extends Controller
 
         // dd(compact('material', 'categories', 'images', 'properties', 'techProperties', 'susProperties', 'selectedCategories'));
         return view('web.archive.archive_content', compact('material', 'categories', 'images', 'properties', 'techProperties', 'susProperties', 'selectedCategories', 'recommended_materials'));
+    }
+
+    public function archive_new(Request $request){
+        // dd("this the request", $request->all());
+        $searchQuery = null;
+
+        $query = DB::table('materials')
+        ->select(
+            'materials.m_id',
+            'materials.name',
+            'materials.image_file',
+            'materials.created_at',
+            'materials.year',
+            DB::raw('GROUP_CONCAT(DISTINCT categories.name ORDER BY categories.name SEPARATOR ", ") as category_name')
+        )
+        ->join('item_categories', 'materials.m_id', '=', 'item_categories.m_id')
+        ->join('categories', 'item_categories.c_id', '=', 'categories.c_id')
+        ->where('materials.enabled', 1)
+        ->where('materials.year', date('Y'));
+
+    
+        if ($request->has('searchQuery')) {
+            $searchQuery = $request->input('searchQuery');
+            $query->where(function ($q) use ($searchQuery) {
+                $q->where('materials.name', 'like', "%$searchQuery%")
+                ->orWhere('materials.material_code', 'like', "%$searchQuery%")
+                ->orWhere('materials.description', 'like', "%$searchQuery%");
+            });
+        }
+
+        $query->groupBy(
+            'materials.m_id',
+            'materials.name',
+            'materials.image_file',
+            'materials.created_at',
+            'materials.year'
+        );        
+
+        // dd($query->get());
+        $materials = $query->paginate(3);
+
+        if ($request->ajax()) {
+            return response()->json([
+            'html' => view('web.archive.archive_new_grid', compact('materials', 'searchQuery'))->render()
+            ], 200)
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            ->header('Cache-Control', 'post-check=0, pre-check=0', false)
+            ->header('Pragma', 'no-cache');
+        }
+
+        return view('web.archive.archive_new', compact('materials', 'searchQuery'));
+
     }
 }

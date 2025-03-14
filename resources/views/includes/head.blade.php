@@ -14,7 +14,7 @@
 <link href="/assets/plugins/select2/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link href="/assets/css/custome.css" rel="stylesheet" />
-<link rel="shortcut icon" href="{{url('web/assets/img/matix_logo_white.png')}}?{{ mt_rand() }}">
+<link rel="shortcut icon" href="{{url('web/assets/img/matix_logo_bg.png')}}?{{ mt_rand() }}">
 <!-- ================== END BASE CSS STYLE ================== -->
 <link href="/assets/plugins/switchery/dist/switchery.min.css" rel="stylesheet" />
 <link href="/assets/plugins/abpetkov-powerange/dist/powerange.min.css" rel="stylesheet" />

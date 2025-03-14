@@ -8,6 +8,12 @@ use Validator;
 
 class MaterialController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:material-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:material-write', ['only' => ['create', 'store', 'edit', 'update']]);
+    }
+
     public function index(Request $request)
     {
         $name = '';
@@ -37,11 +43,11 @@ class MaterialController extends Controller
         }
 
         $query = $query->orderBy('name', 'asc');
-        
+
         $materials = $query->paginate(3);
 
         $materials->appends(compact('name', 'material_code', 'enabled', 'year'));
-        
+
         return view('materials.index', compact('materials', 'name', 'material_code', 'enabled', 'year'));
     }
 
@@ -64,23 +70,22 @@ class MaterialController extends Controller
             ->pluck('c_id')
             ->toArray();
 
-
         $properties = DB::table('properties')
             ->select('*')
             ->where('m_id', $id)
-            ->where('type', '=', "soft")
+            ->where('type', '=', 'soft')
             ->get();
 
         $techProperties = DB::table('properties')
             ->select('*')
             ->where('m_id', $id)
-            ->where('type', '=', "technical")
+            ->where('type', '=', 'technical')
             ->get();
 
         $susProperties = DB::table('properties')
             ->select('*')
             ->where('m_id', $id)
-            ->where('type', '=', "application")
+            ->where('type', '=', 'application')
             ->get();
 
         $images = DB::table('material_images')
@@ -123,7 +128,6 @@ class MaterialController extends Controller
             ->pluck('c_id')
             ->toArray();
 
-
         $images = DB::table('material_images')
             ->select('mi_id', 'image_file')
             ->where('m_id', $m_id)
@@ -131,21 +135,21 @@ class MaterialController extends Controller
             ->toArray();
 
         $properties = DB::table('properties')
-        ->select('*')
-        ->where('m_id', $m_id)
-        ->where('type', '=', "soft")
-        ->get();
+            ->select('*')
+            ->where('m_id', $m_id)
+            ->where('type', '=', 'soft')
+            ->get();
 
         $techProperties = DB::table('properties')
             ->select('*')
             ->where('m_id', $m_id)
-            ->where('type', '=', "technical")
+            ->where('type', '=', 'technical')
             ->get();
 
         $susProperties = DB::table('properties')
             ->select('*')
             ->where('m_id', $m_id)
-            ->where('type', '=', "application")
+            ->where('type', '=', 'application')
             ->get();
 
         // dd(compact('material', 'categories', 'images', 'properties', 'techProperties', 'susProperties', 'selectedCategories'));
@@ -179,7 +183,7 @@ class MaterialController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error deleting material: ' . $e->getMessage(),
+                'message' => 'Error deleting material: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -189,13 +193,13 @@ class MaterialController extends Controller
     {
         $validator = $this->validateMaterialRequest($request, $materialId);
         if ($validator->fails()) {
-            
+
             return response()->json([
                 'success' => false,
                 'errors' => $validator->getMessageBag()->toArray(),
             ], 400);
         }
-        
+
         $storedImagePaths = [];
         try {
             DB::beginTransaction();
@@ -248,27 +252,27 @@ class MaterialController extends Controller
                     ->whereIn('p_id', $request->input('deleteOldAppProps'))
                     ->delete();
             }
-            session()->flash('success', "Material " . ($materialId ? 'updated' : 'created') . " successfully!");
-            
+            session()->flash('success', 'Material '.($materialId ? 'updated' : 'created').' successfully!');
+
             return response()->json([
                 'success' => true,
-                'message' => 'Material ' . ($materialId ? 'updated' : 'created') . ' successfully',
+                'message' => 'Material '.($materialId ? 'updated' : 'created').' successfully',
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
             $this->deleteUploadedImages($storedImagePaths);
-            
+
             return response()->json([
                 'success' => false,
-                'message' => 'Error processing material: ' . $e->getMessage(),
+                'message' => 'Error processing material: '.$e->getMessage(),
             ], 500);
         }
     }
 
     protected function validateMaterialRequest(Request $request, $materialId = null)
     {
-        $uniqueCodeRule = 'unique:materials,material_code' . ($materialId ? ",{$materialId},m_id" : '');
+        $uniqueCodeRule = 'unique:materials,material_code'.($materialId ? ",{$materialId},m_id" : '');
         if (! preg_match('/>(\s*[^<\s].*?)</', $request->description)) {
             $request->merge(['description' => strip_tags($request->description)]);
         }
@@ -278,7 +282,7 @@ class MaterialController extends Controller
         // <p>&nbsp;</p><p><br></p> not handled yet
 
         return Validator::make($request->all(), [
-            'code' => 'required|' . $uniqueCodeRule,
+            'code' => 'required|'.$uniqueCodeRule,
             'name' => 'required',
             'material_source' => 'nullable|string|min:3|max:255',
             'categories' => 'required|array',

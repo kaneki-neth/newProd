@@ -9,6 +9,12 @@ use Validator;
 
 class NewsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:news-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:news-write', ['only' => ['create', 'store', 'edit', 'update']]);
+    }
+
     public function index(Request $request)
     {
         $title = '';

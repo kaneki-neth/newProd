@@ -22,12 +22,30 @@ class home extends Controller
             return $news;
         });
 
-        $recommended_materials = DB::table('materials')
-            ->join('item_categories', 'materials.m_id', '=', 'item_categories.m_id')
-            ->join('categories', 'item_categories.c_id', '=', 'categories.c_id')
-            ->select('materials.name as material_name', 'materials.m_id', 'materials.image_file', DB::raw('MIN(categories.name) as category_name'))
-            ->where('materials.enabled', 1)
-            ->groupBy('materials.m_id', 'material_name')
+        $recommended_materials = DB::table('materials as m')
+            ->joinSub(
+                DB::table('item_categories as ic')
+                    ->join('categories as c', 'ic.c_id', '=', 'c.c_id')
+                    ->select(
+                        'ic.m_id',
+                        'c.name as category_name',
+                        'c.c_id',
+                        DB::raw('ROW_NUMBER() OVER (PARTITION BY ic.m_id ORDER BY c.name) as rn')
+                    ),
+                'fc',
+                function ($join) {
+                    $join->on('m.m_id', '=', 'fc.m_id')
+                        ->where('fc.rn', '=', 1);
+                }
+            )
+            ->select(
+                'm.name as material_name',
+                'm.m_id',
+                'm.image_file',
+                'fc.category_name',
+                'fc.c_id as category_id'
+            )
+            ->where('m.enabled', 1)
             ->get();
 
         return view('web.index', compact('latest_news', 'recommended_materials'));
@@ -47,12 +65,12 @@ class home extends Controller
             ->join('item_categories', 'materials.m_id', '=', 'item_categories.m_id')
             ->join('categories', 'item_categories.c_id', '=', 'categories.c_id')
             ->where('materials.enabled', 1);
-        
+
         if ($searchTerm) {
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('materials.name', 'like', "%$searchTerm%")
-                ->orWhere('materials.material_code', 'like', "%$searchTerm%")
-                ->orWhere('materials.description', 'like', "%$searchTerm%");
+                    ->orWhere('materials.material_code', 'like', "%$searchTerm%")
+                    ->orWhere('materials.description', 'like', "%$searchTerm%");
             });
         }
 
@@ -62,7 +80,7 @@ class home extends Controller
             'materials.image_file',
             'materials.created_at',
             'materials.year'
-        );        
+        );
 
         // dd($query->get());
         $materials = $query->paginate(5);

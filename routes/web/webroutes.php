@@ -11,10 +11,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [home::class, 'index']);
 Route::get('/search_content/{searchTerm}', [home::class, 'search_content']);
 
-Route::get('/about', [aboutus::class, 'index']);
+Route::get('/core_programs', [aboutus::class, 'core_programs']);
+Route::get('/vision_mission', [aboutus::class, 'vision_mission']);
 
 Route::get('/digital_archive', [archive::class, 'index']);
 Route::get('/digital_archive_content/{id}', [archive::class, 'archive_details']);
+Route::get('/digital_archive_new', [archive::class, 'archive_new']);
 
 Route::get('/events', [newsevent::class, 'index']);
 Route::get('/events_news_content/{n_id}', [newsevent::class, 'events_news_content'])->name('news_content');

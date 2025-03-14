@@ -13,86 +13,54 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        Permission::create([
-            'name' => 'role-full',
-            'display_name' => 'Role Access (Full)',
-            'created_by' => 1,
-            'updated_by' => 1,
-        ]);
-        Permission::create([
-            'name' => 'role-view',
-            'display_name' => 'Role Access (View)',
-            'created_by' => 1,
-            'updated_by' => 1,
-        ]);
+        $permissions = [
+            ['role-full', 'Role Access (Full)'],
+            ['role-view', 'Role Access (View)'],
+            ['user-full', 'User Access (Full)'],
+            ['user-view', 'User Access (View)'],
+            ['company_settings', 'Company Settings Access'],
+            ['look_up_full', 'Look Up Access (Full)'],
+            ['look_up_view', 'Look Up Access (View)'],
 
-        Permission::create([
-            'name' => 'user-full',
-            'display_name' => 'User Access (Full)',
-            'created_by' => 1,
-            'updated_by' => 1,
-        ]);
+            ['connect-read', 'Connect (Read)'],
+            ['category-read', 'Category (Read)'],
+            ['category-write', 'Category (Write)'],
+            ['material-read', 'Material (Read)'],
+            ['material-write', 'Material (Write)'],
+            ['video-read', 'Video (Read)'],
+            ['video-write', 'Video (Write)'],
+            ['news-read', 'News (Read)'],
+            ['news-write', 'News (Write)'],
+            ['blog-read', 'Blog (Read)'],
+            ['blog-write', 'Blog (Write)'],
+            ['research-read', 'Research (Read)'],
+            ['research-write', 'Research (Write)'],
+            ['event-read', 'Event (Read)'],
+            ['event-write', 'Event (Write)'],
+        ];
 
-        Permission::create([
-            'name' => 'user-view',
-            'display_name' => 'User Access (View)',
-            'created_by' => 1,
-            'updated_by' => 1,
-        ]);
-
-        Permission::create([
-            'name' => 'permission-full',
-            'display_name' => 'Permission Access (Full)',
-            'created_by' => 1,
-            'updated_by' => 1,
-        ]);
-
-        Permission::create([
-            'name' => 'permission-view',
-            'display_name' => 'Permission Access (View)',
-            'created_by' => 1,
-            'updated_by' => 1,
-        ]);
-
-        Permission::create([
-            'name' => 'company_settings',
-            'display_name' => 'Company Settings Access',
-            'created_by' => 1,
-            'updated_by' => 1,
-        ]);
-
-        Permission::create([
-            'name' => 'look_up_full ',
-            'display_name' => 'Look Up Access (Full)',
-            'created_by' => 1,
-            'updated_by' => 1,
-        ]);
-
-        Permission::create([
-            'name' => 'look_up_view',
-            'display_name' => 'Look Up Access (View)',
-            'created_by' => 1,
-            'updated_by' => 1,
-        ]);
-
-        Permission::create([
-            'name' => 'video_full',
-            'display_name' => 'Video Access (Full)',
-            'created_by' => 1,
-            'updated_by' => 1,
-        ]);
-
-        Permission::create([
-            'name' => 'video_view',
-            'display_name' => 'Video Access (View)',
-            'created_by' => 1,
-            'updated_by' => 1,
-        ]);
+        foreach ($permissions as $permission) {
+            Permission::create([
+                'name' => $permission[0],
+                'display_name' => $permission[1],
+                'created_by' => 1,
+                'updated_by' => 1,
+            ]);
+        }
 
         $admin = Role::where('name', 'admin')->first();
         $admin->givePermissionTo(Permission::all());
 
         $user = Role::where('name', 'user')->first();
-        $user->givePermissionTo('user-view', 'role-view', 'video_view');
+        $user->givePermissionTo(
+            'news-read',
+            'blog-read',
+            'research-read',
+            'event-read',
+            'video-read',
+            'connect-read',
+            'category-read',
+            'material-read',
+        );
     }
 }

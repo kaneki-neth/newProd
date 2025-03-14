@@ -9,6 +9,12 @@ use Validator;
 
 class BlogController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:blog-read', ['only' => ['index', 'show']]);
+        $this->middleware('permission:blog-write', ['only' => ['create', 'store', 'edit', 'update']]);
+    }
+
     public function index(Request $request)
     {
         $title = '';

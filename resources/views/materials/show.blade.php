@@ -165,10 +165,12 @@
                     <i class="fa fa-arrow-left"></i> 
                     Back
                 </button>
+                @can('material-write')
                 <button class="btn btn-primary btn-xs" type="submit" style="" onclick="location.href=`/material/{{$material->m_id}}/edit`">
                     <i class="fa fa-edit"></i> 
                     Edit
                 </button>
+                @endcan
             </div>
             <form method="POST" id="form-update-materials">
                 @csrf

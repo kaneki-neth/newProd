@@ -10,28 +10,28 @@
       <div class="col-lg-3 col-md-3 footer-links">
 
         <ul>
-          <li class="mb-0"><a href="/about" class="dmsans-semi-bold c-white">About MATIX</a></li>
-          <li class="mb-0"><a href="/digital_archive" class="dmsans-semi-bold c-white">Materials Library</a></li>
-          <li class="mb-0"><a href="/events" class="dmsans-semi-bold c-white">News & Events+</a></li>
+          <li class="mb-0"><a href="/about" class="dmsans-semi-bold c-white">About MATIX +</a></li>
+          <li class="mb-0"><a href="/digital_archive" class="dmsans-semi-bold c-white">Materials Library +</a></li>
+          <li class="mb-0"><a href="/events" class="dmsans-semi-bold c-white">News and Events</a></li>
           <li class="mb-0"><a href="/contact" class="dmsans-semi-bold c-white">Connect</a></li>
         </ul>
 
         <h5 class="dmsans-semi-bold c-white mt-4 mb-4">Links</h5>
 
         <ul>
-          <li class="mb-0"><a href="#" class="dmsans-regular c-white">FabLab UP Cebu</a></li>
-          <li class="mb-0"><a href="#" class="dmsans-regular c-white">CCAD</a></li>
-          <li class="mb-0"><a href="#" class="dmsans-regular c-white">University of the Philippines Cebu</a></li>
+          <li class="mb-0"><a href="https://www.upcebu.edu.ph/" class="dmsans-regular c-white">FabLab UP Cebu</a></li>
+          <li class="mb-0"><a href="https://ccad.upcebu.edu.ph/" class="dmsans-regular c-white">CCAD</a></li>
+          <li class="mb-0"><a href="https://www.upcebu.edu.ph/" class="dmsans-regular c-white">University of the Philippines Cebu</a></li>
         </ul>
 
       </div>
       <div class="col-lg-2 col-md-3 footer-links">
         <h5 class="dmsans-semi-bold c-white mb-4">Connect with us</h5>
         <ul>
-          <li><a href="#" class="dmsans-regular c-white">Facebook</a></li>
-          <li><a href="#" class="dmsans-regular c-white">Instagram</a></li>
-          <li><a href="#" class="dmsans-regular c-white">YouTube</a></li>
-          <li><a href="#" class="dmsans-regular c-white">TikTok</a></li>
+          <li><a href="https://www.facebook.com/matixupcebu" class="dmsans-regular c-white">Facebook</a></li>
+          <li><a href="https://www.instagram.com/matix_upc/" class="dmsans-regular c-white">Instagram</a></li>
+          <li><a href="https://www.youtube.com/@matix_upc" class="dmsans-regular c-white">YouTube</a></li>
+          <li><a href="https://www.tiktok.com/@matix_upc" class="dmsans-regular c-white">TikTok</a></li>
         </ul>
       </div>
 

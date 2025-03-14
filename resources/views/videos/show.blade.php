@@ -37,7 +37,7 @@
             <div class="row" style="margin-bottom: 10px;">
                 <div class="col-md-6 d-flex justify-content-start gap-2">
                     <a href="/videos" class="btn btn-primary btn-xs"><i class="fa fa-arrow-left"></i> Back</a>
-                    @if (Auth::user()->hasPermissionTo('video_full'))
+                    @if (Auth::user()->hasPermissionTo('video-write'))
                         <div class="col-md-6 d-flex justify-content-start gap-2">
                             <button class="btn btn-primary btn-xs" onclick="location.href='/videos/edit/{{ $video->v_id }}'">
                                 Edit</button>

@@ -10,6 +10,11 @@ class newsevent extends Controller
 {
     public function index(Request $request)
     {
+
+        if (! $request->ajax() && ! $request->has('category')){
+            return redirect('/events?category=news');
+        }
+
         if (!$request->ajax()) {
             return view('web.news_and_events.events');
         }
@@ -68,7 +73,7 @@ class newsevent extends Controller
         $cleanDescription = $description;
         $cleanDescription = strip_tags($cleanDescription);
         if (strlen($cleanDescription) > $maxLength) {
-            return substr($cleanDescription, 0, $maxLength) . '...';
+            return substr($cleanDescription, 0, $maxLength);
         }
 
         return $cleanDescription;

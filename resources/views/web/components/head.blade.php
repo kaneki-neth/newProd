@@ -4,8 +4,8 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 
-<link href="/web/assets/img/matix_logo_white.png" rel="icon">
-<link href="/web/assets/img/matix_logo_white.png" rel="apple-touch-icon">
+<link href="/web/assets/img/matix_logo_bg.png" rel="icon">
+<link href="/web/assets/img/matix_logo_bg.png" rel="apple-touch-icon">
 
 <link href="/web/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <link href="/web/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">

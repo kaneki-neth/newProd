@@ -4,7 +4,9 @@
 <main class="main-news">
 
   <div class="article-container">
-    <div class="article-category">News</div>
+    <a href="/events?category=news">
+      <div class="article-category">News</div>
+    </a>
     <h1 class="article-title">
       {{ $news->title }}
     </h1>
@@ -12,12 +14,14 @@
       <p class="article-date">Posted <span>{{ $news->date }}</span></p>
       <p class="article-author">by <span>{{ $news->created_by }}</span></p>
     </div>
-    <img 
-      src="{{ asset('storage/'.$news->image_file) }}" 
+    <img
+      src="{{ asset('storage/'.$news->image_file) }}"
       alt="{{ $news->title }}" class="article-featured-image" />
 
     <div class="article-content">
-      <?php echo $news->description; ?>
+      <p>
+        <?php echo $news->description; ?>
+      </p>
     </div>
   </div>
 </main>

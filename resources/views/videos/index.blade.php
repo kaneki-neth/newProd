@@ -54,11 +54,13 @@
     <div class="panel panel-inverse">
         <div class="panel-body" id="pannel-body">
             <div class="table-responsive" style="overflow-x: hidden">
+            @if(Auth::user()->can('video-write'))
                 <div class="d-flex justify-content-end">
                     <button class="btn btn-primary btn-xs" onclick="location.href='/videos/create'">
                         <i class="fa fa-plus"></i> Add New
                     </button>
                 </div>
+            @endif
 
                 <form id="form-search" style="">
                     <input type="hidden" name="filter" value="true">

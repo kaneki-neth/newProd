@@ -4444,7 +4444,7 @@ input[type="radio"] {
 }
 
 .media-kit .media-kit-image:hover {
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .media-kit h6 {
@@ -4473,6 +4473,33 @@ input[type="radio"] {
   font-size: 20px;
 }
 
-.search-term-text { font-size: 30px; }
+.search-term-text {
+  font-size: 30px;
+}
 
 /* search spec page starts here */
+
+/* vision and mission page starts here */
+.vm-title {
+  font-family: "Arial_narrow_7";
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 35px;
+}
+
+.vm-wrapper p {
+  font-size: 16px;
+}
+
+.divider {
+  height: 1px;
+  background-color: #000;
+  margin: 50px 0;
+}
+
+.value-title {
+  font-size: 23px;
+  font-family: "dm-sans-semi-bold";
+  margin: 30px 0;
+}
+/* vision and mission page ends here */

@@ -70,4 +70,8 @@
         </div>
     </div>
 </main>
+
+<script>
+  $("#nav-about").addClass("active");
+</script>
 @endsection

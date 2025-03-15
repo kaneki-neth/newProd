@@ -53,6 +53,7 @@
 
 <script>
     $("#nav-archive").addClass("active");
+
     $(document).ready(function() {
 
         $("#search-bar").on("keypress", function(event) {

@@ -84,6 +84,7 @@
 
 <script>
     $("#nav-archive").addClass("active");
+    
     let selectedYear = @json($selectedYear);
     document.querySelectorAll(".year-option-container .year-option").forEach((option) => {
         if (option.textContent.trim() == selectedYear) {

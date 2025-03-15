@@ -6,20 +6,19 @@
     <nav id="navmenu" class="navmenu">
       <ul class="nav-items">
 
-        <!-- dropdowns please help -->
-        <!-- this is the parent nav -->
-        <!-- <li><a href="/about" id="nav-about">About MATIX +<br></a></li> -->
-        <!-- this is the children navs -->
-        <li><a href="/vision_mission" id="nav-about">Vision & Mission<br></a></li>
-        <li><a href="/core_programs" id="nav-about">Core Programs<br></a></li>
+        <li class="dropdown"><a href="#" id="nav-about"><span>About MATIX +</span></a>
+          <ul>
+            <li><a href="/vision_mission">Vision & Mission</a></li>
+            <li><a href="/core_programs">Core Programs</a></li>
+          </ul>
+        </li>
 
-        <!-- this is the parent nav -->
-        <!-- <li><a href="" id="nav-archive">Materials Library +</a></li> -->
-        <!-- this is the children navs -->
-        <li><a href="/digital_archive" id="nav-archive">Materials Archive</a></li>
-        <li><a href="/digital_archive_new" id="nav-archive">New Materials Developed</a></li>
-
-
+        <li class="dropdown"><a href="#" id="nav-archive"><span>Materials Library +</span></a>
+          <ul>
+            <li><a href="/digital_archive_new">New Materials Developed</a></li>
+            <li><a href="/digital_archive">Materials Archive</a></li>
+          </ul>
+        </li>
 
         <li><a href="/events" id="nav-events">News and Events</a></li>
         <li><a href="/contact" id="nav-contact">Connect</a></li>

@@ -105,11 +105,11 @@
   /* Applied to main navmenu links when they are hovered over or active */
   --nav-mobile-background-color: #ffffff;
   /* Used as the background color for mobile navigation menu */
-  --nav-dropdown-background-color: #ffffff;
+  --nav-dropdown-background-color: #D5FF1C;
   /* Used as the background color for dropdown items that appear when hovering over primary navigation items */
-  --nav-dropdown-color: #272828;
+  --nav-dropdown-color: #000;
   /* Used for navigation links of the dropdown items in the navigation menu. */
-  --nav-dropdown-hover-color: #D5FF1C;
+  --nav-dropdown-hover-color: #000;
   /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
 }
 
@@ -499,7 +499,7 @@ h6 {
 
   .navmenu .dropdown ul {
     margin: 0;
-    padding: 10px 0;
+    padding: 0;
     background: var(--nav-dropdown-background-color);
     display: block;
     position: absolute;
@@ -510,11 +510,10 @@ h6 {
     transition: 0.3s;
     border-radius: 4px;
     z-index: 99;
-    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
   }
 
   .navmenu .dropdown ul li {
-    min-width: 200px;
+    width: auto;
   }
 
   .navmenu .dropdown ul a {
@@ -549,7 +548,8 @@ h6 {
   .navmenu .dropdown ul a:hover,
   .navmenu .dropdown ul .active:hover,
   .navmenu .dropdown ul li:hover>a {
-    color: var(--nav-dropdown-hover-color);
+    text-decoration: none;
+    background: #C5EA20;
   }
 
   .navmenu .dropdown:hover>ul {
@@ -1339,6 +1339,7 @@ h6 {
   }
 
   #category-dropdown {
+    margin-top: 40px !important;
     width: 100% !important;
     padding: 8px !important;
     border-radius: 5px;
@@ -1742,6 +1743,7 @@ h6 {
   }
 
   #category-dropdown {
+    margin-top: 40px !important;
     width: 100% !important;
     padding: 8px !important;
     border-radius: 5px;
@@ -2262,6 +2264,7 @@ h6 {
   }
 
   #category-dropdown {
+    margin-top: 40px !important;
     width: 100% !important;
     padding: 8px !important;
     border-radius: 5px;
@@ -4159,7 +4162,7 @@ input[type="radio"] {
 }
 
 .section-title {
-  margin-top: -67px;
+  margin-top: -38px;
   color: #bbb;
   font-weight: 600;
   font-size: 32px;

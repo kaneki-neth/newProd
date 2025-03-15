@@ -580,6 +580,14 @@ h6 {
   }
 
   /* about page ends here */
+
+  /* connect page starts here */
+  .connect-location .connect-loc-info {
+    width: auto !important;
+    font-size: 14px !important;
+  }
+
+  /* connect page ends here */
 }
 
 /* Navmenu - Mobile */
@@ -803,6 +811,14 @@ h6 {
   }
 
   /* news and events content ends here */
+
+  /* connect page starts here */
+  .connect-location .connect-loc-info {
+    width: auto !important;
+    font-size: 14px !important;
+  }
+
+  /* connect page ends here */
 
   /* footer starts here */
   .col-lg-4.col-md-12 img {
@@ -1407,6 +1423,20 @@ h6 {
   /* content page ends here */
   /* news and events page ends here */
 
+  /* vision and mission starts here */
+  .vm-wrapper p {
+    font-size: 13px !important;
+  }
+
+  /* vision and mission ends here */
+
+  /* connect page starts here */
+  .location-info,
+  .connect-loc-info a,
+  .main-connect {
+    font-size: 12px !important;
+  }
+
   /* footer starts here */
   .footer .footer-about {
     text-align: left !important;
@@ -1449,6 +1479,16 @@ h6 {
 
   .mobile-nav-toggle {
     margin-right: 108px;
+  }
+
+  .about-wrapper,
+  .archive-wrapper,
+  .news-wrapper,
+  .article-container,
+  .event-container,
+  .vm-wrapper,
+  .connect-wrapper {
+    padding: 0 35px !important;
   }
 
   /* general ends here */
@@ -1631,6 +1671,7 @@ h6 {
   .product-description,
   .library-description {
     font-size: 14px !important;
+    width: auto !important;
   }
 
   /* about page ends here */
@@ -1784,6 +1825,30 @@ h6 {
 
   /* content page ends here */
   /* news and events page ends here */
+
+  /* vision and mission starts here */
+  .vm-wrapper p {
+    font-size: 13px !important;
+    text-align: justify !important;
+  }
+
+  /* vision and mission ends here */
+
+  /* connect page starts here */
+  .connect-location .connect-location-sm {
+    width: 515px !important;
+  }
+
+  .main-connect {
+    font-size: smaller !important;
+  }
+
+  .location-info,
+  .connect-loc-info a {
+    font-size: x-small !important;
+  }
+
+  /* connect page ends here */
 
   /* footer starts here */
   .footer .footer-about .logo img {
@@ -1990,7 +2055,9 @@ h6 {
   .archive-wrapper,
   .news-wrapper,
   .article-container,
-  .event-container {
+  .event-container,
+  .vm-wrapper,
+  .connect-wrapper {
     padding: 0 35px !important;
   }
 
@@ -2000,9 +2067,10 @@ h6 {
 
   .about-title,
   .main-about h1 {
-    font-size: 24px;
-    width: 300px;
-    text-align: center;
+    font-size: 24px !important;
+    width: 300px !important;
+    margin-bottom: 20px !important;
+    text-align: center !important;
   }
 
   .second-about h1,
@@ -2278,6 +2346,37 @@ h6 {
 
   /* content page ends here */
   /* news and events page ends here */
+
+  /* vision and mission starts here */
+  .vm-wrapper p {
+    font-size: 12px !important;
+    text-align: center !important;
+  }
+
+  .value-title {
+    font-size: 18px !important;
+    margin: 15px 0 !important;
+    text-align: center !important;
+  }
+
+  /* vision and mission ends here */
+
+  /* connect page starts here */
+  .main-connect {
+    font-size: smaller !important;
+  }
+
+  .connect-location .connect-location-sm {
+    width: 300px !important;
+  }
+
+  .location-info,
+  .connect-loc-info a {
+    font-size: x-small !important;
+  }
+
+  /* connect page ends here */
+
 
   /* footer starts here */
   .footer .footer-about .logo {
@@ -4382,7 +4481,7 @@ input[type="radio"] {
 }
 
 .connect-location .connect-location-sm {
-  width: 50%;
+  width: 47%;
 }
 
 .map-container {
@@ -4399,7 +4498,7 @@ input[type="radio"] {
 }
 
 .connect-location .connect-loc-info {
-  width: 600px;
+  width: 600px !important;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -4502,4 +4601,5 @@ input[type="radio"] {
   font-family: "dm-sans-semi-bold";
   margin: 30px 0;
 }
+
 /* vision and mission page ends here */

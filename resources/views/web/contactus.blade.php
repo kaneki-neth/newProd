@@ -2,7 +2,7 @@
 
 @section('content')
 <main class="main main-connect">
-  <div class="container">
+  <div class="connect-wrapper container">
 
     <div class="row">
       <div class="col-12">

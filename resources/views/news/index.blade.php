@@ -95,7 +95,7 @@
                             @foreach($news as $n)
                                 <tr>
                                     <td class="text-center" width="15%">{{ date('F d, Y', strtotime($n->date)) }}</td>
-                                    <td class="" id="name" style="cursor: pointer"
+                                    <td class="" id="name" style="color:#28acb5; cursor: pointer;"
                                         onclick="location.href='/news/{{ $n->n_id }}'">{{ $n->title }}</td>
                                     <td class="text-center" width="10%">
                                         @if($n->enabled)

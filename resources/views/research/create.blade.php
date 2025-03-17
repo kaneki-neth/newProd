@@ -155,9 +155,9 @@
 
     <ol class="breadcrumb float-xl-end">
         <li class="breadcrumb-item"><a href="{{ route('research.index') }}">Researches</a></li>
-        <li class="breadcrumb-item"><a href="javascript:;">Add Research</a></li>
+        <li class="breadcrumb-item"><a href="javascript:;">Research</a></li>
     </ol>
-    <h1 class="page-header">Add Research</h1>
+    <h1 class="page-header">Research (Add)</h1>
 
     <div class="panel panel-inverse">
         <div class="panel-body" id="pannel-body">
@@ -259,11 +259,11 @@
                     </div>
                 </div>
             </div>
-
-            <div class="d-flex justify-content-start mt-3">
-                <button class="btn btn-primary btn-xs" onclick="submitData()">Submit</button>
-            </div>
         </div>
+        <div class="d-flex justify-content-start mt-5">
+            <button class="btn btn-primary btn-xs" onclick="submitData()">Submit</button>
+        </div>
+    </div>
     </div>
 
     <script src="/assets/js/jquery-3.6.4.min.js"></script>
@@ -446,19 +446,19 @@
 
             let newRow = document.createElement('tr');
             newRow.innerHTML = `
-                    <td style="width:100% !important" colspan="2">
-                        <div>
-                            <label class="form-label" for="author">Author Name </label>
-                            <input class="author-name form-control form-control-xs "
-                                name="author_name" id="author-name-field" style=" width:100%">
-                        </div>
-                    </td>
-                    <td class="d-flex justify-content-center align-items-center" style="height:100%">
-                        <div class="d-flex flex-column justify-content-end align-items-center text-danger mt-3" style="height: 23px">
-                            <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeRow(this)"></i>
-                        </div>
-                    </td>
-                    `;
+                        <td style="width:100% !important" colspan="2">
+                            <div>
+                                <label class="form-label" for="author">Author Name </label>
+                                <input class="author-name form-control form-control-xs "
+                                    name="author_name" id="author-name-field" style=" width:100%">
+                            </div>
+                        </td>
+                        <td class="d-flex justify-content-center align-items-center" style="height:100%">
+                            <div class="d-flex flex-column justify-content-end align-items-center text-danger mt-3" style="height: 23px">
+                                <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeRow(this)"></i>
+                            </div>
+                        </td>
+                        `;
             tableBody.appendChild(newRow);
         }
         function removeRow(button) {

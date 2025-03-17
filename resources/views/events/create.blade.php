@@ -138,9 +138,9 @@
 
 <ol class="breadcrumb float-xl-end">
     <li class="breadcrumb-item"><a href="{{ route('events.index') }}">Events</a></li>
-    <li class="breadcrumb-item"><a href="javascript:;">Add Event</a></li>
+    <li class="breadcrumb-item"><a href="javascript:;">Event</a></li>
 </ol>
-<h1 class="page-header">Add Event</h1>
+<h1 class="page-header">Event (Add)</h1>
 
 <div class="panel panel-inverse">
     <div class="panel-body" id="pannel-body">

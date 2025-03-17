@@ -199,9 +199,9 @@
 
 <ol class="breadcrumb float-xl-end">
     <li class="breadcrumb-item"><a href="{{ route('materials.index') }}">Materials</a></li>
-    <li class="breadcrumb-item"><a href="javascript:;">Add Material</a></li>
+    <li class="breadcrumb-item"><a href="javascript:;">Material</a></li>
 </ol>
-<h1 class="page-header">Add Material</h1>
+<h1 class="page-header">Material (Add)</h1>
 
 <div class="panel panel-inverse">
     <div class="panel-body" id="pannel-body" style="padding: 45px !important;">
@@ -233,7 +233,7 @@
                         <select class="form-control select2 validate" id="categories" name="categories[]" type="text"
                             multiple>
                             @foreach ($categories as $category)
-                                <option value="{{ $category->c_id }}">{{ $category->name }}</option>
+                            <option value="{{ $category->c_id }}">{{ $category->name }}</option>
                             @endforeach
                         </select>
                         <span id="categories-msg" class="error-message"></span>
@@ -242,18 +242,17 @@
                         <label for="year" class="form-label">Year <span class="text-danger">*</span></label>
                         <select class="form-control select2-container select2" id="year" name="year">
                             @for ($i = 1984; $i <= (date('Y') + 5); $i++)
-                                @if ($i == date('Y'))
-                                    <option value="{{ $i }}" selected>{{ $i }}</option>
+                                @if ($i==date('Y'))
+                                <option value="{{ $i }}" selected>{{ $i }}</option>
                                 @else
-                                    <option value="{{ $i }}">{{ $i }}</option>
+                                <option value="{{ $i }}">{{ $i }}</option>
                                 @endif
-                            @endfor
+                                @endfor
                         </select>
                     </div>
                 </div>
                 <div class="row g-0 mt-3">
                     <div class="d-flex flex-row gap-2">
-                        <label class="form-label" for="enabled">Status <span class="text-danger">*</span></label>
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" role="switch" id="enabled" name="enabled"
                                 checked>
@@ -269,7 +268,7 @@
                             placeholder="Enter text ..." rows="12"></textarea>
                     </div>
                 </div>
-                
+
                 <div class="row g-0 mt-3">
                     <div class="col-12">
                         <div>
@@ -407,9 +406,9 @@
                 </div>
 
             </div>
-            <div class="d-flex justify-content-start">
+            <div class="mt-5 d-flex justify-content-start">
                 <button class="btn btn-primary btn-xs" onclick="submitData()">
-                    <i class="fa fa-plus"></i> Submit
+                    Submit
                 </button>
             </div>
         </div>
@@ -442,12 +441,11 @@
         height: "300",
         maximumImageFileSize: 102400000,
         callbacks: {
-            onImageUploadError: function (msg) {
-            }
+            onImageUploadError: function(msg) {}
         }
     });
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('#imageError').removeClass("show");
         $('#imageError').hide();
         $('#imageError').empty();
@@ -462,8 +460,11 @@
         //     $field.css('border-color', '#ced4da');
         // });
 
-        $('#categories').select2({ placeholder: "Select Categories", width: "100%" })
-            .on('change', function () {
+        $('#categories').select2({
+                placeholder: "Select Categories",
+                width: "100%"
+            })
+            .on('change', function() {
                 $(this).next('.select2-container')
                     .find('.select2-selection--multiple')
                     .removeClass('error-input');
@@ -483,7 +484,7 @@
             }
 
             let reader = new FileReader();
-            reader.onload = function (e) {
+            reader.onload = function(e) {
                 let newDiv = document.createElement('div');
                 newDiv.classList.add('image-container');
 
@@ -501,7 +502,7 @@
 
                 var currentCount = imageCount;
 
-                toolOverlay.addEventListener('click', function () {
+                toolOverlay.addEventListener('click', function() {
                     deleteSubImage(newDiv, currentCount);
                 });
 
@@ -539,7 +540,7 @@
             }
 
             let reader = new FileReader();
-            reader.onload = function (e) {
+            reader.onload = function(e) {
                 mainImage = file;
                 console.log("main image is currently ", mainImage);
                 console.log(e.target.result);
@@ -597,21 +598,33 @@
 
             let value = "No Value";
             if (name && value) {
-                properties.push({ name, value, type: 'soft' });
+                properties.push({
+                    name,
+                    value,
+                    type: 'soft'
+                });
             }
         });
         document.querySelectorAll('#technical_properties_tableBody tr').forEach(row => {
             let name = row.querySelector('input[name="technical_property_name"]').value;
             let value = row.querySelector('input[name="technical_property_value"]').value;
             if (name && value) {
-                properties.push({ name, value, type: 'technical' });
+                properties.push({
+                    name,
+                    value,
+                    type: 'technical'
+                });
             }
         });
         document.querySelectorAll('#sustainability_tableBody tr').forEach(row => {
             let name = row.querySelector('input[name="sustainability_property_name"]').value;
             let value = row.querySelector('input[name="sustainability_property_value"]').value;
             if (name && value) {
-                properties.push({ name, value, type: 'application' });
+                properties.push({
+                    name,
+                    value,
+                    type: 'application'
+                });
             }
 
         });
@@ -641,11 +654,11 @@
             data: formData,
             processData: false,
             contentType: false,
-            success: function (response) {
+            success: function(response) {
                 console.log(response);
                 window.location.href = '/material';
             },
-            error: function (xhr) {
+            error: function(xhr) {
                 if (xhr.status === 400) {
                     const errors = xhr.responseJSON.errors;
                     console.log("these the errors", errors);
@@ -666,7 +679,7 @@
                                 }
 
                                 $("#" + $input_id).addClass('error-input')
-                                    .on('keyup change', function () {
+                                    .on('keyup change', function() {
                                         rm_error(this);
                                     });
                                 $('#' + key + '-msg').text(element[0]);
@@ -675,8 +688,7 @@
                     }
 
                     // Swal.close();
-                }
-                else if (xhr.status === 413) {
+                } else if (xhr.status === 413) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Content Too Large',
@@ -717,6 +729,7 @@
                             `;
         tableBody.appendChild(newRow);
     }
+
     function removeRow(button) {
         let currentRows = document.querySelectorAll('#properties_tableBody tr').length;
         let row = button.closest('tr');

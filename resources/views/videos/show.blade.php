@@ -56,7 +56,7 @@
                             <div class="col-md-6">
                                 <label for="title" class="form-label">Title</label>
                                 <input type="text" class="form-control form-control-xs" name="title" placeholder="..."
-                                    value="{{ $video->title }}" readonly>
+                                    value="{{ $video->title }}" readonly style="background-color: #f0f0f0;">
                                 <span class="error-message" style="color: red;"></span>
                             </div>
 
@@ -64,7 +64,8 @@
                             <div class="col-md-6">
                                 <label for="date" class="form-label">Date</label>
                                 <input class="form-control" id="datepicker-autoClose" name="date"
-                                    value="{{ date('F d, Y', strtotime($video->date)) }}" readonly>
+                                    value="{{ date('F d, Y', strtotime($video->date)) }}" readonly
+                                    style="background-color: #f0f0f0;">
                                 <span class="error-message" style="color: red;"></span>
                             </div>
 
@@ -73,7 +74,7 @@
                                 <label for="video_url" class="form-label">Video URL</label>
                                 <input class="form-control" name="video_url" id="urlInput"
                                     placeholder="Paste video URL here" value="{{ $video->video_url }}"
-                                    onchange="fetchThumbnail()" readonly>
+                                    onchange="fetchThumbnail()" readonly style="background-color: #f0f0f0;">
                                 <span class="error-message" style="color: red;"></span>
                             </div>
 
@@ -81,9 +82,9 @@
                             <div class="col-md-6 mt-3 d-flex align-items-center justify-content-end">
                                 <div class="form-check form-switch">
                                     @if($video->status == 1)
-                                        <span class="badge bg-primary rounded-pill">Enabled</span>
+                                        <span class="badge bg-secondary rounded-pill">Enabled</span>
                                     @else
-                                        <span class="badge bg-warning rounded-pill">Disabled</span>
+                                        <span class="badge bg-secondary rounded-pill">Disabled</span>
                                     @endif
                                 </div>
                             </div>
@@ -93,8 +94,8 @@
                                 <label for="description" class="form-label">Description</label>
                                 <div class="border p-2 rounded">
                                     <textarea class="textarea form-control" name="description" id="summernote"
-                                        placeholder="Enter text ..." rows="12"
-                                        readonly>{!! strip_tags($video->description, '<p><a><b><i><u><strong><em><ul><ol><li><img>') !!}</textarea>
+                                        placeholder="Enter text ..." rows="12" readonly
+                                        style="background-color: #f0f0f0;">{!! strip_tags($video->description, '<p><a><b><i><u><strong><em><ul><ol><li><img>') !!}</textarea>
                                     <span class="error-message" id="descriptionError" style="color: red;"></span>
                                 </div>
                             </div>

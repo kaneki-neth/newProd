@@ -46,9 +46,9 @@
 
     <ol class="breadcrumb float-xl-end">
         <li class="breadcrumb-item"><a href="{{ route('videos.index') }}">Videos</a></li>
-        <li class="breadcrumb-item"><a href="javascript:;">Edit Video</a></li>
+        <li class="breadcrumb-item"><a href="javascript:;">Video</a></li>
     </ol>
-    <h1 class="page-header">Edit Video</h1>
+    <h1 class="page-header">Video (Update)</h1>
 
     <!-- make new -->
 
@@ -110,7 +110,7 @@
                         </div>
 
                         <!-- Button -->
-                        <div class="col-6 mt-3">
+                        <div class="col-6 mt-5">
                             <button class="btn btn-primary btn-xs" onclick="submitData()">
                                 Update
                             </button>

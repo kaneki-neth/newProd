@@ -127,7 +127,7 @@
     });
 
     document.querySelectorAll('.card-title-video').forEach(excerpt => {
-      truncateToWordCount(excerpt, 8);
+      truncateToWordCount(excerpt, 5);
     });
   </script>
 </div>

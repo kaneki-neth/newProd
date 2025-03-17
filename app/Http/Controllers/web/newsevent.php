@@ -11,7 +11,7 @@ class newsevent extends Controller
     public function index(Request $request)
     {
 
-        if (! $request->ajax() && ! $request->has('category')){
+        if (!$request->ajax() && !$request->has('category')) {
             return redirect('/events?category=news');
         }
 
@@ -117,6 +117,10 @@ class newsevent extends Controller
             ->where('r_id', $r_id)
             ->first();
 
+        $authors = DB::table('research_author')->where('r_id', $r_id)->pluck('author_name')->toArray();
+
+        $files = DB::table('research_files')->where('r_id', $r_id)->get();
+
         if (!$research->enabled) {
             return redirect()->action([newsevent::class, 'index']);
         }
@@ -129,7 +133,7 @@ class newsevent extends Controller
             ->first();
         $research->created_by = $user->first_name . ' ' . $user->last_name;
 
-        return view('web.news_and_events.articles.events_research_content', compact('research'));
+        return view('web.news_and_events.articles.events_research_content', compact('research', 'authors', 'files'));
     }
 
     public function events_blog_content($b_id)

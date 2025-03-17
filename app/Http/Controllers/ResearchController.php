@@ -57,6 +57,17 @@ class ResearchController extends Controller
 
     public function show($r_id)
     {
+        $files = DB::table('research_files')
+            ->select('file_path')
+            ->where('r_id', $r_id)
+            ->get()
+            ->toArray();
+
+        $authors = DB::table('research_author')
+            ->where('r_id', $r_id)
+            ->pluck('author_name') // Gets an array of values
+            ->toArray();
+
         $research = DB::table('research')
             ->select('r_id', 'title', 'date', 'description', 'image_file', 'enabled')
             ->where('r_id', $r_id)
@@ -68,7 +79,7 @@ class ResearchController extends Controller
             ->get()
             ->toArray();
 
-        return view('research.show', compact('research', 'subImages'));
+        return view('research.show', compact('research', 'subImages', 'files', 'authors'));
     }
 
     public function create()
@@ -89,11 +100,27 @@ class ResearchController extends Controller
             ->get()
             ->toArray();
 
-        return view('research.edit', compact('research', 'subImages'));
+        // Get unique files to avoid duplicates in the view
+        $files = DB::table('research_files')
+            ->select('file_path')
+            ->where('r_id', $r_id)
+            // ->distinct() // Add this to get only unique file paths
+            ->get()
+            ->toArray();
+
+        $authors = DB::table('research_author')
+            ->where('r_id', $r_id)
+            ->whereNotNull('author_name') // Only get non-null author names
+            // ->distinct() // In case there are duplicate author names
+            ->pluck('author_name')
+            ->toArray();
+
+        return view('research.edit', compact('research', 'subImages', 'files', 'authors'));
     }
 
     public function store(Request $request)
     {
+        // dd($request->all());
         return $this->handleRequest($request);
     }
 
@@ -150,6 +177,72 @@ class ResearchController extends Controller
                 $r_id = DB::table('research')->insertGetId($data);
             }
 
+            // Handle file deletions
+            if ($request->has('filesToDelete') && !empty($request->filesToDelete)) {
+                foreach ($request->filesToDelete as $filePath) {
+                    // Check if this file belongs to this research
+                    $fileExists = DB::table('research_files')
+                        ->where('r_id', $r_id)
+                        ->where('file_path', $filePath)
+                        ->exists();
+
+                    if ($fileExists) {
+                        // Check if this file is used by other research entries
+                        $fileUsedElsewhere = DB::table('research_files')
+                            ->where('file_path', $filePath)
+                            ->where('r_id', '!=', $r_id)
+                            ->exists();
+
+                        // Only delete the physical file if it's not used elsewhere
+                        if (!$fileUsedElsewhere && Storage::disk('public')->exists($filePath)) {
+                            Storage::disk('public')->delete($filePath);
+                        }
+
+                        // Delete only the database records for this research
+                        DB::table('research_files')
+                            ->where('r_id', $r_id)
+                            ->where('file_path', $filePath)
+                            ->delete();
+                    }
+                }
+            }
+
+            // Handle the uploaded files
+            if ($request->hasFile('uploadFiles')) {
+                // Save all files to research_files table
+                foreach ($request->file('uploadFiles') as $file) {
+                    $uploadFilePath = $file->storeAs('files/research', $file->getClientOriginalName(), 'public');
+
+                    // Insert file record in research_files table
+                    DB::table('research_files')->insert([
+                        'r_id' => $r_id,
+                        'file_path' => $uploadFilePath,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
+            }
+
+            // Handle authors - moved outside the uploadFiles condition
+            if ($request->has('authors') && !empty($request->authors)) {
+                // If updating, delete existing authors first
+                if ($r_id) {
+                    DB::table('research_author')->where('r_id', $r_id)->delete();
+                }
+
+                // Insert all authors
+                foreach ($request->authors as $author) {
+                    if (!empty($author)) {
+                        DB::table('research_author')->insert([
+                            'r_id' => $r_id,
+                            'author_name' => $author,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                    }
+                }
+            }
+
             if ($request->hasFile('sub_images')) {
                 $storedImagePaths = array_merge(
                     $storedImagePaths,
@@ -182,9 +275,9 @@ class ResearchController extends Controller
     protected function validateRequest(Request $request, $r_id = null)
     {
         if ($request->has('date') && $request->date) {
-            $request->merge(['date' => date('Y-m-d', strtotime($request->date))]);
+            $request->merge(input: ['date' => date('Y-m-d', strtotime($request->date))]);
         }
-        if (! preg_match('/>(\s*[^<\s].*?)</', $request->description)) {
+        if (!preg_match('/>(\s*[^<\s].*?)</', $request->description)) {
             $request->merge(['description' => strip_tags($request->description)]);
         }
         if ($request->description == strip_tags($request->description)) {
@@ -196,11 +289,14 @@ class ResearchController extends Controller
             'title' => 'required|max:255',
             'date' => 'required|date',
             'description' => 'required',
-            'mainImage' => ($r_id ? 'sometimes' : 'required').'|image|mimes:jpeg,png,jpg,gif,svg|max:102400',
+            'mainImage' => ($r_id ? 'sometimes' : 'required') . '|image|mimes:jpeg,png,jpg,gif,svg|max:102400',
             'sub_images' => 'sometimes|array',
             'sub_images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:102400',
+            'uploadFiles.*' => 'sometimes|file|mimes:pdf,doc,docx,ppt,pptx|max:102400',
             'subImagesToDelete' => 'sometimes|array',
             'subImagesToDelete.*' => 'integer',
+            'filesToDelete' => 'sometimes|array',
+            'filesToDelete.*' => 'string',
             'enabled' => 'required|in:0,1',
         ], messages: [
             'title.required' => 'The title field is required.',
@@ -209,6 +305,7 @@ class ResearchController extends Controller
             'mainImage.required' => 'The main image is required.',
             'mainImage.max' => 'The main image must not be greater than 100MB.',
             'sub_images.*.max' => 'The sub images must not be greater than 100MB.',
+            'uploadFiles.*.max' => 'The uploaded file must not be greater than 100MB.',
         ]);
     }
 

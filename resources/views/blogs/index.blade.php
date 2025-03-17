@@ -95,7 +95,7 @@
                             @foreach($blogs as $b)
                                 <tr>
                                     <td class="text-center" width="15%">{{ date('F d, Y', strtotime($b->date)) }}</td>
-                                    <td class="" id="name" style="cursor: pointer"
+                                    <td class="" id="name" style="color:#28acb5; cursor: pointer;"
                                         onclick="location.href='/blogs/{{ $b->b_id }}'">{{ $b->title }}</td>
                                     <td class="text-center" width="10%">
                                         @if($b->enabled)

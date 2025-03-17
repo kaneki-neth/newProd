@@ -95,7 +95,7 @@
                             @foreach($researches as $r)
                                 <tr>
                                     <td class="text-center" width="15%">{{ date('F d, Y', strtotime($r->date)) }}</td>
-                                    <td class="" id="name" style="cursor: pointer"
+                                    <td class="" id="name" style="color:#28acb5; cursor: pointer;"
                                         onclick="location.href='/research/{{ $r->r_id }}'">{{ $r->title }}</td>
                                     <td class="text-center" width="10%">
                                         @if($r->enabled)

@@ -137,9 +137,9 @@
 
 <ol class="breadcrumb float-xl-end">
     <li class="breadcrumb-item"><a href="{{ route('news.index') }}">News</a></li>
-    <li class="breadcrumb-item"><a href="javascript:;">Edit News</a></li>
+    <li class="breadcrumb-item"><a href="javascript:;">News</a></li>
 </ol>
-<h1 class="page-header">News List</h1>
+<h1 class="page-header">News (Update)</h1>
 
 <div class="panel panel-inverse">
     <div class="panel-body" id="pannel-body">
@@ -200,8 +200,8 @@
                 <input class="form-check-input" type="checkbox" role="switch" id="enabled" name="enabled" {{ $news->enabled ? 'checked' : '' }}>
             </div>
         </div>
-        <div class="d-flex justify-content-start mt-3">
-            <button class="btn btn-primary btn-xs" onclick="submitData()">Submit</button>
+        <div class="d-flex justify-content-start mt-5">
+            <button class="btn btn-primary btn-xs" onclick="submitData()">Update</button>
         </div>
     </div>
 </div>

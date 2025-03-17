@@ -71,9 +71,9 @@
                 <div class="d-flex align-items-center">
                     <h2 class="me-2">{{ $event->title }}</h2>
                     @if($event->enabled == 1)
-                        <span class="badge bg-primary rounded-pill">Enabled</span>
+                        <span class="badge bg-secondary rounded-pill">Enabled</span>
                     @else
-                        <span class="badge bg-warning rounded-pill">Disabled</span>
+                        <span class="badge bg-secondary rounded-pill">Disabled</span>
                     @endif
                 </div>
                 <p><i class="fa fa-calendar"></i> {{ date('F j, Y', strtotime($event->date)) }}</p>

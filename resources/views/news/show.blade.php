@@ -39,7 +39,6 @@
         align-items: center;
         justify-content: center;
         border: 1px solid var(--bs-component-border-color);
-        border-radius: 4px;
     }
 
     #main-img-container {
@@ -51,9 +50,9 @@
 
 <ol class="breadcrumb float-xl-end">
     <li class="breadcrumb-item"><a href="/news">News</a></li>
-    <li class="breadcrumb-item"><a href="javascript:;">View</a></li>
+    <li class="breadcrumb-item"><a href="javascript:;">News</a></li>
 </ol>
-<h1 class="page-header">News View</h1>
+<h1 class="page-header">News (View)</h1>
 
 <div class="panel panel-inverse">
     <div class="panel-body" id="pannel-body">
@@ -61,7 +60,7 @@
             <div class="col-md-12 d-flex justify-content-start gap-2">
                 <a href="/news" class="btn btn-primary btn-xs"><i class="fa fa-arrow-left"></i> Back</a>
                 @can('news-write')
-                    <a href="/news/{{ $news->n_id }}/edit" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Edit</a>
+                <a href="/news/{{ $news->n_id }}/edit" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> Edit</a>
                 @endcan
             </div>
         </div>
@@ -70,9 +69,9 @@
                 <div class="d-flex align-items-center">
                     <h2 class="me-2">{{ $news->title }}</h2>
                     @if($news->enabled == 1)
-                        <span class="badge bg-primary rounded-pill">Enabled</span>
+                    <span class="badge bg-secondary rounded-pill">Enabled</span>
                     @else
-                        <span class="badge bg-warning rounded-pill">Disabled</span>
+                    <span class="badge bg-secondary rounded-pill">Disabled</span>
                     @endif
                 </div>
                 <p><i class="fa fa-calendar"></i> {{ date('F j, Y', strtotime($news->date)) }}</p>
@@ -84,13 +83,13 @@
                         <img src="{{ asset('storage/'.$news->image_file) }}" alt="Image" style="width: 100%;" style="width: 100%; height:100%; object-fit: contain;">
                     </div>
                     @if(count($subImages) > 0)
-                        <div id="imageGallery" style="display: flex; gap: 10px; overflow-x: auto; padding: 5px; border: 1px solid #ccc; border-radius: 4px; margin-top: 8px">
-                            @foreach($subImages as $subImage)
-                                <div class="image-container">
-                                    <img src="{{ asset('storage/'.$subImage->image_file) }}" style="width: 100%; height: 100%; border: 1px solid #d1c3c0">
-                                </div>
-                            @endforeach
+                    <div id="imageGallery" style="display: flex; gap: 10px; overflow-x: auto; padding: 5px; border: 1px solid #ddd; margin-top: 8px">
+                        @foreach($subImages as $subImage)
+                        <div class="image-container">
+                            <img class="opacity-75" src="{{ asset('storage/'.$subImage->image_file) }}" style="width: 100%; height: 100%; border: 1px solid #ddd">
                         </div>
+                        @endforeach
+                    </div>
                     @endif
                 </div>
             </div>

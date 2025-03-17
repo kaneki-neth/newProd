@@ -109,7 +109,7 @@
                                     <td class="text-center" width="20%" data-order="{{ $dateTime->toIso8601String() }}">
                                         {{ $dateTime->format('F d, Y g:i A') }}
                                     </td>
-                                    <td class="" style="cursor: pointer" onclick="location.href='/events_/{{ $e->e_id }}'">{{ $e->title }}</td>
+                                    <td class="" style="color:#28acb5; cursor: pointer;" onclick="location.href='/events_/{{ $e->e_id }}'">{{ $e->title }}</td>
                                     <td width="30%">{{ $e->location }}</td>
                                     <td class="text-center" width="10%">
                                         @if($e->enabled)

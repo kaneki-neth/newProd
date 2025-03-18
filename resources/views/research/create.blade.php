@@ -184,7 +184,7 @@
                     <div class="form-group mt-2">
                         <label for="uploadFile" class="form-label">Upload File </label>
                         <input type="file" class="form-control" id="uploadFile" name="uploadFile" accept=".pdf">
-                        <span style="font-size: small">Maximum file size: 100MB</span><span class="text-danger">*</span>
+                        <span class="text-uppercase small text-muted">maximum file size: 100MB</span> <span class="text-danger small">*</span>
                         <span id="uploadFile-msg" class="error-msg text-danger"></span>
                     </div>
 

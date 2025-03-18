@@ -184,6 +184,7 @@
                     <div class="form-group mt-2">
                         <label for="uploadFile" class="form-label">Upload File </label>
                         <input type="file" class="form-control" id="uploadFile" name="uploadFile" accept=".pdf">
+                        <span style="font-size: small">Maximum file size: 100MB</span><span class="text-danger">*</span>
                         <span id="uploadFile-msg" class="error-msg text-danger"></span>
                     </div>
 
@@ -446,19 +447,19 @@
 
             let newRow = document.createElement('tr');
             newRow.innerHTML = `
-                                <td style="width:100% !important" colspan="2">
-                                    <div>
-                                        <label class="form-label" for="author">Author Name </label>
-                                        <input class="author-name form-control form-control-xs "
-                                            name="author_name" id="author-name-field" style=" width:100%">
-                                    </div>
-                                </td>
-                                <td class="d-flex justify-content-center align-items-center" style="height:100%">
-                                    <div class="d-flex flex-column justify-content-end align-items-center text-danger mt-3" style="height: 23px">
-                                        <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeRow(this)"></i>
-                                    </div>
-                                </td>
-                                `;
+                                            <td style="width:100% !important" colspan="2">
+                                                <div>
+                                                    <label class="form-label" for="author">Author Name </label>
+                                                    <input class="author-name form-control form-control-xs "
+                                                        name="author_name" id="author-name-field" style=" width:100%">
+                                                </div>
+                                            </td>
+                                            <td class="d-flex justify-content-center align-items-center" style="height:100%">
+                                                <div class="d-flex flex-column justify-content-end align-items-center text-danger mt-3" style="height: 23px">
+                                                    <i type="button" class="fas fa-lg fa-fw fa-trash-can" onclick="removeRow(this)"></i>
+                                                </div>
+                                            </td>
+                                            `;
             tableBody.appendChild(newRow);
         }
         function removeRow(button) {

@@ -12,7 +12,17 @@
     </h1>
     <div class="article-meta">
       <p class="article-date">Posted <span>{{ $research->date }}</span></p>
-      <p class="article-author">by <span>{{ implode(', ', $authors) }}</span></p>
+      <p class="article-author">by
+      @php
+      $maxAuthors = 3;
+      $authorCount = count($authors);
+      $displayAuthors = array_slice($authors, 0, $maxAuthors);
+    @endphp
+      <span>{{ implode(', ', $displayAuthors) }}</span>
+      @if($authorCount > $maxAuthors)
+      <span>et al.</span>
+    @endif
+      </p>
     </div>
     <img src="{{ asset('storage/' . $research->image_file) }}" alt="{{ $research->title }}"
       class="article-featured-image" />

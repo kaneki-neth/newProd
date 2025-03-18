@@ -28,12 +28,14 @@
       class="article-featured-image" />
 
     <div class="generate-qr" data-bs-toggle="modal" data-bs-target="#qrModal">
+      @if($files && count($files) > 0)
       <i class="bi bi-filetype-pdf"></i>
       @foreach($files as $file)
       <a href="" onclick="openPdf('{{ asset('storage/' . $file->file_path) }}')">
       <span>View or download PDF</span>
       </a>
     @endforeach
+    @endif
     </div>
 
     <div class="article-content">

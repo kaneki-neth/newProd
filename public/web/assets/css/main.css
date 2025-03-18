@@ -2354,6 +2354,11 @@ h6 {
   .article-title {
     font-size: 38px !important;
   }
+  
+  .article-date,
+  .article-author {
+    font-size: 11px !important;
+  }
 
   .event-meta {
     font-size: 12px !important;

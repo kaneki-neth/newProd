@@ -10,27 +10,28 @@
     <h1 class="article-title">
       {{ $research->title }}
     </h1>
-    <div class="article-meta">
-      <p class="article-date">Published <span>{{ $research->date }}</span></p>
-      <p class="article-author">by
-      @php
-      $maxAuthors = 3;
-      $authorCount = count($authors);
-      $displayAuthors = array_slice($authors, 0, $maxAuthors);
-      $remainingAuthors = array_slice($authors, $maxAuthors);
-      $tooltipContent = implode('<br>', $remainingAuthors);
-  @endphp
-      <span>{{ implode(', ', $displayAuthors) }}</span>
-      @if($authorCount > $maxAuthors)
-      <span class="et-al-hover" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-      title="{{ $tooltipContent }}">et al.</span>
+    <div class="article-meta d-flex flex-column flex-sm-row align-items-center text-center text-sm-start mb-3">
+      <p class="article-date me-0 me-sm-3 mb-1 mb-sm-0">
+      <small>Published <span>{{ $research->date }}</span></small>
+      </p>
+      <p class="article-author mb-0">
+      <small>
+        @php
+        $maxAuthors = 3;
+        $authorCount = count($authors);
+        $displayAuthors = array_slice($authors, 0, $maxAuthors);
+    @endphp
+        <span>{{ implode(', ', $displayAuthors) }}</span>
+        @if($authorCount > $maxAuthors)
+      <span>et al.</span>
     @endif
+      </small>
       </p>
     </div>
     <img src="{{ asset('storage/' . $research->image_file) }}" alt="{{ $research->title }}"
       class="article-featured-image" />
 
-    <div class="generate-qr" data-bs-toggle="modal" data-bs-target="#qrModal">
+    <div class="download-pdf">
       @if($files && count($files) > 0)
       <i class="bi bi-filetype-pdf"></i>
       @foreach($files as $file)

@@ -27,11 +27,6 @@ class DatabaseSeeder extends Seeder
             BusinessUnitSeeder::class,
             OrgUserBuSeeder::class,
             OrgCompanySeeder::class,
-
-            CategorySeeder::class,
-            MaterialSeeder::class,
-            NBRESeeder::class,
-            VideoSeeder::class,
         ]);
     }
 }

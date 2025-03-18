@@ -14,7 +14,7 @@
                         <div class="d-flex align-items-center">
                             <div class="flex-grow-1 text-center">
                                 <!-- <img src="{{ url('/images/_logo.pngz') }}" alt="user_profile" width="80px"> -->
-                                <img src="{{url('web/assets/img/matix_logo_white.png')}}" width="80px" data-aos="fade-in">
+                                <img src="{{ asset('restologoBlack.png') }}" width="80px" data-aos="fade-in">
                             </div>
                             <div class="menu-caret ms-auto"></div>
                         </div>
@@ -24,12 +24,12 @@
             </div>
             <div id="appSidebarProfileMenu" class="collapse">
                 @if(Auth::user()->can('company_settings'))
-                <div class="menu-item pt-5px" id="company_settings">
-                    <a href="/settings/company" class="menu-link">
-                        <div class="menu-icon"><i class="fa fa-cog"></i></div>
-                        <div class="menu-text">Company Settings</div>
-                    </a>
-                </div>
+                    <div class="menu-item pt-5px" id="company_settings">
+                        <a href="/settings/company" class="menu-link">
+                            <div class="menu-icon"><i class="fa fa-cog"></i></div>
+                            <div class="menu-text">Company Settings</div>
+                        </a>
+                    </div>
                 @endif
                 <div class="menu-item" id="myAccount">
                     <a href="/settings/myAccount" class="menu-link">
@@ -54,148 +54,62 @@
                 </a>
             </div>
 
-            @can('connect-read')
-            <div class="menu-item" id="connect">
-                <a href="/connect-mail" class="menu-link">
-                    <div class="menu-icon">
-                        <i class="fa-solid fa-envelope"></i>
-                    </div>
-                    <div class="menu-text">Connect</div>
-                </a>
-            </div>
-            @endcan
 
-            @canany(['category-read', 'category-write'])
-            <div class="menu-item" id="category">
-                <a href="/category" class="menu-link">
-                    <div class="menu-icon">
-                        <i class="fa fa-boxes-stacked"></i>
-                    </div>
-                    <div class="menu-text">Categories</div>
-                </a>
-            </div>
-            @endcanany
-
-            @canany(['material-read', 'material-write'])
-            <div class="menu-item" id="material">
-                <a href="/material" class="menu-link">
-                    <div class="menu-icon">
-                        <i class="fa fa-boxes-stacked"></i>
-                    </div>
-                    <div class="menu-text">Materials</div>
-                </a>
-            </div>
-            @endcanany
-
-            @canany(['video-read', 'video-write'])
-            <div class="menu-item" id="videos">
-                <a href="/videos" class="menu-link">
-                    <div class="menu-icon">
-                        <i class="fa fa-video"></i>
-                    </div>
-                    <div class="menu-text">Videos</div>
-                </a>
-            </div>
-            @endcanany
-
-            @canany(['news-read', 'news-write'])
-            <div class="menu-item" id="news">
-                <a href="/news" class="menu-link">
-                    <div class="menu-icon">
-                        <i class="fa fa-newspaper"></i>
-                    </div>
-                    <div class="menu-text">News</div>
-                </a>
-            </div>
-            @endcanany
-
-            @canany(['blog-read', 'blog-write'])
-            <div class="menu-item" id="blogs">
-                <a href="/blogs" class="menu-link">
-                    <div class="menu-icon">
-                        <i class="fa fa-blog"></i>
-                    </div>
-                    <div class="menu-text">Blogs</div>
-                </a>
-            </div>
-            @endcanany
-
-            @canany(['research-read', 'research-write'])
-            <div class="menu-item" id="research">
-                <a href="/research" class="menu-link">
-                    <div class="menu-icon">
-                        <i class="fa fa-flask"></i>
-                    </div>
-                    <div class="menu-text">Research</div>
-                </a>
-            </div>
-            @endcanany
-
-            @canany(['event-read', 'event-write'])
-            <div class="menu-item" id="events">
-                <a href="/events_" class="menu-link">
-                    <div class="menu-icon">
-                        <i class="fa fa-calendar"></i>
-                    </div>
-                    <div class="menu-text">Events</div>
-                </a>
-            </div>
-            @endcanany
 
             @if(Auth::user()->can('role-full') || Auth::user()->can('role-view') || Auth::user()->can('user-full') || Auth::user()->can('user-view'))
-            <div class="menu-item has-sub" id="SysAdmin">
-                <a href="javascript:;" class="menu-link">
-                    <div class="menu-icon">
-                        <i class="fa fa-key"></i>
+                <div class="menu-item has-sub" id="SysAdmin">
+                    <a href="javascript:;" class="menu-link">
+                        <div class="menu-icon">
+                            <i class="fa fa-key"></i>
+                        </div>
+                        <div class="menu-text">System Administration</div>
+                        <div class="menu-caret"></div>
+                    </a>
+                    <div class="menu-submenu" id="Sys_admin">
+                        @if(Auth::user()->can('role-full') || Auth::user()->can('role-view'))
+                            <div class="menu-item" id="role">
+                                <a href="/sys_admin/role_controller" class="menu-link">
+                                    <div class="menu-text">Roles</div>
+                                </a>
+                            </div>
+                        @endif
+                        @if(Auth::user()->can('user-full') || Auth::user()->can('user-view'))
+                            <div class="menu-item" id="user">
+                                <a href="/sys_admin/user" class="menu-link">
+                                    <div class="menu-text">Users</div>
+                                </a>
+                            </div>
+                        @endif
                     </div>
-                    <div class="menu-text">System Administration</div>
-                    <div class="menu-caret"></div>
-                </a>
-                <div class="menu-submenu" id="Sys_admin">
-                    @if(Auth::user()->can('role-full') || Auth::user()->can('role-view'))
-                    <div class="menu-item" id="role">
-                        <a href="/sys_admin/role_controller" class="menu-link">
-                            <div class="menu-text">Roles</div>
-                        </a>
-                    </div>
-                    @endif
-                    @if(Auth::user()->can('user-full') || Auth::user()->can('user-view'))
-                    <div class="menu-item" id="user">
-                        <a href="/sys_admin/user" class="menu-link">
-                            <div class="menu-text">Users</div>
-                        </a>
-                    </div>
-                    @endif
                 </div>
-            </div>
             @endif
 
             @if(Auth::user()->can('look_up_view') || Auth::user()->can('look_up_full'))
-            <div class="menu-item has-sub" id="application">
-                <a href="javascript:;" class="menu-link">
-                    <div class="menu-icon">
-                        <i class="fa fa-gears"></i>
-                    </div>
-                    <div class="menu-text">Application Settings</div>
-                    <div class="menu-caret"></div>
-                </a>
-                <div class="menu-submenu" id="developer">
-                    <div class="menu-item has-sub" id="lookup">
-                        <a href="javascript:;" class="menu-link">
-                            <div class="menu-text">Developer</div>
-                            <div class="menu-caret"></div>
-                        </a>
+                <div class="menu-item has-sub" id="application">
+                    <a href="javascript:;" class="menu-link">
+                        <div class="menu-icon">
+                            <i class="fa fa-gears"></i>
+                        </div>
+                        <div class="menu-text">Application Settings</div>
+                        <div class="menu-caret"></div>
+                    </a>
+                    <div class="menu-submenu" id="developer">
+                        <div class="menu-item has-sub" id="lookup">
+                            <a href="javascript:;" class="menu-link">
+                                <div class="menu-text">Developer</div>
+                                <div class="menu-caret"></div>
+                            </a>
 
-                        <div class="menu-submenu">
-                            <div class="menu-item" id="look">
-                                <a href="{{ route('app_lookup.index') }}" class="menu-link" id="look">
-                                    <div class="menu-text">Lookups</div>
-                                </a>
+                            <div class="menu-submenu">
+                                <div class="menu-item" id="look">
+                                    <a href="{{ route('app_lookup.index') }}" class="menu-link" id="look">
+                                        <div class="menu-text">Lookups</div>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
             @endif
 
             <!-- BEGIN minify-button -->

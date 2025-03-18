@@ -21,22 +21,6 @@ class PermissionSeeder extends Seeder
             ['company_settings', 'Company Settings Access'],
             ['look_up_full', 'Look Up Access (Full)'],
             ['look_up_view', 'Look Up Access (View)'],
-
-            ['connect-read', 'Connect (Read)'],
-            ['category-read', 'Category (Read)'],
-            ['category-write', 'Category (Write)'],
-            ['material-read', 'Material (Read)'],
-            ['material-write', 'Material (Write)'],
-            ['video-read', 'Video (Read)'],
-            ['video-write', 'Video (Write)'],
-            ['news-read', 'News (Read)'],
-            ['news-write', 'News (Write)'],
-            ['blog-read', 'Blog (Read)'],
-            ['blog-write', 'Blog (Write)'],
-            ['research-read', 'Research (Read)'],
-            ['research-write', 'Research (Write)'],
-            ['event-read', 'Event (Read)'],
-            ['event-write', 'Event (Write)'],
         ];
 
         foreach ($permissions as $permission) {
@@ -53,14 +37,10 @@ class PermissionSeeder extends Seeder
 
         $user = Role::where('name', 'user')->first();
         $user->givePermissionTo(
-            'news-read',
-            'blog-read',
-            'research-read',
-            'event-read',
-            'video-read',
-            'connect-read',
-            'category-read',
-            'material-read',
+            'role-view',
+            'user-view',
+            'company_settings',
+            'look_up_view',
         );
     }
 }

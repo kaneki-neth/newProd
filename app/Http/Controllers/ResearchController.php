@@ -209,6 +209,25 @@ class ResearchController extends Controller
 
             // Handle the uploaded files
             if ($request->hasFile('uploadFiles')) {
+                // Check if there are existing files for this research
+                $existingFiles = DB::table('research_files')
+                    ->where('r_id', $r_id)
+                    ->exists();
+
+                // If there are existing files and none are marked for deletion, return an error
+                if ($existingFiles && (!$request->has('filesToDelete') || empty($request->filesToDelete))) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Please delete existing files before uploading new ones.',
+                        'errors' => ['uploadFiles' => ['Please delete existing files before uploading new ones.']]
+                    ], 400);
+                }
+
+                // Delete existing files for this research entry
+                DB::table('research_files')
+                    ->where('r_id', $r_id)
+                    ->delete();
+
                 // Save all files to research_files table
                 foreach ($request->file('uploadFiles') as $file) {
                     $uploadFilePath = $file->storeAs('files/research', $file->getClientOriginalName(), 'public');

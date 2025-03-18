@@ -6,14 +6,14 @@
     <nav id="navmenu" class="navmenu">
       <ul class="nav-items">
 
-        <li class="dropdown"><a href="#" id="nav-about"><span>About MATIX +</span></a>
+        <li class="dropdown"><a style="cursor: pointer;" id="nav-about"><span>About MATIX +</span></a>
           <ul>
             <li><a href="/vision_mission">Vision & Mission</a></li>
             <li><a href="/core_programs">Core Programs</a></li>
           </ul>
         </li>
 
-        <li class="dropdown"><a href="#" id="nav-archive"><span>Materials Library +</span></a>
+        <li class="dropdown"><a style="cursor: pointer;" id="nav-archive"><span>Materials Library +</span></a>
           <ul>
             <li><a href="/digital_archive_new">New Materials Developed</a></li>
             <li><a href="/digital_archive">Materials Archive</a></li>

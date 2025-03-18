@@ -117,16 +117,20 @@
                         @endif
                     </div>
                     <div class="d-flex flex-column mt-3 mx-auto" style="max-width: 80%">
-                        <h5>Uploaded Files:</h5>
+                        <h5>Uploaded File:</h5>
                         <ul class="list-unstyled">
-                            @foreach($files as $file)
-                                <li class="file-display d-flex align-items-center mb-2">
-                                    <a class="btn btn-primary btn-xs me-2">
-                                        <i class="fa fa-file-pdf"></i>
-                                        {{ basename($file->file_path) }}
-                                    </a>
-                                </li>
-                            @endforeach
+                            @if(count($files) == 0)
+                                <span>No file uploaded</span>
+                            @else
+                                @foreach($files as $file)
+                                    <li class="file-display d-flex align-items-center mb-2">
+                                        <a class="btn btn-primary btn-xs me-2">
+                                            <i class="fa fa-file-pdf"></i>
+                                            {{ basename($file->file_path) }}
+                                        </a>
+                                    </li>
+                                @endforeach
+                            @endif
                         </ul>
                     </div>
                 </div>

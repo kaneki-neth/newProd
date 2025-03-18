@@ -118,11 +118,34 @@ class archive extends Controller
             ->get()
             ->toArray();
 
+        $material_categories = DB::table('item_categories')
+            ->where('m_id', $m_id)
+            ->pluck('c_id')
+            ->toArray();
+
         $recommended_materials = DB::table('materials')
             ->join('item_categories', 'materials.m_id', '=', 'item_categories.m_id')
             ->join('categories', 'item_categories.c_id', '=', 'categories.c_id')
-            ->where('materials.m_id', $m_id)
-            ->select('materials.name', 'materials.m_id', 'materials.image_file')->get();
+            ->whereIn('item_categories.c_id', $material_categories)
+            ->where('materials.m_id', '!=', $m_id)
+            ->select('materials.name', 'materials.m_id', 'materials.image_file')
+            // ->distinct()
+            ->get();
+
+        if ($recommended_materials->count() < 10) {
+            $additional_materials = DB::table('materials')
+                ->join('item_categories', 'materials.m_id', '=', 'item_categories.m_id')
+                ->join('categories', 'item_categories.c_id', '=', 'categories.c_id')
+                ->whereNotIn('item_categories.c_id', $material_categories)
+                ->whereNotIn('materials.m_id', $recommended_materials->pluck('m_id')->toArray())
+                ->where('materials.m_id', '!=', $m_id)
+                ->select('materials.name', 'materials.m_id', 'materials.image_file')
+                ->distinct()
+                ->limit(10 - $recommended_materials->count())
+                ->get();
+
+            $recommended_materials = $recommended_materials->merge($additional_materials);
+        }
 
         $properties = DB::table('properties')
             ->select('name')

@@ -44,7 +44,7 @@ class MaterialController extends Controller
 
         $query = $query->orderBy('name', 'asc');
 
-        $materials = $query->paginate(3);
+        $materials = $query->paginate(20);
 
         $materials->appends(compact('name', 'material_code', 'enabled', 'year'));
 
@@ -183,7 +183,7 @@ class MaterialController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error deleting material: '.$e->getMessage(),
+                'message' => 'Error deleting material: ' . $e->getMessage(),
             ], 500);
         }
     }
@@ -252,11 +252,11 @@ class MaterialController extends Controller
                     ->whereIn('p_id', $request->input('deleteOldAppProps'))
                     ->delete();
             }
-            session()->flash('success', 'Material '.($materialId ? 'updated' : 'created').' successfully!');
+            session()->flash('success', 'Material ' . ($materialId ? 'updated' : 'created') . ' successfully!');
 
             return response()->json([
                 'success' => true,
-                'message' => 'Material '.($materialId ? 'updated' : 'created').' successfully',
+                'message' => 'Material ' . ($materialId ? 'updated' : 'created') . ' successfully',
             ]);
 
         } catch (\Exception $e) {
@@ -265,15 +265,15 @@ class MaterialController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error processing material: '.$e->getMessage(),
+                'message' => 'Error processing material: ' . $e->getMessage(),
             ], 500);
         }
     }
 
     protected function validateMaterialRequest(Request $request, $materialId = null)
     {
-        $uniqueCodeRule = 'unique:materials,material_code'.($materialId ? ",{$materialId},m_id" : '');
-        if (! preg_match('/>(\s*[^<\s].*?)</', $request->description)) {
+        $uniqueCodeRule = 'unique:materials,material_code' . ($materialId ? ",{$materialId},m_id" : '');
+        if (!preg_match('/>(\s*[^<\s].*?)</', $request->description)) {
             $request->merge(['description' => strip_tags($request->description)]);
         }
         if ($request->description == strip_tags($request->description)) {
@@ -282,7 +282,7 @@ class MaterialController extends Controller
         // <p>&nbsp;</p><p><br></p> not handled yet
 
         return Validator::make($request->all(), [
-            'code' => 'required|'.$uniqueCodeRule,
+            'code' => 'required|' . $uniqueCodeRule,
             'name' => 'required',
             'material_source' => 'nullable|string|min:3|max:255',
             'categories' => 'required|array',
@@ -291,7 +291,7 @@ class MaterialController extends Controller
             'properties.*.name' => 'required',
             'properties.*.value' => 'required',
             'properties.*.type' => 'required|in:soft,technical,application',
-            'mainImage' => ($materialId ? 'sometimes' : 'required').'|image|mimes:jpeg,png,jpg,gif,svg|max:102400',
+            'mainImage' => ($materialId ? 'sometimes' : 'required') . '|image|mimes:jpeg,png,jpg,gif,svg|max:102400',
             'imageFiles' => 'sometimes|array',
             'imageFiles.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:102400',
             'year' => 'required|digits:4',

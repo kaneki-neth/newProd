@@ -11,13 +11,13 @@
       {{ $research->title }}
     </h1>
     <div class="article-meta">
-      <p class="article-date">Posted <span>{{ $research->date }}</span></p>
+      <p class="article-date">Published <span>{{ $research->date }}</span></p>
       <p class="article-author">by
       @php
       $maxAuthors = 3;
       $authorCount = count($authors);
       $displayAuthors = array_slice($authors, 0, $maxAuthors);
-    @endphp
+  @endphp
       <span>{{ implode(', ', $displayAuthors) }}</span>
       @if($authorCount > $maxAuthors)
       <span>et al.</span>
@@ -27,15 +27,16 @@
     <img src="{{ asset('storage/' . $research->image_file) }}" alt="{{ $research->title }}"
       class="article-featured-image" />
 
-    <div class="article-content">
+    <div class="generate-qr" data-bs-toggle="modal" data-bs-target="#qrModal">
+      <i class="bi bi-filetype-pdf"></i>
       @foreach($files as $file)
-      <li class="file-display d-flex align-items-center mb-2">
       <a href="" onclick="openPdf('{{ asset('storage/' . $file->file_path) }}')">
-      <i class="fa-solid fa-file-pdf"></i>
       <span>View or download PDF</span>
       </a>
-      </li>
     @endforeach
+    </div>
+
+    <div class="article-content">
       <p>
       <?php echo $research->description; ?>
       </p>

@@ -17,10 +17,13 @@
       $maxAuthors = 3;
       $authorCount = count($authors);
       $displayAuthors = array_slice($authors, 0, $maxAuthors);
+      $remainingAuthors = array_slice($authors, $maxAuthors);
+      $tooltipContent = implode('<br>', $remainingAuthors);
   @endphp
       <span>{{ implode(', ', $displayAuthors) }}</span>
       @if($authorCount > $maxAuthors)
-      <span>et al.</span>
+      <span class="et-al-hover" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+      title="{{ $tooltipContent }}">et al.</span>
     @endif
       </p>
     </div>
@@ -53,5 +56,17 @@
     function openPdf(pdfUrl) {
     window.open(pdfUrl, '_blank');
     }
+
+    // Initialize tooltips
+    $(document).ready(function () {
+    $('[data-bs-toggle="tooltip"]').tooltip();
+    });
   </script>
+
+  <style>
+    .et-al-hover {
+    cursor: help;
+    text-decoration: underline dotted;
+    }
+  </style>
 @endsection

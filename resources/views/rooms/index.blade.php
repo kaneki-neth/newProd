@@ -34,8 +34,9 @@
         <div class="panel-body" id="pannel-body">
             <div class="table-responsive" style="overflow-x: hidden">
                 <div class="d-flex justify-content-end">
-                    <button class="btn btn-primary btn-xs" onclick="location.href='/sys_admin/room/create'"><i
-                            class="fa fa-plus"></i> Add New</button>
+                    <button class="btn btn-primary btn-xs" onclick="location.href='/rooms/create'"><i
+                            class="fa fa-plus"></i>
+                        Add New</button>
                 </div>
                 <form id="form-search" style="">
                     <input type="hidden" name="filter" value="true">
@@ -106,9 +107,9 @@
 
                         </tbody>
                     </table>
-                </div>
-                <div class="d-flex justify-content-end">
-                    {{ $rooms->links() }}
+                    <div class="d-flex justify-content-end">
+                        {{ $rooms->links() }}
+                    </div>
                 </div>
             </div>
         </div>

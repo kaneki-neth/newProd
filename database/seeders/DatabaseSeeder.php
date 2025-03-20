@@ -27,6 +27,9 @@ class DatabaseSeeder extends Seeder
             BusinessUnitSeeder::class,
             OrgUserBuSeeder::class,
             OrgCompanySeeder::class,
+
+            RoomTypeSeeder::class,
+            RoomSeeder::class,
         ]);
     }
 }

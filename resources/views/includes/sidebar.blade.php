@@ -54,6 +54,15 @@
                 </a>
             </div>
 
+            <div class="menu-item" id="rooms">
+                <a href="/rooms" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fa fa-bed"></i>
+                    </div>
+                    <div class="menu-text">Rooms</div>
+                </a>
+            </div>
+
 
 
             @if(Auth::user()->can('role-full') || Auth::user()->can('role-view') || Auth::user()->can('user-full') || Auth::user()->can('user-view'))

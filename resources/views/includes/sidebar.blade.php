@@ -53,6 +53,14 @@
                     <div class="menu-text">Home</div>
                 </a>
             </div>
+            <div class="menu-item" id="amenities">
+                <a href="/amenities" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fa fa-bed"></i>
+                    </div>
+                    <div class="menu-text">Amenities</div>
+                </a>
+            </div>
 
 
 

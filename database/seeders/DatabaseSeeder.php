@@ -28,5 +28,9 @@ class DatabaseSeeder extends Seeder
             OrgUserBuSeeder::class,
             OrgCompanySeeder::class,
         ]);
+
+        $this->call([
+            AmenitiesSeeder::class,
+        ]);
     }
 }

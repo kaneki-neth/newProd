@@ -22,58 +22,22 @@
         top: -5px;
         background-color: white;
     }
-
-    .select2-container {
-        width: 100%;
-    }
-
-    .custom-input {
-        height: 30px;
-    }
-
-    .select2-dropdown {
-        z-index: 1056 !important;
-    }
 </style>
 
 
-<form method="POST" id="add_room" autocomplete="off">
+<form method="POST" id="add_room_type" autocomplete="off">
     <div class="row">
-        <label for="room_number" class="col-sm-4 col-form-label form-label">Room Number <span
-                class="text-danger">*</span></label>
+        <label for="type" class="col-sm-4 col-form-label form-label">Name <span class="text-danger">*</span></label>
         <div class="col-sm-8">
-            <input type="text" class="form-control form-control-sm" id="room_number" name="room_number"
-                placeholder="...">
-            <span id="room_number-msg" class="error-msg text-danger"></span>
+            <input type="text" class="form-control form-control-sm" id="name" name="name" placeholder="...">
+            <span id="name-msg" class="error-msg text-danger"></span>
         </div>
     </div>
     <div class="row mt-1">
-        <label for="floor_number" class="col-sm-4 col-form-label form-label">Floor Number <span
-                class="text-danger">*</span></label>
+        <label for="price" class="col-sm-4 col-form-label form-label">Price <span class="text-danger">*</span></label>
         <div class="col-sm-8">
-            <input type="number" class="form-control form-control-sm" id="floor_number" name="floor_number"
-                placeholder="...">
-            <span id="floor_number-msg" class="error-msg text-danger"></span>
-        </div>
-    </div>
-    <div class="row mt-1">
-        <label for="room_type" class="col-sm-4 col-form-label form-label">Room Type <span
-                class="text-danger">*</span></label>
-        <div class="col-sm-8">
-            <select class="form-control select2" id="room_type" name="room_type" placeholder="..." autocomplete="off">
-                <option value="" selected disabled>Select Room Type</option>
-                @foreach ($room_types as $room_type)
-                    <option value="{{ $room_type->rt_id }}">{{ $room_type->name }}</option>
-                @endforeach
-            </select>
-            <span id="room_type-msg" class="error-msg text-danger"></span>
-        </div>
-    </div>
-    <div class="row mt-1">
-        <label for="status" class="col-sm-4 col-form-label form-label">Status <span class="text-danger">*</span></label>
-        <div class="col-sm-8">
-            <input type="text" class="form-control form-control-sm" id="status" name="status" placeholder="...">
-            <span id="status-msg" class="error-msg text-danger"></span>
+            <input type="number" class="form-control form-control-sm" id="price" name="price" placeholder="...">
+            <span id="price-msg" class="error-msg text-danger"></span>
         </div>
     </div>
     <div class="row mt-1">
@@ -92,20 +56,20 @@
 
 <script>
     $(document).ready(function () {
-        $('#room_type').select2();
-
-        $('#room_number, #floor_number, #room_type, #status').on('keyup change', function (e) {
-            if (e.keyCode === 13) return;
-            remove_error(this);
+        ['#name', '#price'].forEach(function (selector) {
+            $(selector).keypress(function () {
+                if ($(this).val().length >= 50) {
+                    $(this).val($(this).val().slice(0, 50));
+                    return false;
+                }
+            }).keyup(function (e) {
+                if (e.keyCode === 13) return;
+                remove_error(this);
+            });
         });
     });
 
-    function remove_error(element) {
-        $(element).css('border', '');
-        $(`#${element.id}-msg`).text('');
-    }
-
-    $('#add_room').submit(function (e) {
+    $('#add_room_type').submit(function (e) {
         e.preventDefault();
         $(".btn").attr("disabled", false);
         let formData = new FormData(this);
@@ -118,7 +82,7 @@
 
         $.ajax({
             method: 'post',
-            url: '{{ route("rooms.store") }}',
+            url: '{{ route("room_types.store") }}',
             data: formData,
             contentType: false,
             processData: false,
@@ -126,13 +90,12 @@
                 location.reload();
             },
             error: function (xhr, status, error) {
-                console.log("AJAX error response:", xhr);
                 $(".btn").attr("disabled", false);
                 $("#modal-content").removeClass("modal-before");
                 $("#div-modal-loader").attr('style', 'display:none!important');
                 if (xhr.status === 400) {
                     const errors = xhr.responseJSON.errors;
-                    $("input, select").css('border', '');
+                    $("input").css('border', '');
                     $(".error-msg").text('');
                     Object.keys(errors).forEach(field => {
                         $(`#${field}`).css('border', '1px solid red');
@@ -146,7 +109,7 @@
     // Add proper modal cleanup when the modal is hidden
     $('#main_modal').on('hidden.bs.modal', function () {
         // Reset the form
-        $('#add_room')[0].reset();
+        $('#add_room_type')[0].reset();
 
         // Clear error messages and styling
         $("input").css('border', '');

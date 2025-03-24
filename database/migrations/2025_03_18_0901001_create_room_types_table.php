@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id('rt_id')->autoIncrement();
             $table->string('name');
             $table->decimal('price', 10, 2);
+            $table->tinyInteger('enabled')->default(1);
 
 
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();

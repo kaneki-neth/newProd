@@ -53,7 +53,14 @@
                     <div class="menu-text">Home</div>
                 </a>
             </div>
-
+            <div class="menu-item" id="penalties">
+                <a href="/penalties" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </div>
+                    <div class="menu-text">Penalties</div>
+                </a>
+            </div>
 
 
             @if(Auth::user()->can('role-full') || Auth::user()->can('role-view') || Auth::user()->can('user-full') || Auth::user()->can('user-view'))

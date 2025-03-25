@@ -56,13 +56,29 @@
             <div class="menu-item" id="amenities">
                 <a href="/amenities" class="menu-link">
                     <div class="menu-icon">
-                        <i class="fa fa-bed"></i>
+                        <i class="fa-solid fa-toilet-paper"></i>
                     </div>
                     <div class="menu-text">Amenities</div>
                 </a>
             </div>
 
+            <div class="menu-item" id="rooms">
+                <a href="/rooms" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fa-solid fa-door-open"></i>
+                    </div>
+                    <div class="menu-text">Rooms</div>
+                </a>
+            </div>
 
+            <div class="menu-item" id="room_types">
+                <a href="/room_types" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fa fa-bed"></i>
+                    </div>
+                    <div class="menu-text">Room Types</div>
+                </a>
+            </div>
 
             @if(Auth::user()->can('role-full') || Auth::user()->can('role-view') || Auth::user()->can('user-full') || Auth::user()->can('user-view'))
                 <div class="menu-item has-sub" id="SysAdmin">

@@ -26,9 +26,9 @@ class AmenityController extends Controller
             $price = $request->price;
         }
 
-        if ($request->has('enabled')) {
-            $query->where('enabled', $request->enabled);
-            $enabled = $request->enabled;
+        if ($request->has('enabled') && in_array($request->input('enabled'), ['0', '1'])) {
+            $query->where('enabled', $request->input('enabled'));
+            $enabled = $request->input('enabled');
         }
 
         $amenities = $query->get();

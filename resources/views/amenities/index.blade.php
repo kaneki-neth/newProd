@@ -48,8 +48,8 @@
 
                         <div class="col-lg-2 col-md-3">
                             <label class="form-label">Status</label>
-                            <select class="form-control custom-input" id="enabled" name="enabled">
-                                <option value="">Select Status</option>
+                            <select class="form-control custom-input select2" id="enabled" name="enabled">
+                                <option selected>All</option>
                                 <option value="1" {{ $enabled == 1 ? 'selected' : '' }}>Active</option>
                                 <option value="0" {{ $enabled == 0 ? 'selected' : '' }}>Inactive</option>
                             </select>
@@ -85,7 +85,13 @@
                                         {{ $amenity->name }}
                                     </td>
                                     <td class="text-center">{{ $amenity->price }}</td>
-                                    <td class="text-center">{{ $amenity->enabled == 1 ? 'Active' : 'Inactive' }}</td>
+                                    <td class="text-center">
+                                        @if($amenity->enabled == 1)
+                                            <span class="badge bg-success">Active</span>
+                                        @else
+                                            <span class="badge bg-danger">Inactive</span>
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -105,6 +111,10 @@
 
     <script>
         $('#amenities').addClass('active');
+
+        $(document).ready(function () {
+            $('.select2').select2();
+        });
 
         var tblrows = 0;
         var height = screen.height;

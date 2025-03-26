@@ -25,5 +25,6 @@ Route::group(['middleware' => ['auth']], function () {
     include __DIR__ . '/room_types.php';
     include __DIR__ . '/amenities.php';
     include __DIR__ . '/penalty.php';
+    include __DIR__ . '/company.php';
 });
 

@@ -35,5 +35,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AmenitiesSeeder::class,
         ]);
+
+        $this->call([
+            PenaltySeeder::class,
+        ]);
     }
 }

@@ -24,28 +24,53 @@
     }
 </style>
 
-<form method="POST" id="edit_amenity" autocomplete="off">
+<form method="POST" id="edit_category" autocomplete="off">
     <div class="row">
         <label for="type" class="col-sm-4 col-form-label form-label">Name <span class="text-danger">*</span></label>
         <div class="col-sm-8">
             <input type="text" class="form-control form-control-sm" id="name" name="name" onkeyup="remove_error(this)"
-                value="{{ $amenity->name }}">
+                value="{{ $category->name }}">
             <span id="name-msg" class="error-msg text-danger"></span>
         </div>
     </div>
     <div class="row mt-1">
-        <label for="price" class="col-sm-4 col-form-label form-label">Price <span class="text-danger">*</span></label>
+        <label for="description" class="col-sm-4 col-form-label form-label">Description <span
+                class="text-danger">*</span></label>
         <div class="col-sm-8">
-            <input type="text" class="form-control form-control-sm" id="price" name="price" onkeyup="remove_error(this)"
-                value="{{ $amenity->price }}">
-            <span id="price-msg" class="error-msg text-danger"></span>
+            <input type="text" class="form-control form-control-sm" id="description" name="description"
+                onkeyup="remove_error(this)" value="{{ $category->description }}">
+            <span id="description-msg" class="error-msg text-danger"></span>
+        </div>
+    </div>
+    <div class="row mt-1">
+        <label for="daily_rate" class="col-sm-4 col-form-label form-label">Daily Rate</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control form-control-sm" id="daily_rate" name="daily_rate"
+                onkeyup="remove_error(this)" value="{{ $category->daily_rate }}">
+            <span id="daily_rate-msg" class="error-msg text-danger"></span>
+        </div>
+    </div>
+    <div class="row mt-1">
+        <label for="hourly_rate" class="col-sm-4 col-form-label form-label">Hourly Rate</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control form-control-sm" id="hourly_rate" name="hourly_rate"
+                onkeyup="remove_error(this)" value="{{ $category->hourly_rate }}">
+            <span id="hourly_rate-msg" class="error-msg text-danger"></span>
+        </div>
+    </div>
+    <div class="row mt-1">
+        <label for="max_occupancy" class="col-sm-4 col-form-label form-label">Max Occupancy</label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control form-control-sm" id="max_occupancy" name="max_occupancy"
+                onkeyup="remove_error(this)" value="{{ $category->max_occupancy }}">
+            <span id="max_occupancy-msg" class="error-msg text-danger"></span>
         </div>
     </div>
     <div class="row mt-1">
         <label for="enabled" class="col-sm-4 col-form-label form-label">Enabled</label>
         <div class="col-sm-8">
             <div class="form-check form-switch align-middle">
-                <input class="form-check-input" type="checkbox" id="enabled" name="enabled" value="1" {{ $amenity->enabled == 1 ? 'checked' : '' }}>
+                <input class="form-check-input" type="checkbox" id="enabled" name="enabled" value="1" {{ $category->enabled == 1 ? 'checked' : '' }}>
             </div>
         </div>
     </div>
@@ -57,15 +82,20 @@
 
 <script>
     $(document).ready(function () {
-        ['#name', '#price'].forEach(function (selector) {
-            $(selector).keyup(function (e) {
+        ['#name', '#daily_rate', '#hourly_rate', '#max_occupancy'].forEach(function (selector) {
+            $(selector).keypress(function () {
+                if ($(this).val().length >= 50) {
+                    $(this).val($(this).val().slice(0, 50));
+                    return false;
+                }
+            }).keyup(function (e) {
                 if (e.keyCode === 13) return;
                 remove_error(this);
             });
         });
     });
 
-    $('#edit_amenity').submit(function (e) {
+    $('#edit_category').submit(function (e) {
         e.preventDefault();
         $(".btn").attr("disabled", true);
         let formData = new FormData(this);
@@ -76,7 +106,7 @@
         $("#modal-content").addClass("modal-before");
         $("#div-modal-loader").attr('style', 'display:block!important');
 
-        let url = "/amenities/update/" + {{ $amenity->a_id }};
+        let url = "/categories/update/" + {{ $category->c_id }};
         $.ajax({
             method: 'post',
             url: url,

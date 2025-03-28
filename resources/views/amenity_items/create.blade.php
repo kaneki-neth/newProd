@@ -25,7 +25,7 @@
 </style>
 
 
-<form method="POST" id="add_room_type" autocomplete="off">
+<form method="POST" id="add_amenity_item" autocomplete="off">
     <div class="row">
         <label for="type" class="col-sm-4 col-form-label form-label">Name <span class="text-danger">*</span></label>
         <div class="col-sm-8">
@@ -33,6 +33,17 @@
             <span id="name-msg" class="error-msg text-danger"></span>
         </div>
     </div>
+
+    <div class="row mt-1">
+        <label for="description" class="col-sm-4 col-form-label form-label">Description <span
+                class="text-danger">*</span></label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control form-control-sm" id="description" name="description"
+                placeholder="...">
+            <span id="description-msg" class="error-msg text-danger"></span>
+        </div>
+    </div>
+
     <div class="row mt-1">
         <label for="price" class="col-sm-4 col-form-label form-label">Price <span class="text-danger">*</span></label>
         <div class="col-sm-8">
@@ -40,6 +51,16 @@
             <span id="price-msg" class="error-msg text-danger"></span>
         </div>
     </div>
+
+    <div class="row mt-1">
+        <label for="quantity" class="col-sm-4 col-form-label form-label">Quantity <span
+                class="text-danger">*</span></label>
+        <div class="col-sm-8">
+            <input type="number" class="form-control form-control-sm" id="quantity" name="quantity" placeholder="...">
+            <span id="quantity-msg" class="error-msg text-danger"></span>
+        </div>
+    </div>
+
     <div class="row mt-1">
         <label for="enabled" class="col-sm-4 col-form-label form-label">Enabled</label>
         <div class="col-sm-8">
@@ -56,20 +77,15 @@
 
 <script>
     $(document).ready(function () {
-        ['#name', '#price'].forEach(function (selector) {
-            $(selector).keypress(function () {
-                if ($(this).val().length >= 50) {
-                    $(this).val($(this).val().slice(0, 50));
-                    return false;
-                }
-            }).keyup(function (e) {
+        ['#name', '#description', '#price', '#quantity'].forEach(function (selector) {
+            $(selector).keyup(function (e) {
                 if (e.keyCode === 13) return;
                 remove_error(this);
             });
         });
     });
 
-    $('#add_room_type').submit(function (e) {
+    $('#add_amenity_item').submit(function (e) {
         e.preventDefault();
         $(".btn").attr("disabled", false);
         let formData = new FormData(this);
@@ -82,7 +98,7 @@
 
         $.ajax({
             method: 'post',
-            url: '{{ route("room_types.store") }}',
+            url: '{{ route("amenity_items.store") }}',
             data: formData,
             contentType: false,
             processData: false,
@@ -109,7 +125,7 @@
     // Add proper modal cleanup when the modal is hidden
     $('#main_modal').on('hidden.bs.modal', function () {
         // Reset the form
-        $('#add_room_type')[0].reset();
+        $('#add_amenity_item')[0].reset();
 
         // Clear error messages and styling
         $("input").css('border', '');

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Roles')
+@section('title', 'Charges')
 
 @section('content')
 
@@ -24,16 +24,17 @@
     </style>
 
     <ol class="breadcrumb float-xl-end">
-        <li class="breadcrumb-item"><a href="/penalties">Penalties</a></li>
+        <li class="breadcrumb-item"><a href="/charges-items">Charges</a></li>
     </ol>
 
-    <h1 class="page-header">Penalties List</h1>
+    <h1 class="page-header">Charges Items</h1>
 
     <div class="panel panel-inverse">
         <div class="panel-body" id="pannel-body">
 
             <div class="d-flex justify-content-end">
-                <button class="btn btn-primary btn-xs" onclick="add_penalty()"><i class="fa fa-plus"></i> Add New</button>
+                <button class="btn btn-primary btn-xs" onclick="add_charges_item()"><i class="fa fa-plus"></i> Add
+                    New</button>
             </div>
 
             <div>
@@ -41,14 +42,21 @@
                     <div class="row">
                         <div class="col-md-2">
                             <div class="mb-3">
-                                <label for="penalty" class="form-label">Penalty Name</label>
-                                <input type="text" class="form-control form-control-sm" id="penalty" value="{{ $penalty }}"
-                                    name="penalty" placeholder="..." autocomplete="off">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control form-control-sm" id="name" value="{{ $name }}"
+                                    name="name" placeholder="..." autocomplete="off">
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="mb-3">
-                                <label for="penalty" class="form-label">Status</label>
+                                <label for="amount" class="form-label">Amount</label>
+                                <input type="text" class="form-control form-control-sm" id="amount" value="{{ $amount }}"
+                                    name="amount" placeholder="..." autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Status</label>
                                 <select class="form-control form-control-sm select2" id="status" name="status">
                                     <option value="">All</option>
                                     <option value="1" {{ $status == 1 ? 'selected' : '' }}>Enabled</option>
@@ -74,20 +82,20 @@
                     <thead>
                         <tr>
                             <th class="text-center" style="width: 5%">No.</th>
-                            <th class="text-center">Penalty</th>
+                            <th class="text-center">Name</th>
                             <th class="text-center">Amount</th>
                             <th class="text-center">Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($penalties as $penalty)
+                        @foreach($charges_items as $charges_item)
                             <tr>
                                 <td class="text-center">{{ $loop->iteration }}</td>
                                 <td class="text-center btnRoles" style="color:#28acb5; cursor:pointer;"
-                                    onclick="showmodaledit(`{{ $penalty->p_id }}`)">{{ $penalty->name }}
+                                    onclick="showmodaledit(`{{ $charges_item->ci_id }}`)">{{ $charges_item->name }}
                                 </td>
-                                <td class="text-center">{{ $penalty->amount}}</td>
-                                @if($penalty->enabled == 1)
+                                <td class="text-center">{{ $charges_item->amount}}</td>
+                                @if($charges_item->enabled == 1)
                                     <td class="text-center"><span class="badge bg-success">Active</span></td>
                                 @else
                                     <td class="text-center"><span class="badge bg-danger">Inactive</span></td>
@@ -131,25 +139,26 @@
 
 
     <script>
-        $("#penalties").addClass("active");
+        $("#charges_items").addClass("active");
         $(document).ready(function () {
             $("#status").select2();
         });
 
         function clearsearchfield() {
-            $("#penalty").val('');
+            $("#name").val('');
+            $("#amount").val('');
             $("#status").val('').trigger('change');
         }
 
-        function add_penalty() {
+        function add_charges_item() {
             $.ajax({
                 method: 'get',
-                url: '{{ route("penalties.create") }}',
+                url: '{{ route("charges_items.create") }}',
                 contentType: false,
                 processData: false,
                 success: (response) => {
                     $("#main_modal").modal('show');
-                    $("#modal-title").html(`Penalty (Add)`);
+                    $("#modal-title").html(`Charges Item (Add)`);
                     $("#modal-body").html(response);
                 }, error: function (reject) {
                     Swal.fire({
@@ -162,15 +171,15 @@
         }
 
 
-        function showmodaledit(penalty_id) {
+        function showmodaledit(charges_item_id) {
             $.ajax({
                 method: 'get',
-                url: '{{ route("penalties.edit", ["id" => ":id"]) }}'.replace(':id', penalty_id),
+                url: '{{ route("charges_items.edit", ["id" => ":id"]) }}'.replace(':id', charges_item_id),
                 contentType: false,
                 processData: false,
                 success: (response) => {
                     $("#main_modal").modal('show');
-                    $("#modal-title").html(`Penalty (Update)`);
+                    $("#modal-title").html(`Charges Item (Update)`);
                     $("#modal-body").html(response);
                 }, error: function (reject) {
                     Swal.fire({

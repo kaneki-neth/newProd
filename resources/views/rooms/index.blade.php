@@ -56,9 +56,9 @@
                         </div>
                         <div class="col-lg-2 col-md-3">
                             <div class="mb-3">
-                                <label for="room_type" class="form-label">Room Type</label>
-                                <input type="text" class="form-control form-control-sm custom-input" id="room_type"
-                                    name="room_type" value="{{ $room_type }}" placeholder="..." autocomplete="off">
+                                <label for="category" class="form-label">Category</label>
+                                <input type="text" class="form-control form-control-sm custom-input" id="category"
+                                    name="category" value="{{ $category }}" placeholder="..." autocomplete="off">
                             </div>
                         </div>
                         <div class="col-lg-2 col-md-3">
@@ -88,10 +88,11 @@
                         class="table table-striped table-bordered align-middle text-nowrap table-sm">
                         <thead>
                             <tr>
-                                <th class="text-center" width="10%">Room Number</th>
-                                <th class="text-center" width="10%">Floor Number</th>
-                                <th class="text-center">Room Type</th>
+                                <th class="text-center" width="10%">Room No.</th>
+                                <th class="text-center" width="10%">Floor No.</th>
+                                <th class="text-center">Category</th>
                                 <th class="text-center">Status</th>
+                                <th class="text-center">Enabled</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -102,8 +103,11 @@
                                         {{ $room->room_number }}
                                     </td>
                                     <td class="text-center">{{ $room->floor_number }}</td>
-                                    <td class="text-center">{{ $room->room_type_name }}</td>
+                                    <td class="text-center">{{ $room->category_name }}</td>
                                     <td class="text-center">{{ $room->status }}</td>
+                                    <td class="text-center"><span
+                                            class="badge bg-{{ $room->enabled == 1 ? 'success' : 'danger' }}">{{ $room->enabled == 1 ? 'Active' : 'Inactive' }}</span>
+                                    </td>
                                 </tr>
                             @endforeach
 
@@ -149,7 +153,7 @@
     <script>
         $(document).ready(function () {
             $('#status').select2();
-            $('#room_type').select2();
+            $('#category').select2();
         });
 
         $("#rooms").addClass("active");
@@ -202,7 +206,7 @@
         function clearsearchfield() {
             $("#room_number").val('');
             $("#floor_number").val('');
-            $("#room_type").val('');
+            $("#category").val('');
             $("#status").val('');
             $("#status").select2().trigger('change');
         }

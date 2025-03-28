@@ -24,27 +24,46 @@
     }
 </style>
 
-
-<form method="POST" id="add_amenity" autocomplete="off">
+<form method="POST" id="edit_amenity_item" autocomplete="off">
     <div class="row">
         <label for="type" class="col-sm-4 col-form-label form-label">Name <span class="text-danger">*</span></label>
         <div class="col-sm-8">
-            <input type="text" class="form-control form-control-sm" id="name" name="name" placeholder="...">
+            <input type="text" class="form-control form-control-sm" id="name" name="name" onkeyup="remove_error(this)"
+                value="{{ $amenity_item->name }}">
             <span id="name-msg" class="error-msg text-danger"></span>
+        </div>
+    </div>
+    <div class="row mt-1">
+        <label for="description" class="col-sm-4 col-form-label form-label">Description <span
+                class="text-danger">*</span></label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control form-control-sm" id="description" name="description"
+                onkeyup="remove_error(this)" value="{{ $amenity_item->description }}">
+            <span id="description-msg" class="error-msg text-danger"></span>
         </div>
     </div>
     <div class="row mt-1">
         <label for="price" class="col-sm-4 col-form-label form-label">Price <span class="text-danger">*</span></label>
         <div class="col-sm-8">
-            <input type="number" class="form-control form-control-sm" id="price" name="price" placeholder="...">
+            <input type="number" class="form-control form-control-sm" id="price" name="price"
+                onkeyup="remove_error(this)" value="{{ $amenity_item->price }}">
             <span id="price-msg" class="error-msg text-danger"></span>
+        </div>
+    </div>
+    <div class="row mt-1">
+        <label for="quantity" class="col-sm-4 col-form-label form-label">Quantity <span
+                class="text-danger">*</span></label>
+        <div class="col-sm-8">
+            <input type="number" class="form-control form-control-sm" id="quantity" name="quantity"
+                onkeyup="remove_error(this)" value="{{ $amenity_item->quantity }}">
+            <span id="quantity-msg" class="error-msg text-danger"></span>
         </div>
     </div>
     <div class="row mt-1">
         <label for="enabled" class="col-sm-4 col-form-label form-label">Enabled</label>
         <div class="col-sm-8">
             <div class="form-check form-switch align-middle">
-                <input class="form-check-input" type="checkbox" id="enabled" name="enabled" value="1" checked>
+                <input class="form-check-input" type="checkbox" id="enabled" name="enabled" value="1" {{ $amenity_item->enabled == 1 ? 'checked' : '' }}>
             </div>
         </div>
     </div>
@@ -56,7 +75,7 @@
 
 <script>
     $(document).ready(function () {
-        ['#name', '#price'].forEach(function (selector) {
+        ['#name', '#description', '#price', '#quantity'].forEach(function (selector) {
             $(selector).keyup(function (e) {
                 if (e.keyCode === 13) return;
                 remove_error(this);
@@ -64,20 +83,21 @@
         });
     });
 
-    $('#add_amenity').submit(function (e) {
+    $('#edit_amenity_item').submit(function (e) {
         e.preventDefault();
-        $(".btn").attr("disabled", false);
+        $(".btn").attr("disabled", true);
         let formData = new FormData(this);
 
-        formData.append('_token', '{{ csrf_token() }}');
-        formData.set('enabled', $('#enabled').is(':checked') ? 1 : 0);
+        formData.append('_token', `{{ csrf_token() }}`);
+        formData.append('enabled', $('#enabled').is(':checked') ? 1 : 0);
 
         $("#modal-content").addClass("modal-before");
         $("#div-modal-loader").attr('style', 'display:block!important');
 
+        let url = "/amenity-items/update/" + {{ $amenity_item->ai_id }};
         $.ajax({
             method: 'post',
-            url: '{{ route("amenities.store") }}',
+            url: url,
             data: formData,
             contentType: false,
             processData: false,
@@ -99,19 +119,5 @@
                 }
             }
         });
-    });
-
-    // Add proper modal cleanup when the modal is hidden
-    $('#main_modal').on('hidden.bs.modal', function () {
-        // Reset the form
-        $('#add_amenity')[0].reset();
-
-        // Clear error messages and styling
-        $("input").css('border', '');
-        $(".error-msg").text('');
-
-        // Remove modal states
-        $("#modal-content").removeClass("modal-before");
-        $("#div-modal-loader").attr('style', 'display:none!important');
     });
 </script>

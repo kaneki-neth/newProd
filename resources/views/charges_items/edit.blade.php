@@ -38,20 +38,29 @@
     }
 </style>
 
-<form method="POST" id="update_penalties" autocomplete="off">
+<form method="POST" id="update_charges_items" autocomplete="off">
 
     <div class="row">
         <label for="type" class="col-sm-4 col-form-label form-label">Name</label>
         <div class="col-sm-7">
-            <input type="text" class="form-control form-control-sm" id="name" value="{{$penalty->name}}" name="name"
-                onkeyup="remove_error(this)" placeholder="...">
+            <input type="text" class="form-control form-control-sm" id="name" value="{{$charges_item->name}}"
+                name="name" onkeyup="remove_error(this)" placeholder="...">
             <span id="name-msg" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row">
+        <label for="description" class="col-sm-4 col-form-label form-label">Description</label>
+        <div class="col-sm-7">
+            <input type="text" class="form-control form-control-sm" id="description"
+                value="{{$charges_item->description}}" name="description" onkeyup="remove_error(this)"
+                placeholder="...">
+            <span id="description-msg" class="text-danger"></span>
         </div>
     </div>
     <div class="row mt-1">
         <label for="amount" class="col-sm-4 col-form-label form-label">Amount</label>
         <div class="col-sm-7">
-            <input type="number" class="form-control form-control-sm" id="amount" value="{{$penalty->amount}}"
+            <input type="number" class="form-control form-control-sm" id="amount" value="{{$charges_item->amount}}"
                 name="amount" onkeyup="remove_error(this)" placeholder="...">
             <span id="amount-msg" class="text-danger"></span>
         </div>
@@ -60,7 +69,7 @@
         <label for="enabled" class="col-sm-4 col-form-label form-label">Enabled</label>
         <div class="col-sm-8">
             <div class="form-check form-switch align-middle mt-1">
-                <input class="form-check-input" type="checkbox" id="enabled" name="enabled" value="1" {{ $penalty->enabled == 1 ? 'checked' : '' }}>
+                <input class="form-check-input" type="checkbox" id="enabled" name="enabled" value="1" {{ $charges_item->enabled == 1 ? 'checked' : '' }}>
             </div>
         </div>
     </div>
@@ -72,7 +81,7 @@
 
 <script>
     $(document).ready(function () {
-        ['#name', '#amount'].forEach(function (selector) {
+        ['#name', '#amount', '#description'].forEach(function (selector) {
             $(selector).keyup(function (e) {
                 if (e.keyCode === 13) return;
                 remove_error(this);
@@ -80,7 +89,7 @@
         });
     });
 
-    $('#update_penalties').submit(function (e) {
+    $('#update_charges_items').submit(function (e) {
         e.preventDefault();
         $(".btn").attr("disabled", true);
         let formData = new FormData(this);
@@ -93,19 +102,11 @@
 
         $.ajax({
             method: 'post',
-            url: '{{ route('penalties.update', ['id' => $penalty->p_id]) }}',
+            url: '{{ route('charges_items.update', ['id' => $charges_item->ci_id]) }}',
             data: formData,
             contentType: false,
             processData: false,
             success: (response) => {
-                // Swal.fire({
-                //     icon: 'success',
-                //     title: 'Data Successfully Updated!',
-                //     showConfirmButton: false,
-                //     timer: 1500
-                // }).then(() => {
-                //     location.reload();
-                // });
                 location.reload();
             }, error: function (xhr, status, error) {
                 $(".btn").attr("disabled", false);

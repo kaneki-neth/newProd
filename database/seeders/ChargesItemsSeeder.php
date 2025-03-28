@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class PenaltySeeder extends Seeder
+class ChargesItemsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -58,7 +58,7 @@ class PenaltySeeder extends Seeder
         ];
 
         foreach ($data as $item) {
-            DB::table('penalties')->insert($item);
+            DB::table('charges_items')->insert($item);
         }
     }
 }

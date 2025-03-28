@@ -10,16 +10,17 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('room_types', function (Blueprint $table) {
-            $table->id('rt_id')->autoIncrement();
+        Schema::create('amenity_items', function (Blueprint $table) {
+            $table->integer('ai_id')->primary()->autoIncrement();
             $table->string('name');
+            $table->string('description')->nullable();
             $table->decimal('price', 10, 2);
+            $table->integer('quantity')->default(1);
             $table->tinyInteger('enabled')->default(1);
 
-
-            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->integer('created_by')->foreignId('users')->constrained();
             $table->dateTime('created_at')->useCurrent();
-            $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->integer('updated_by')->foreignId('users')->constrained()->nullable()->nullOnDelete();
             $table->dateTime('updated_at')->useCurrentOnUpdate()->nullable();
         });
     }
@@ -29,6 +30,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('room_types');
+        Schema::dropIfExists('amenity_items');
     }
 };

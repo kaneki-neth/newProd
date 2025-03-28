@@ -11,12 +11,12 @@ class RoomController extends Controller
     {
         $room_number = '';
         $floor_number = '';
-        $room_type = '';
+        $category = '';
         $status = '';
 
         $query = DB::table('rooms')
-            ->join('room_types', 'rooms.rt_id', '=', 'room_types.rt_id')
-            ->select('rooms.r_id', 'rooms.room_number', 'rooms.floor_number', 'rooms.status', 'room_types.name as room_type_name');
+            ->join('categories', 'rooms.c_id', '=', 'categories.c_id')
+            ->select('rooms.r_id', 'rooms.room_number', 'rooms.floor_number', 'rooms.status', 'rooms.enabled', 'categories.name as category_name');
 
         if ($request->has('room_number')) {
             $query->where('rooms.room_number', 'like', '%' . $request->room_number . '%');
@@ -28,9 +28,9 @@ class RoomController extends Controller
             $floor_number = $request->floor_number;
         }
 
-        if ($request->has('room_type')) {
-            $query->where('room_types.name', 'like', '%' . $request->room_type . '%');
-            $room_type = $request->room_type;
+        if ($request->has('category')) {
+            $query->where('categories.name', 'like', '%' . $request->category . '%');
+            $category = $request->category;
         }
 
         $status = $request->input('status');
@@ -46,17 +46,17 @@ class RoomController extends Controller
 
         $statuses = DB::table('rooms')->distinct()->pluck('status');
 
-        return view('rooms.index', compact('room_number', 'floor_number', 'room_type', 'status', 'rooms', 'statuses'));
+        return view('rooms.index', compact('room_number', 'floor_number', 'category', 'status', 'rooms', 'statuses'));
     }
 
     public function create()
     {
-        $room_types = DB::table('room_types')
-            ->select('room_types.rt_id', 'room_types.name')
-            ->where('room_types.enabled', 1)
+        $categories = DB::table('categories')
+            ->select('categories.c_id', 'categories.name')
+            ->where('categories.enabled', 1)
             ->get();
 
-        return view('rooms.create', compact('room_types'));
+        return view('rooms.create', compact('categories'));
     }
 
     public function store(Request $request)
@@ -65,13 +65,13 @@ class RoomController extends Controller
             'room_number' => 'required|unique:rooms',
             'floor_number' => 'required|numeric',
             'status' => 'required',
-            'room_type' => 'required'
+            'category' => 'required'
         ], messages: [
             'room_number.required' => 'Room number is required.',
             'room_number.unique' => 'Room number already exists.',
             'floor_number.required' => 'Floor number is required.',
             'status.required' => 'Status is required.',
-            'room_type.required' => 'Room type is required.'
+            'category.required' => 'Category is required.'
         ]);
 
         if ($validator->fails()) {
@@ -85,7 +85,7 @@ class RoomController extends Controller
             'room_number' => $request->input('room_number'),
             'floor_number' => $request->input('floor_number'),
             'status' => $request->input('status'),
-            'rt_id' => $request->input('room_type'),
+            'c_id' => $request->input('category'),
             'enabled' => $request->input('enabled')
         ];
 
@@ -111,12 +111,12 @@ class RoomController extends Controller
     public function edit($id)
     {
         $room = DB::table('rooms')->where('r_id', $id)->first();
-        $room_types = DB::table('room_types')
-            ->select('room_types.rt_id', 'room_types.name')
-            ->where('room_types.enabled', 1)
+        $categories = DB::table('categories')
+            ->select('categories.c_id', 'categories.name')
+            ->where('categories.enabled', 1)
             ->get();
 
-        return view('rooms.edit', compact('room', 'room_types'));
+        return view('rooms.edit', compact('room', 'categories'));
     }
 
     public function update(Request $request, $id)
@@ -125,13 +125,13 @@ class RoomController extends Controller
             'room_number' => 'required|unique:rooms,room_number,' . $id . ',r_id',
             'floor_number' => 'required|numeric',
             'status' => 'required',
-            'room_type' => 'required'
+            'category' => 'required'
         ], messages: [
             'room_number.required' => 'Room number is required.',
             'room_number.unique' => 'Room number already exists.',
             'floor_number.required' => 'Floor number is required.',
             'status.required' => 'Status is required.',
-            'room_type.required' => 'Room type is required.'
+            'category.required' => 'Category is required.'
         ]);
 
         if ($validator->fails()) {
@@ -145,7 +145,7 @@ class RoomController extends Controller
             'room_number' => $request->input('room_number'),
             'floor_number' => $request->input('floor_number'),
             'status' => $request->input('status'),
-            'rt_id' => $request->input('room_type'),
+            'c_id' => $request->input('category'),
             'enabled' => $request->input('enabled')
         ];
 

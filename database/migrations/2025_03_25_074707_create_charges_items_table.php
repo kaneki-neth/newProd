@@ -10,14 +10,15 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('penalties', function (Blueprint $table) {
-            $table->id('p_id');
+        Schema::create('charges_items', function (Blueprint $table) {
+            $table->id('ci_id');
             $table->string('name');
+            $table->string('description')->nullable();
             $table->decimal('amount', 10, 2);
             $table->tinyInteger('enabled')->default(1);
 
-            $table->foreignId('created_by')->constrained('users');
-            $table->dateTime('created_at')->useCurrent();
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->dateTime('created_at')->nullable()->useCurrent();
             $table->foreignId('updated_by')->nullable()->constrained('users');
             $table->dateTime('updated_at')->nullable();
         });
@@ -28,6 +29,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('penalties');
+        Schema::dropIfExists('charges_items');
     }
 };

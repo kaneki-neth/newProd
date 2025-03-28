@@ -25,19 +25,26 @@
 </style>
 
 
-<form method="POST" id="add_penalty" autocomplete="off">
+<form method="POST" id="add_charges_item" autocomplete="off">
 
     <div class="row">
         <div class="row">
-            <label for="type" class="col-sm-4 col-form-label form-label">Penalty Name <span
-                    class="text-danger">*</span></label>
+            <label for="name" class="col-sm-4 col-form-label form-label">Name <span class="text-danger">*</span></label>
             <div class="col-sm-8">
                 <input type="text" class="form-control form-control-sm" id="name" name="name" placeholder="...">
                 <span id="name-msg" class="error-msg text-danger"></span>
             </div>
         </div>
+        <div class="row">
+            <label for="description" class="col-sm-4 col-form-label form-label">Description</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control form-control-sm" id="description" name="description"
+                    placeholder="...">
+                <span id="description-msg" class="error-msg text-danger"></span>
+            </div>
+        </div>
         <div class="row mt-1">
-            <label for="amount" class="col-sm-4 col-form-label form-label">Penalty Amount <span
+            <label for="amount" class="col-sm-4 col-form-label form-label">Amount <span
                     class="text-danger">*</span></label>
             <div class="col-sm-8">
                 <input type="number" class="form-control form-control-sm" id="amount" name="amount" placeholder="...">
@@ -63,7 +70,7 @@
 
 <script>
     $(document).ready(function () {
-        ['#name', '#amount'].forEach(function (selector) {
+        ['#name', '#amount', '#description'].forEach(function (selector) {
             $(selector).keyup(function (e) {
                 if (e.keyCode === 13) return;
                 remove_error(this);
@@ -71,7 +78,7 @@
         });
     });
 
-    $('#add_penalty').submit(function (e) {
+    $('#add_charges_item').submit(function (e) {
         e.preventDefault();
 
         $(".btn").attr("disabled", false);
@@ -85,7 +92,7 @@
 
         $.ajax({
             method: 'post',
-            url: '{{ route("penalties.store") }}',
+            url: '{{ route("charges_items.store") }}',
             data: formData,
             contentType: false,
             processData: false,

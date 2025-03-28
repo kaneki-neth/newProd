@@ -10,15 +10,19 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('amenities', function (Blueprint $table) {
-            $table->integer('a_id')->primary()->autoIncrement();
+        Schema::create('categories', function (Blueprint $table) {
+            $table->id('c_id')->autoIncrement();
             $table->string('name');
-            $table->decimal('price', 10, 2);
+            $table->string('description');
             $table->tinyInteger('enabled')->default(1);
+            $table->decimal('daily_rate', 10, 2)->nullable();
+            $table->decimal('hourly_rate', 10, 2)->nullable();
+            $table->integer('max_occupancy')->nullable();
 
-            $table->integer('created_by')->foreignId('users')->constrained();
+
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->dateTime('created_at')->useCurrent();
-            $table->integer('updated_by')->foreignId('users')->constrained()->nullable()->nullOnDelete();
+            $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->dateTime('updated_at')->useCurrentOnUpdate()->nullable();
         });
     }
@@ -28,6 +32,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('amenities');
+        Schema::dropIfExists('room_types');
     }
 };

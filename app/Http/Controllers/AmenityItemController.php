@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class AmenityController extends Controller
+class AmenityItemController extends Controller
 {
     public function index(Request $request)
     {
@@ -14,7 +14,7 @@ class AmenityController extends Controller
         $price = "";
         $enabled = "";
 
-        $query = DB::table('amenities');
+        $query = DB::table('amenity_items');
 
         if ($request->has('name')) {
             $query->where('name', 'like', '%' . $request->name . '%');
@@ -31,25 +31,29 @@ class AmenityController extends Controller
             $enabled = $request->input('enabled');
         }
 
-        $amenities = $query->get();
+        $amenity_items = $query->get();
 
-        return view('amenities.index', compact('amenities', 'name', 'price', 'enabled'));
+        return view('amenity_items.index', compact('amenity_items', 'name', 'price', 'enabled'));
     }
 
     public function create()
     {
-        return view('amenities.create');
+        return view('amenity_items.create');
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
+            'description' => 'required',
             'price' => 'required',
+            'quantity' => 'required',
             'enabled' => 'required',
         ], $messages = [
                 'name.required' => 'Name is required',
+                'description.required' => 'Description is required',
                 'price.required' => 'Price is required',
+                'quantity.required' => 'Quantity is required',
                 'enabled.required' => 'Status is required',
             ]);
 
@@ -62,20 +66,22 @@ class AmenityController extends Controller
 
         try {
             DB::beginTransaction();
-            $amenity = DB::table('amenities')->insert([
+            $amenity_item = DB::table('amenity_items')->insert([
                 'name' => $request->name,
+                'description' => $request->description,
                 'price' => $request->price,
+                'quantity' => $request->quantity,
                 'enabled' => $request->enabled,
                 'created_by' => auth()->user()->id,
                 'created_at' => now(),
             ]);
 
             DB::commit();
-            session()->flash('success', 'Amenity created successfully');
+            session()->flash('success', 'Amenity item created successfully');
             return response()->json([
                 'success' => true,
-                'message' => 'Amenity created successfully',
-                'data' => $amenity
+                'message' => 'Amenity item created successfully',
+                'data' => $amenity_item
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -88,21 +94,25 @@ class AmenityController extends Controller
 
     public function edit($id)
     {
-        $amenity = DB::table('amenities')->where('a_id', $id)->first();
+        $amenity_item = DB::table('amenity_items')->where('ai_id', $id)->first();
 
 
-        return view('amenities.edit', compact('amenity'));
+        return view('amenity_items.edit', compact('amenity_item'));
     }
 
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
+            'description' => 'required',
             'price' => 'required',
+            'quantity' => 'required',
             'enabled' => 'required',
         ], $messages = [
                 'name.required' => 'Name is required',
+                'description.required' => 'Description is required',
                 'price.required' => 'Price is required',
+                'quantity.required' => 'Quantity is required',
                 'enabled.required' => 'Status is required',
             ]);
 
@@ -115,20 +125,22 @@ class AmenityController extends Controller
 
         try {
             DB::beginTransaction();
-            $amenity = DB::table('amenities')->where('a_id', $id)->update([
+            $amenity_item = DB::table('amenity_items')->where('ai_id', $id)->update([
                 'name' => $request->name,
+                'description' => $request->description,
                 'price' => $request->price,
+                'quantity' => $request->quantity,
                 'enabled' => $request->enabled,
                 'updated_by' => auth()->user()->id,
                 'updated_at' => now(),
             ]);
 
             DB::commit();
-            session()->flash('success', 'Amenity updated successfully');
+            session()->flash('success', 'Amenity item updated successfully');
             return response()->json([
                 'success' => true,
-                'message' => 'Amenity updated successfully',
-                'data' => $amenity
+                'message' => 'Amenity item updated successfully',
+                'data' => $amenity_item
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();

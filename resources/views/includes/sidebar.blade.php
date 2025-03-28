@@ -53,16 +53,16 @@
                     <div class="menu-text">Home</div>
                 </a>
             </div>
-            <div class="menu-item" id="penalties">
-                <a href="/penalties" class="menu-link">
+            <div class="menu-item" id="charges_items">
+                <a href="/charges-items" class="menu-link">
                     <div class="menu-icon">
                         <i class="fa-solid fa-pen-to-square"></i>
                     </div>
-                    <div class="menu-text">Penalties</div>
+                    <div class="menu-text">Charges</div>
                 </a>
             </div>
-            <div class="menu-item" id="amenities">
-                <a href="/amenities" class="menu-link">
+            <div class="menu-item" id="amenity_items">
+                <a href="/amenity-items" class="menu-link">
                     <div class="menu-icon">
                         <i class="fa-solid fa-toilet-paper"></i>
                     </div>
@@ -79,12 +79,12 @@
                 </a>
             </div>
 
-            <div class="menu-item" id="room_types">
-                <a href="/room_types" class="menu-link">
+            <div class="menu-item" id="categories">
+                <a href="/categories" class="menu-link">
                     <div class="menu-icon">
                         <i class="fa fa-bed"></i>
                     </div>
-                    <div class="menu-text">Room Types</div>
+                    <div class="menu-text">Categories</div>
                 </a>
             </div>
 

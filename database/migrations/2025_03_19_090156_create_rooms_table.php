@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('floor_number');
             $table->string('status');
             $table->tinyInteger('enabled')->default(1);
-            $table->foreignId('rt_id')->nullable()->constrained('room_types', 'rt_id')->nullOnDelete();
+            $table->foreignId('c_id')->nullable()->constrained('categories', 'c_id')->nullOnDelete();
 
 
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();

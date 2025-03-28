@@ -22,9 +22,9 @@ Route::group(['middleware' => ['auth']], function () {
     include __DIR__ . '/settings/myAccount.php';
     include __DIR__ . '/app/app_lookup.php';
     include __DIR__ . '/rooms.php';
-    include __DIR__ . '/room_types.php';
-    include __DIR__ . '/amenities.php';
-    include __DIR__ . '/penalty.php';
+    include __DIR__ . '/categories.php';
+    include __DIR__ . '/amenity_items.php';
+    include __DIR__ . '/charges_items.php';
     include __DIR__ . '/company.php';
     include __DIR__ . '/guest.php';
 });

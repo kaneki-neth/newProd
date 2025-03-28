@@ -4,7 +4,6 @@
         overflow-y: auto;
         overflow-x: hidden;
         padding-right: 15px;
-        background: linear-gradient(to right, transparent 50%, white 100%);
     }
 
     ::-webkit-scrollbar {
@@ -23,58 +22,51 @@
         top: -5px;
         background-color: white;
     }
-
-    .select2-container {
-        width: 100%;
-    }
-
-    .custom-input {
-        height: 30px;
-    }
-
-    .select2-dropdown {
-        z-index: 1056 !important;
-    }
 </style>
 
 
-<form method="POST" id="add_room" autocomplete="off">
+<form method="POST" id="add_category" autocomplete="off">
     <div class="row">
-        <label for="room_number" class="col-sm-4 col-form-label form-label">Room Number <span
+        <label for="name" class="col-sm-4 col-form-label form-label">Name <span class="text-danger">*</span></label>
+        <div class="col-sm-8">
+            <input type="text" class="form-control form-control-sm" id="name" name="name" placeholder="...">
+            <span id="name-msg" class="error-msg text-danger"></span>
+        </div>
+    </div>
+    <div class="row mt-1">
+        <label for="description" class="col-sm-4 col-form-label form-label">Description <span
                 class="text-danger">*</span></label>
         <div class="col-sm-8">
-            <input type="text" class="form-control form-control-sm" id="room_number" name="room_number"
+            <input type="text" class="form-control form-control-sm" id="description" name="description"
                 placeholder="...">
-            <span id="room_number-msg" class="error-msg text-danger"></span>
+            <span id="description-msg" class="error-msg text-danger"></span>
         </div>
     </div>
     <div class="row mt-1">
-        <label for="floor_number" class="col-sm-4 col-form-label form-label">Floor Number <span
+        <label for="daily_rate" class="col-sm-4 col-form-label form-label">Daily Rate <span
                 class="text-danger">*</span></label>
         <div class="col-sm-8">
-            <input type="number" class="form-control form-control-sm" id="floor_number" name="floor_number"
+            <input type="number" class="form-control form-control-sm" id="daily_rate" name="daily_rate"
                 placeholder="...">
-            <span id="floor_number-msg" class="error-msg text-danger"></span>
+            <span id="daily_rate-msg" class="error-msg text-danger"></span>
         </div>
     </div>
     <div class="row mt-1">
-        <label for="category" class="col-sm-4 col-form-label form-label">Category <span
+        <label for="hourly_rate" class="col-sm-4 col-form-label form-label">Hourly Rate <span
                 class="text-danger">*</span></label>
         <div class="col-sm-8">
-            <select class="form-control select2" id="category" name="category" placeholder="..." autocomplete="off">
-                <option value="" selected disabled>Select Category</option>
-                @foreach ($categories as $category)
-                    <option value="{{ $category->c_id }}">{{ $category->name }}</option>
-                @endforeach
-            </select>
-            <span id="category-msg" class="error-msg text-danger"></span>
+            <input type="number" class="form-control form-control-sm" id="hourly_rate" name="hourly_rate"
+                placeholder="...">
+            <span id="hourly_rate-msg" class="error-msg text-danger"></span>
         </div>
     </div>
     <div class="row mt-1">
-        <label for="status" class="col-sm-4 col-form-label form-label">Status <span class="text-danger">*</span></label>
+        <label for="max_occupancy" class="col-sm-4 col-form-label form-label">Max Occupancy <span
+                class="text-danger">*</span></label>
         <div class="col-sm-8">
-            <input type="text" class="form-control form-control-sm" id="status" name="status" placeholder="...">
-            <span id="status-msg" class="error-msg text-danger"></span>
+            <input type="number" class="form-control form-control-sm" id="max_occupancy" name="max_occupancy"
+                placeholder="...">
+            <span id="max_occupancy-msg" class="error-msg text-danger"></span>
         </div>
     </div>
     <div class="row mt-1">
@@ -93,20 +85,20 @@
 
 <script>
     $(document).ready(function () {
-        $('#category').select2();
-
-        $('#room_number, #floor_number, #category, #status').on('keyup change', function (e) {
-            if (e.keyCode === 13) return;
-            remove_error(this);
+        ['#name', '#description', '#daily_rate', '#hourly_rate', '#max_occupancy'].forEach(function (selector) {
+            $(selector).keypress(function () {
+                if ($(this).val().length >= 50) {
+                    $(this).val($(this).val().slice(0, 50));
+                    return false;
+                }
+            }).keyup(function (e) {
+                if (e.keyCode === 13) return;
+                remove_error(this);
+            });
         });
     });
 
-    function remove_error(element) {
-        $(element).css('border', '');
-        $(`#${element.id}-msg`).text('');
-    }
-
-    $('#add_room').submit(function (e) {
+    $('#add_category').submit(function (e) {
         e.preventDefault();
         $(".btn").attr("disabled", false);
         let formData = new FormData(this);
@@ -119,7 +111,7 @@
 
         $.ajax({
             method: 'post',
-            url: '{{ route("rooms.store") }}',
+            url: '{{ route("categories.store") }}',
             data: formData,
             contentType: false,
             processData: false,
@@ -127,13 +119,12 @@
                 location.reload();
             },
             error: function (xhr, status, error) {
-                console.log("AJAX error response:", xhr);
                 $(".btn").attr("disabled", false);
                 $("#modal-content").removeClass("modal-before");
                 $("#div-modal-loader").attr('style', 'display:none!important');
                 if (xhr.status === 400) {
                     const errors = xhr.responseJSON.errors;
-                    $("input, select").css('border', '');
+                    $("input").css('border', '');
                     $(".error-msg").text('');
                     Object.keys(errors).forEach(field => {
                         $(`#${field}`).css('border', '1px solid red');
@@ -147,7 +138,7 @@
     // Add proper modal cleanup when the modal is hidden
     $('#main_modal').on('hidden.bs.modal', function () {
         // Reset the form
-        $('#add_room')[0].reset();
+        $('#add_category')[0].reset();
 
         // Clear error messages and styling
         $("input").css('border', '');

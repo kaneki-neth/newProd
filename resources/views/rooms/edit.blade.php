@@ -44,20 +44,20 @@
         </div>
     </div>
     <div class="row mt-1">
-        <label for="room_type" class="col-sm-4 col-form-label form-label">Room Type <span
+        <label for="category" class="col-sm-4 col-form-label form-label">Category <span
                 class="text-danger">*</span></label>
         <div class="col-sm-8">
-            <select class="form-control form-control-sm select2" id="room_type" name="room_type"
+            <select class="form-control form-control-sm select2" id="category" name="category"
                 onkeyup="remove_error(this)">
-                @foreach ($room_types as $room_type)
-                    @if ($room_type->rt_id == $room->rt_id)
-                        <option value="{{ $room_type->rt_id }}" selected>{{ $room_type->name }}</option>
+                @foreach ($categories as $category)
+                    @if ($category->c_id == $room->c_id)
+                        <option value="{{ $category->c_id }}" selected>{{ $category->name }}</option>
                     @else
-                        <option value="{{ $room_type->rt_id }}">{{ $room_type->name }}</option>
+                        <option value="{{ $category->c_id }}">{{ $category->name }}</option>
                     @endif
                 @endforeach
             </select>
-            <span id="room_type-msg" class="error-msg text-danger"></span>
+            <span id="category-msg" class="error-msg text-danger"></span>
         </div>
     </div>
     <div class="row mt-1">
@@ -84,7 +84,7 @@
 
 <script>
     $(document).ready(function () {
-        $('#room_type').select2();
+        $('#category').select2();
     });
 
     $('#edit_room').submit(function (e) {
@@ -109,13 +109,18 @@
             success: (response) => {
                 location.reload();
             },
-            error: function (reject) {
+            error: function (xhr, status, error) {
                 $(".btn").attr("disabled", false);
                 $("#modal-content").removeClass("modal-before");
                 $("#div-modal-loader").attr('style', 'display:none!important');
-                if (reject.status === 400) {
-                    $("#room_number").css('border', '1px solid red');
-                    $("#room_number-msg").text(reject.responseJSON.errors.room_number);
+                if (xhr.status === 400) {
+                    const errors = xhr.responseJSON.errors;
+                    $("input").css('border', '');
+                    $(".error-msg").text('');
+                    Object.keys(errors).forEach(field => {
+                        $(`#${field}`).css('border', '1px solid red');
+                        $(`#${field}-msg`).text(errors[field]);
+                    });
                 }
             }
         });

@@ -1,10 +1,16 @@
 @extends('layouts.app')
 
-@section('title', 'Amenities')
+@section('title', 'Categories')
 
 @section('content')
     <style>
-        .custom-input {
+        /* @can('category-write')
+            #name:hover {
+                font-weight: bold;
+                color: #28acb5;
+            }
+
+        @endcan */ .custom-input {
             height: 30px;
         }
 
@@ -18,15 +24,15 @@
     </style>
 
     <ol class="breadcrumb float-xl-end">
-        <li class="breadcrumb-item"><a href="javascript:;">Amenities</a></li>
+        <li class="breadcrumb-item"><a href="javascript:;">Categories</a></li>
     </ol>
-    <h1 class="page-header">Amenities List</h1>
+    <h1 class="page-header">Category List</h1>
 
     <div class="panel panel-inverse">
         <div class="panel-body" id="pannel-body">
             <div class="table-responsive" style="overflow-x: hidden">
                 <div class="d-flex justify-content-end">
-                    <button class="btn btn-primary btn-xs" onclick="add_amenity()">
+                    <button class="btn btn-primary btn-xs" onclick="add_category()">
                         <i class="fa fa-plus"></i> Add New
                     </button>
                 </div>
@@ -41,18 +47,15 @@
                         </div>
 
                         <div class="col-lg-2 col-md-3">
-                            <label class="form-label">Price</label>
-                            <input type="text" class="form-control custom-input" id="price" name="price"
-                                value="{{ $price }}" placeholder="..." autocomplete="off">
+                            <label class="form-label">Daily Rate</label>
+                            <input type="text" class="form-control custom-input" id="daily_rate" name="daily_rate"
+                                value="{{ $daily_rate }}" placeholder="..." autocomplete="off">
                         </div>
 
                         <div class="col-lg-2 col-md-3">
-                            <label class="form-label">Status</label>
-                            <select class="form-control custom-input select2" id="enabled" name="enabled">
-                                <option selected>All</option>
-                                <option value="1" {{ $enabled == 1 ? 'selected' : '' }}>Active</option>
-                                <option value="0" {{ $enabled == 0 ? 'selected' : '' }}>Inactive</option>
-                            </select>
+                            <label class="form-label">Hourly Rate</label>
+                            <input type="text" class="form-control custom-input" id="hourly_rate" name="hourly_rate"
+                                value="{{ $hourly_rate }}" placeholder="..." autocomplete="off">
                         </div>
 
                         <div class="col-lg-2 col-md-3 mt-2">
@@ -70,27 +73,27 @@
                         class="table table-striped table-bordered align-middle text-nowrap table-sm">
                         <thead>
                             <tr>
-                                <th>No.</th>
                                 <th>Name</th>
-                                <th class="text-center" style="width: 50%">Price</th>
+                                <th class="text-center" style="width: 50%">Daily Rate</th>
+                                <th class="text-center" style="width: 50%">Hourly Rate</th>
+                                <th class="text-center" style="width: 50%">Max Occupancy</th>
                                 <th class="text-center" style="width: 50%">Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($amenities as $amenity)
+                            @foreach($categories as $category)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
                                     <td id="name" style="color:#28acb5; cursor:pointer;"
-                                        onclick="showmodaledit(`{{ $amenity->a_id }}`)">
-                                        {{ $amenity->name }}
+                                        onclick="showmodaledit(`{{ $category->c_id }}`)">
+                                        {{ $category->name }}
                                     </td>
-                                    <td class="text-center">{{ $amenity->price }}</td>
+                                    <td class="text-center">{{ $category->daily_rate }}</td>
+                                    <td class="text-center">{{ $category->hourly_rate }}</td>
+                                    <td class="text-center">{{ $category->max_occupancy }}</td>
                                     <td class="text-center">
-                                        @if($amenity->enabled == 1)
-                                            <span class="badge bg-success">Active</span>
-                                        @else
-                                            <span class="badge bg-danger">Inactive</span>
-                                        @endif
+                                        <span class="badge bg-{{ $category->enabled == 1 ? 'success' : 'danger' }}">
+                                            {{ $category->enabled == 1 ? 'Active' : 'Inactive' }}
+                                        </span>
                                     </td>
                                 </tr>
                             @endforeach
@@ -110,11 +113,7 @@
     <script src="/assets/plugins/datatables.net-scroller-bs5/js/scroller.bootstrap5.min.js"></script>
 
     <script>
-        $('#amenities').addClass('active');
-
-        $(document).ready(function () {
-            $('.select2').select2();
-        });
+        $('#categories').addClass('active');
 
         var tblrows = 0;
         var height = screen.height;
@@ -132,18 +131,19 @@
 
         function clearsearchfield() {
             $("#name").val('');
-            $("#price").val('');
+            $("#daily_rate").val('');
+            $("#hourly_rate").val('');
         }
 
-        function add_amenity() {
+        function add_category() {
             $.ajax({
                 method: 'get',
-                url: '{{ route("amenities.create") }}',
+                url: '{{ route("categories.create") }}',
                 contentType: false,
                 processData: false,
                 success: (response) => {
                     $("#main_modal").modal('show');
-                    $("#modal-title").html('Add Amenity');
+                    $("#modal-title").html('Add Category');
                     $("#modal-body").html(response);
                 }, error: (error) => {
                     Swal.fire({
@@ -156,7 +156,7 @@
         }
 
         function showmodaledit(id) {
-            let url = '{{ route("amenities.edit", ["id" => ":id"]) }}';
+            let url = '{{ route("categories.edit", ["id" => ":id"]) }}';
             url = url.replace(':id', id);
             $.ajax({
                 method: 'get',
@@ -165,7 +165,7 @@
                 processData: false,
                 success: (response) => {
                     $("#main_modal").modal('show');
-                    $("#modal-title").html('Edit Amenity');
+                    $("#modal-title").html('Edit Category');
                     $("#modal-body").html(response);
                 }, error: (error) => {
                     Swal.fire({

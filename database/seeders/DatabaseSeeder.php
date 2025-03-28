@@ -28,13 +28,13 @@ class DatabaseSeeder extends Seeder
             OrgUserBuSeeder::class,
             OrgCompanySeeder::class,
 
-            RoomTypeSeeder::class,
+            CategoriesSeeder::class,
             RoomSeeder::class,
         ]);
 
         $this->call([
-            AmenitiesSeeder::class,
-            PenaltySeeder::class,
+            AmenityItemsSeeder::class,
+            ChargesItemsSeeder::class,
             CompanySeeder::class,
             GuestSeeder::class,
         ]);

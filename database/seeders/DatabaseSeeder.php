@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
             AmenitiesSeeder::class,
             PenaltySeeder::class,
             CompanySeeder::class,
+            GuestSeeder::class,
         ]);
     }
 }

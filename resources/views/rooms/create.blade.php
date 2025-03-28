@@ -4,6 +4,7 @@
         overflow-y: auto;
         overflow-x: hidden;
         padding-right: 15px;
+        background: linear-gradient(to right, transparent 50%, white 100%);
     }
 
     ::-webkit-scrollbar {

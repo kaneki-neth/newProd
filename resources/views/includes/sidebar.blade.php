@@ -14,7 +14,7 @@
                         <div class="d-flex align-items-center">
                             <div class="flex-grow-1 text-center">
                                 <!-- <img src="{{ url('/images/_logo.pngz') }}" alt="user_profile" width="80px"> -->
-                                <img src="{{ asset('restologoBlack.png') }}" width="80px" data-aos="fade-in">
+                                <img src="{{ asset('bizSmartLogo.png') }}" width="80px" data-aos="fade-in">
                             </div>
                             <div class="menu-caret ms-auto"></div>
                         </div>
@@ -94,6 +94,15 @@
                         <i class="fa-solid fa-building"></i>
                     </div>
                     <div class="menu-text">Companies</div>
+                </a>
+            </div>
+
+            <div class="menu-item" id="guests">
+                <a href="/guests" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div class="menu-text">Guests</div>
                 </a>
             </div>
 

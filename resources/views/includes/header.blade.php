@@ -24,10 +24,13 @@
 
 @include('includes.mainModal')
 
-<div id="header" class="app-header">
+<div id="header" class="app-header"
+    style="background: linear-gradient(to right, rgba(255, 255, 255, 0) 50%, white 100%), url('{{ asset('header_banner.png') }}');">
     <!-- BEGIN navbar-header -->
     <div class="navbar-header">
-        <a href="/home"><img src="{{ asset('restologo.png') }}" width="140px" class="ps-5" data-aos="fade-in"></a>
+        <a href="/home">
+            {{-- <img src="{{ asset('bizSmartLogo.png') }}" width="140px" class="ps-5" data-aos="fade-in"> --}}
+        </a>
         <!-- <button type="button" class="navbar-mobile-toggler" data-toggle="app-sidebar-mobile">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
